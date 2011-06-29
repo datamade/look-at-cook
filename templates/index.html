@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Budget Breakdown: Cook County, IL</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  
+  <link href="../styles/master.css" rel="stylesheet" type="text/css" />
+  
+  <link href="../images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  
+  <script src="../scripts/jquery.js" type="text/javascript"></script>
+  <script src="../jquery.ga-event-tracker.js" type="text/javascript"></script>
+  <script src="../scripts/highcharts.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    $(function(){
+      chart1 = new Highcharts.Chart({
+      chart: {
+        defaultSeriesType: "area",
+        renderTo: "timeline-chart"
+      },
+      credits: { enabled: false },
+      plotOptions: {
+        area: {
+          allowPointSelect: true,
+          fillOpacity: 0.25
+        },
+        series: {
+          lineWidth: 5,
+          marker: {
+            radius: 6,
+            symbol: "circle"
+          },
+          pointInterval: 365 * 24 * 3600 * 1000,
+          pointStart: Date.UTC(1993, 0, 1),
+          shadow: false
+        }
+      },
+      series: [
+        {
+          data: [
+            2142224322,
+            2053234695,
+            2200115746,
+            2174294505,
+            2238798248,
+            2379538916,
+            2434009960,
+            2615477197.30,
+            2717142084,
+            2745055917,
+            1974710669,
+            2988836914,
+            2990337950.55,
+            3080714914,
+            3039621923,
+            3234567992,
+            3283481314,
+            3575558218,
+            3140084198
+          ],
+          name: "Budgeted"
+        }, {
+          data: [
+            1908944078,
+            1841232199,
+            1965158416,
+            1974710669,
+            2006734727.65,
+            2146882210.37,
+            2275936803,
+            2536702487.38,
+            2614172709,
+            2668773254,
+            2671097237.73,
+            2880536605,
+            2940955564.53,
+            3000140207.05,
+            2979021381,
+            2966699311.14,
+            3081534257.35,
+            3529477188.95,
+          ],
+          name: "Spent"
+        }
+      ],
+      title: null,
+      tooltip: {
+        borderColor: "#000",
+        formatter: function() {
+          var s = "<strong>" + Highcharts.dateFormat("%Y", this.x) + "</strong>";
+          $.each(this.points, function(i, point) {
+            s += "<br />" + point.series.name + ": $" + Highcharts.numberFormat(point.y, 0);
+          });
+          return s;
+        },
+        shared: true
+      },
+      xAxis: {
+        dateTimeLabelFormats: { year: "%Y" },
+        gridLineColor: "#ddd",
+        gridLineWidth: 1,
+        type: "datetime"
+      },
+      yAxis: {
+        gridLineColor: "#ddd",
+        min: 1841232199,
+        labels: {
+          formatter: function() {
+            if (this.value >= 1000000000)
+              return "$" + this.value / 1000000000 + "B";
+            else if (this.value >= 1000000)
+              return "$" + this.value / 1000000 + "M";
+            else
+              return "$" + this.value;
+          }
+        },
+        title: null
+      }
+  });
+    });
+  </script>
+</head>
+<body>
+
+<div id="page">
+  <div id="header">
+    <div id="logo"><img alt="Budget Breakdown: Cook County, IL" src="../images/logo.png" /></div>
+    <div id="header-secondary">A project from <a href="http://www.fritchey.com">John Fritchey</a><br />Cook county Commissoner of the 12th District</div>
+    <div class="clear"></div>
+  </div>
+  
+  <div id="content">
+    <div id="content-primary">
+      <h1>Where's the money going?</h1>
+      <p>Explore Cook County's budget over the years and learn how the money is being spent. <a href="#content-secondary">More about this project</a> &raquo;</p>
+      
+      <div id="timeline">
+        <h2>2011</h2>
+        <div id="timeline-chart"></div>
+      </div>
+      
+      <table id="breakdown">
+        <thead>
+          <tr>
+            <th><a href="#">Fund</a></th>
+            <th><a href="#">Budgeted</a></th>
+            <th><a href="#">Spent</a></th>
+            <th><a href="#">Budgeted vs. spent</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#">Public safety</a></td>
+            <td>$1,248,263,013</td>
+            <td>$998,610,410</td>
+            <td>
+              <div class="bars">
+                <span class="budgeted" style="width: 100%">
+                  <span class="spent" style="width: 80%"></span>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#">Public safety</a></td>
+            <td>$1,248,263,013</td>
+            <td>$998,610,410</td>
+            <td>
+              <div class="bars">
+                <span class="budgeted" style="width: 100%">
+                  <span class="spent" style="width: 80%"></span>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#">Public safety</a></td>
+            <td>$1,248,263,013</td>
+            <td>$998,610,410</td>
+            <td>
+              <div class="bars">
+                <span class="budgeted" style="width: 100%">
+                  <span class="spent" style="width: 80%"></span>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div id="content-secondary">
+      <h2>About</h2>
+      
+      <div class="columns">
+        <p>Every year your Cook County government budgets and spends more than $3 billion collected from the millions of people who live in and visit Chicagoland. Your County's budget impacts your life every day. All of its funding comes from you&mdash;your sales and property taxes, your purchase fees on gas, cigarettes and alcohol. All of its spending exists to support you, too&mdash;or at least it's supposed to. County funding drives the forest preserve district, the jail, public hospitals and clinics, the Cook County courts and dozens of other civic institutions designed to make our region prosperous, efficient and fair.</p>
+        <p>The County Board and its President publish a budget every year that meticulously catalogues Cook County's spending, yet too many residents say they still don't understand what Cook County government is or what it does. They keep asking, "where exactly does our money go?"</p>
+        <p>Cook County Commissioner John Fritchey created this budget transparency project to answer that question. We took County appropriations and expenditures by departmental account for every year from 1993 to the present, then we recruited a pair of enterprising Chicago-based web developers to visualize County spending in a way citizens can understand and engage with. The result is what you're seeing.</p>
+        <p>This budget visualization tool is only a first step. We need your help. What questions do you have about County spending? What do you want to know about the County budget that this visualization isn't explaining to you? What do you think of our spending? What can we do to make Cook County government better?</p>
+        <p>Connect with us on <a class="icon-facebook" href="http://www.facebook.com/John.Fritchey">Facebook</a>, <a class="icon-twitter" href="http://twitter.com/johnfritchey">Twitter</a>, or contact us.</p>
+      </div>
+    </div>
+    
+    <div id="content-tertiary">
+      <a class="action" href="#">View &amp; download data</a>
+      <h2>Explore the data</h2>
+      
+      <p>All the data for this project is freely available to download or explore on Google Fusion Tables.</p>
+    </div>
+  </div>
+  
+  <div id="footer">
+    <ul class="share">
+      <li><a href="http://www.facebook.com/share.php?u=http%3a%2f%2fwww.fritchey.com%2fbudget"><img alt="Facebook" src="../images/facebook-lg.png" /> Share budget on <strong>Facebook</strong></a></li>
+      <li><a href="http://twitter.com/share?text=Where's%20the%20money%20going%3F%20Explore%20Cook%20County's%20budget&amp;url=http%3a%2f%2fwww.fritchey.com%2fbudget"><img alt="Twitter" src="../images/twitter-lg.png" /> Share budget on <strong>Twitter</strong></a></li>
+    </ul>
+    
+    <div id="credit">Budget Breakdown developed and designed by <a href="http://www.derekeder.com">Derek Eder</a> and <a href="http://www.c82.net">Nick Rougeux</a></div>
+  </div>
+</div>
+
+</body>
+</html>

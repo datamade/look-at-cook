@@ -1,0 +1,135 @@
+/*------------------------+
+ | Site: Budget Breakdown |
+ | Part: Master styles    |
+ +------------------------*/
+
+/* Imports
+=====================================================================*/
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
+@import "../styles/reset.css";
+
+
+/* Fonts
+======================================================================*/
+body { font-family: "Droid Sans", Arial, sans-serif; }
+#header { font-family: Georgia, "Times New Roman", Times, serif; }
+
+
+/* Basics
+======================================================================*/
+a { color: #f85204; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+body {
+  background: #213b57 url(../images/bg.jpg);
+  font-size: 15px;
+  line-height: 1.45;
+  padding: 50px 0;
+}
+
+dl, ol, p, ul, table { margin-bottom: 1.5em; }
+cite, em { font-style: italic; }
+h1 { font-size: 39px; margin-bottom: 0.3em; line-height: 1.1; }
+h1, h2 { color: #264870; }
+h1, h2, h3, h4, h5, h6, strong { font-weight: bold; }
+h2 { font-size: 25px; line-height: 1.2; margin-bottom: 0.3em; }
+h3 { font-size: 20px; line-height: 1.2; }
+ol { list-style: decimal; }
+ol, ul { margin-left: 2em; }
+table { border-collapse: collapse; width: 100%; }
+ul { list-style: disc; }
+
+
+/* Core layout
+======================================================================*/
+.clear { clear: both; }
+#page { margin: 0 auto; width: 980px; }
+
+/* Content */
+#content {
+  background: #fff;
+  -moz-box-shadow: 0 0 30px rgba(0, 0, 0, 0.33);
+  -webkit-box-shadow: 0 0 30px rgba(0, 0, 0, 0.33);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.33);
+  clear: both;
+}
+
+#content-primary, #content-secondary, #content-tertiary { padding: 30px 30px 15px }
+#content-secondary { background: #e1e9f2; }
+#content-tertiary { background: #d3dfed; }
+
+
+/* Content
+======================================================================*/
+
+/* Actions */
+.action {
+  background: #f9dd87;
+  background: -moz-linear-gradient(top, #f9dd87 0%, #f4c130 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9dd87), color-stop(100%,#f4c130));
+  background: -webkit-linear-gradient(top, #f9dd87 0%,#f4c130 100%);
+  background: -o-linear-gradient(top, #f9dd87 0%,#f4c130 100%);
+  background: -ms-linear-gradient(top, #f9dd87 0%,#f4c130 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9dd87', endColorstr='#f4c130',GradientType=0 );
+  background: linear-gradient(top, #f9dd87 0%,#f4c130 100%);
+  border: 1px solid #b2b2b2;
+  -moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	-moz-box-shadow: 0 1px 3px #999;
+	-webkit-box-shadow: 0 1px 3px #999;
+	box-shadow: 0 1px 3px #999;
+	color: #653733;
+	display: inline-block;
+	font-size: 21px;
+	font-weight: bold;
+	padding: 0.3em 0.7em 0.2em;
+	white-space: nowrap;
+}
+
+/* Columns */
+.columns {
+  -moz-column-count: 2;
+	-moz-column-gap: 30px;
+	-webkit-column-count: 2;
+	-webkit-column-gap: 30px;
+	column-count: 2;
+	column-gap: 30px
+}
+
+/* Footer */
+#footer { color: #7c8a9b; font-size: 12px; padding: 15px 0 0; }
+#footer a { color: #fff; }
+
+  /* Credit */
+  #credit { float: right; text-align: right; }
+  
+  /* Sharing links */
+  .share { list-style: none; margin: 0; }
+  .share img { float: left; margin-right: 5px; }
+  .share li { float: left; font-size: 11px; line-height: 1.1; width: 155px; }
+  .share strong { display: block; font-size: 20px; }
+
+/* Header */
+#header { color: #b7c6d6; font-size: 13px; padding-bottom: 30px; }
+#header a { color: #fff; }
+#header-secondary { float: right; font-style: italic; padding-top: 54px; text-align: right; }
+#logo { float: left; }
+
+/* Icons */
+a[class*="icon"] {
+  background-repeat: no-repeat;
+  background-position: 0 0.1em;
+  padding: 3px 0 3px 22px;
+}
+
+.icon-facebook { background-image: url(../images/facebook-sm.png); }
+.icon-twitter { background-image: url(../images/twitter-sm.png); }
+
+/* Tertiary content */
+#content-tertiary .action { float: right; }
+
+/* Timeline */
+#timeline { margin-bottom: 20px; }
+#timeline h2 { color: #000; font-size: 21px; text-align: center; }
+#timeline-chart { height: 400px; }
