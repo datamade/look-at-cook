@@ -10,11 +10,58 @@
   <link href="../images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
   
   <script src="../scripts/jquery.js" type="text/javascript"></script>
-  <script src="../jquery.ga-event-tracker.js" type="text/javascript"></script>
   <script src="../scripts/highcharts.js" type="text/javascript"></script>
+  <script src="../scripts/jquery.dataTables.js" type="text/javascript"></script>
+  <script src="../scripts/dataTables.sorting.js" type="text/javascript"></script>
+  <script src="../jquery.ga-event-tracker.js" type="text/javascript"></script>
   
   <script type="text/javascript">
     $(function(){
+      // Table sorting
+      /*function fnFormatDetails(oTable, nTr) {
+        var aData = oTable.fnGetData(ntr);
+        var sOut = "<div>test</div>";
+        return sOut;
+      }*/
+      
+      /*var nCloneTh = document.createElement("th");
+      var nCloneTd = document.createElement("td");
+      nCloneTd.innerHTML = "<img src='../images/expand.png' />";
+      
+      $("#breakdown thead tr").each(function(){
+        this.insertBefore(nCloneTh, this.childNodes[0]);
+      });
+      
+      $("#breakdown tbody tr").each(function() {
+        this.insertBefore(  nCloneTd.cloneNode(true), this.childNodes[0]);
+      });*/
+      
+      $("#breakdown").dataTable({
+        "aaSorting": [[1, "desc"]],
+        "aoColumns": [
+          null,
+          { "sType": "currency" },
+          { "sType": "currency" },
+          { "bSortable": false }
+        ],
+        "bFilter": false,
+        "bInfo": false,
+        "bPaginate": false
+      });
+      
+      /*$('#example tbody td img').live('click', function () {
+        var nTr = this.parentNode.parentNode;
+        if (this.src.match('details_close')) {
+          this.src = "../images/expand.png";
+          oTable.fnClose(nTr);
+        } else {
+          this.src = "../images/collapse.png";
+          oTable.fnOpen(nTr, fnFormatDetails(oTable, nTr), 'details');
+        }
+      });*/
+      
+      
+      // Highcharts
       chart1 = new Highcharts.Chart({
       chart: {
         defaultSeriesType: "area",
@@ -39,6 +86,7 @@
       },
       series: [
         {
+          color: "#264870",
           data: [
             2142224322,
             2053234695,
@@ -62,6 +110,7 @@
           ],
           name: "Budgeted"
         }, {
+          color: "#4c7099",
           data: [
             1908944078,
             1841232199,
@@ -91,7 +140,7 @@
         formatter: function() {
           var s = "<strong>" + Highcharts.dateFormat("%Y", this.x) + "</strong>";
           $.each(this.points, function(i, point) {
-            s += "<br />" + point.series.name + ": $" + Highcharts.numberFormat(point.y, 0);
+            s += "<br /><span style=\"color: " + point.series.color + "\">" + point.series.name + ":</span> $" + Highcharts.numberFormat(point.y, 0);
           });
           return s;
         },
@@ -105,7 +154,6 @@
       },
       yAxis: {
         gridLineColor: "#ddd",
-        min: 1841232199,
         labels: {
           formatter: function() {
             if (this.value >= 1000000000)
@@ -116,6 +164,7 @@
               return "$" + this.value;
           }
         },
+        min: 1841232199,
         title: null
       }
   });
@@ -144,46 +193,54 @@
       <table id="breakdown">
         <thead>
           <tr>
-            <th><a href="#">Fund</a></th>
-            <th><a href="#">Budgeted</a></th>
-            <th><a href="#">Spent</a></th>
-            <th><a href="#">Budgeted vs. spent</a></th>
+            <th><span>Fund</span></th>
+            <th class="num"><span>Budgeted</span></th>
+            <th class="num"><span>Spent</span></th>
+            <th class="charts">Budgeted vs. spent</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><a href="#">Public safety</a></td>
-            <td>$1,248,263,013</td>
-            <td>$998,610,410</td>
+            <td class="num budgeted">$1,248,263,013</td>
+            <td class="num spent">$998,610,410</td>
             <td>
               <div class="bars">
-                <span class="budgeted" style="width: 100%">
-                  <span class="spent" style="width: 80%"></span>
-                </span>
+                <span class="budgeted outer" style="width: 100%"></span>
+                <span class="spent inner" style="width: 79.9%"></span>
               </div>
             </td>
           </tr>
           <tr>
-            <td><a href="#">Public safety</a></td>
-            <td>$1,248,263,013</td>
-            <td>$998,610,410</td>
+            <td><a href="#">Health</a></td>
+            <td class="num budgeted">$911,860,231</td>
+            <td class="num spent">$729,488,184</td>
             <td>
               <div class="bars">
-                <span class="budgeted" style="width: 100%">
-                  <span class="spent" style="width: 80%"></span>
-                </span>
+                <span class="budgeted outer" style="width: 73%"></span>
+                <span class="spent inner" style="width: 58.4%"></span>
               </div>
             </td>
           </tr>
           <tr>
-            <td><a href="#">Public safety</a></td>
-            <td>$1,248,263,013</td>
-            <td>$998,610,410</td>
+            <td><a href="#">Election</a></td>
+            <td class="num budgeted">$616,797,467</td>
+            <td class="num spent">$493,437,973</td>
             <td>
               <div class="bars">
-                <span class="budgeted" style="width: 100%">
-                  <span class="spent" style="width: 80%"></span>
-                </span>
+                <span class="budgeted outer" style="width: 49.1%"></span>
+                <span class="spent inner" style="width: 39.5%"></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="# budgeted">Corporate</a></td>
+            <td class="num budgeted">$169,406,581</td>
+            <td class="num spent">$135,525,264</td>
+            <td>
+              <div class="bars">
+                <span class="budgeted outer" style="width: 13.5%"></span>
+                <span class="spent inner" style="width: 10.8%"></span>
               </div>
             </td>
           </tr>

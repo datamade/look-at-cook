@@ -37,6 +37,7 @@ h3 { font-size: 20px; line-height: 1.2; }
 ol { list-style: decimal; }
 ol, ul { margin-left: 2em; }
 table { border-collapse: collapse; width: 100%; }
+td { vertical-align: top; }
 ul { list-style: disc; }
 
 
@@ -86,6 +87,55 @@ ul { list-style: disc; }
 	padding: 0.3em 0.7em 0.2em;
 	white-space: nowrap;
 }
+
+/* Breakdown table */
+#breakdown .num { text-align: right; }
+#breakdown td { border: 1px solid #ddd; border-width: 1px 0; }
+#breakdown td:last-child { padding-right: 0; }
+#breakdown td, #breakdown th { padding: 0.3em 1em 0.3em 0; }
+#breakdown th { font-size: 12px; font-weight: bold; text-align: left; }
+#breakdown th.charts { width: 50%; }
+#breakdown th span { color: #f85204; cursor: pointer; }
+
+#breakdown th.sorting_asc span {
+  background: url(../images/sort-up.png) no-repeat 100% 50%;
+  padding-right: 10px;
+}
+
+#breakdown th.sorting_desc span {
+  background: url(../images/sort-down.png) no-repeat 100% 50%;
+  padding-right: 10px;
+}
+
+  /* Bars */
+  .bars { position: relative; width: 100%; }
+  
+  .bars .inner {
+    -moz-border-radius-bottomright: 3px;
+    -moz-border-radius-topright: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+    height: 19px;
+    top: 3px;
+  }
+  
+  .bars .outer {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    height: 25px;
+    top: 0;
+  }
+  
+  .bars span { display: block; left: 0; position: absolute; }
+  
+  /* Colors */
+  .budgeted { color: #264870; }
+  .spent { color: #4c7099; }
+  .bars .budgeted { background: #264870; }
+  .bars .spent { background: #4c7099; }
 
 /* Columns */
 .columns {
