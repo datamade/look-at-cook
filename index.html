@@ -35,17 +35,34 @@
 	      },
 	      credits: { enabled: false },
 	      plotOptions: {
-	        area: {
-	          allowPointSelect: true,
-	          fillOpacity: 0.25
-	        },
+	        area: { fillOpacity: 0.25 },
 	        series: {
 	          lineWidth: 5,
 	          marker: {
 	            radius: 6,
 	            symbol: "circle"
 	          },
-	          pointInterval: 365 * 24 * 3600 * 1000,
+	          point: {
+              events: {
+                click: function() {
+                  var x = this.x,
+                      selected = !this.selected,
+                      index = this.series.index;
+                  console.log(this)
+                  this.select(selected, false);
+
+                  $.each(this.series.chart.series, function(i, serie) {
+                    if (serie.index !== index) {
+                      $(serie.data).each(function(j, point){
+                        if(x === point.x)
+                          point.select(selected, true);
+                      });
+                    }
+                  });
+                }
+              }
+            },
+            pointInterval: 365 * 24 * 3600 * 1000,
 	          pointStart: Date.UTC(1993, 0, 1),
 	          shadow: false
 	        }
