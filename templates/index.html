@@ -63,111 +63,128 @@
       
       // Highcharts
       chart1 = new Highcharts.Chart({
-      chart: {
-        defaultSeriesType: "area",
-        renderTo: "timeline-chart"
-      },
-      credits: { enabled: false },
-      plotOptions: {
-        area: {
-          allowPointSelect: true,
-          fillOpacity: 0.25
+        chart: {
+          defaultSeriesType: "area",
+          renderTo: "timeline-chart"
         },
-        series: {
-          lineWidth: 5,
-          marker: {
-            radius: 6,
-            symbol: "circle"
-          },
-          pointInterval: 365 * 24 * 3600 * 1000,
-          pointStart: Date.UTC(1993, 0, 1),
-          shadow: false
-        }
-      },
-      series: [
-        {
-          color: "#264870",
-          data: [
-            2142224322,
-            2053234695,
-            2200115746,
-            2174294505,
-            2238798248,
-            2379538916,
-            2434009960,
-            2615477197.30,
-            2717142084,
-            2745055917,
-            1974710669,
-            2988836914,
-            2990337950.55,
-            3080714914,
-            3039621923,
-            3234567992,
-            3283481314,
-            3575558218,
-            3140084198
-          ],
-          name: "Budgeted"
-        }, {
-          color: "#4c7099",
-          data: [
-            1908944078,
-            1841232199,
-            1965158416,
-            1974710669,
-            2006734727.65,
-            2146882210.37,
-            2275936803,
-            2536702487.38,
-            2614172709,
-            2668773254,
-            2671097237.73,
-            2880536605,
-            2940955564.53,
-            3000140207.05,
-            2979021381,
-            2966699311.14,
-            3081534257.35,
-            3529477188.95,
-          ],
-          name: "Spent"
-        }
-      ],
-      title: null,
-      tooltip: {
-        borderColor: "#000",
-        formatter: function() {
-          var s = "<strong>" + Highcharts.dateFormat("%Y", this.x) + "</strong>";
-          $.each(this.points, function(i, point) {
-            s += "<br /><span style=\"color: " + point.series.color + "\">" + point.series.name + ":</span> $" + Highcharts.numberFormat(point.y, 0);
-          });
-          return s;
-        },
-        shared: true
-      },
-      xAxis: {
-        dateTimeLabelFormats: { year: "%Y" },
-        gridLineColor: "#ddd",
-        gridLineWidth: 1,
-        type: "datetime"
-      },
-      yAxis: {
-        gridLineColor: "#ddd",
-        labels: {
-          formatter: function() {
-            if (this.value >= 1000000000)
-              return "$" + this.value / 1000000000 + "B";
-            else if (this.value >= 1000000)
-              return "$" + this.value / 1000000 + "M";
-            else
-              return "$" + this.value;
+        credits: { enabled: false },
+        plotOptions: {
+          area: { fillOpacity: 0.25 },
+          series: {
+            lineWidth: 5,
+            marker: {
+              radius: 6,
+              symbol: "circle"
+            },
+            point: {
+              events: {
+                click: function() {
+                  var x = this.x,
+                      selected = !this.selected,
+                      index = this.series.index;
+                  console.log(this)
+                  this.select(selected, false);
+
+                  $.each(this.series.chart.series, function(i, serie) {
+                    if (serie.index !== index) {
+                      $(serie.data).each(function(j, point){
+                        if(x === point.x)
+                          point.select(selected, true);
+                      });
+                    }
+                  });
+                }
+              }
+            },
+            pointInterval: 365 * 24 * 3600 * 1000,
+            pointStart: Date.UTC(1993, 0, 1),
+            shadow: false
           }
         },
-        min: 1841232199,
-        title: null
-      }
-  });
+        series: [
+          {
+            color: "#264870",
+            data: [
+              2142224322,
+              2053234695,
+              2200115746,
+              2174294505,
+              2238798248,
+              2379538916,
+              2434009960,
+              2615477197.30,
+              2717142084,
+              2745055917,
+              1974710669,
+              2988836914,
+              2990337950.55,
+              3080714914,
+              3039621923,
+              3234567992,
+              3283481314,
+              3575558218,
+              3140084198
+            ],
+            name: "Budgeted"
+          }, {
+            color: "#4c7099",
+            data: [
+              1908944078,
+              1841232199,
+              1965158416,
+              1974710669,
+              2006734727.65,
+              2146882210.37,
+              2275936803,
+              2536702487.38,
+              2614172709,
+              2668773254,
+              2671097237.73,
+              2880536605,
+              2940955564.53,
+              3000140207.05,
+              2979021381,
+              2966699311.14,
+              3081534257.35,
+              3529477188.95,
+            ],
+            name: "Spent"
+          }
+        ],
+        title: null,
+        tooltip: {
+          borderColor: "#000",
+          formatter: function() {
+            var s = "<strong>" + Highcharts.dateFormat("%Y", this.x) + "</strong>";
+            $.each(this.points, function(i, point) {
+              s += "<br /><span style=\"color: " + point.series.color + "\">" + point.series.name + ":</span> $" + Highcharts.numberFormat(point.y, 0);
+            });
+            return s;
+          },
+          shared: true
+        },
+        xAxis: {
+          dateTimeLabelFormats: { year: "%Y" },
+          gridLineColor: "#ddd",
+          gridLineWidth: 1,
+          type: "datetime"
+        },
+        yAxis: {
+          gridLineColor: "#ddd",
+          labels: {
+            formatter: function() {
+              if (this.value >= 1000000000)
+                return "$" + this.value / 1000000000 + "B";
+              else if (this.value >= 1000000)
+                return "$" + this.value / 1000000 + "M";
+              else
+                return "$" + this.value;
+            }
+          },
+          min: 1841232199,
+          title: null
+        }
+      });
     });
   </script>
 </head>
