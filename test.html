@@ -10,11 +10,17 @@
 <script type="text/javascript">
 	
 	function updateDisplay() {
-		$('#ftdata').html("<strong>approp:</strong><br /> " + appropTotalArray + "<br /><br /><strong>expend:</strong><br />" + expendTotalArray);
+		//$('#ftdata').html("<strong>approp:</strong><br /> " + appropTotalArray + "<br /><br /><strong>expend:</strong><br />" + expendTotalArray);
+		$('#ftdata').html(returnedData);
+	
+	}
+	
+	function updateTable() {
+		$('#breakdown > tbody:last').append(returnedData);
 	}
 	
 	$(document).ready(function() {
-		setTotalArrays();
+		setFundTotals(2011);
 		//getFundTotalArray('Corporate Fund', 1);
 		
 		//display the results on the page
@@ -29,5 +35,19 @@
 </head>
 <body>
 	<div id="ftdata"></div>
+	
+	<table id="breakdown">
+        <thead>
+          <tr>
+            <th><span>Fund</span></th>
+            <th class="num"><span>Budgeted</span></th>
+            <th class="num"><span>Spent</span></th>
+            <th class="charts">Budgeted vs. spent</th>
+          </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+      </table>
 </body>
 </html>
