@@ -133,9 +133,9 @@ ul { list-style: disc; }
   
   /* Colors */
   .budgeted { color: #264870; }
-  .spent { color: #4c7099; }
+  .spent { color: #7d9abb; }
   .bars .budgeted { background: #264870; }
-  .bars .spent { background: #4c7099; }
+  .bars .spent { background: #7d9abb; }
 
 /* Columns */
 .columns {

@@ -38,10 +38,6 @@
 	        area: { fillOpacity: 0.25 },
 	        series: {
 	          lineWidth: 5,
-	          marker: {
-	            radius: 6,
-	            symbol: "circle"
-	          },
 	          point: {
               events: {
                 click: function() {
@@ -71,10 +67,18 @@
 	        {
 	          color: "#264870",
 	          data: appropTotalArray,
+	          marker: {
+	            radius: 6,
+	            symbol: "circle"
+	          },
 	          name: "Budgeted"
 	        }, {
-	          color: "#4c7099",
+	          color: "#7d9abb",
 	          data: expendTotalArray,
+	          marker: {
+	            radius: 8,
+	            symbol: "square"
+	          },
 	          name: "Spent"
 	        }
 	      ],
@@ -168,7 +172,7 @@
 <div id="page">
   <div id="header">
     <div id="logo"><img alt="Budget Breakdown: Cook County, IL" src="images/logo.png" /></div>
-    <div id="header-secondary">A project from <a href="http://www.fritchey.com">John Fritchey</a><br />Cook county Commissoner of the 12th District</div>
+    <div id="header-secondary">A project from <a href="http://www.fritchey.com">John Fritchey</a><br />Cook County Commissoner of the 12th District</div>
     <div class="clear"></div>
   </div>
   
