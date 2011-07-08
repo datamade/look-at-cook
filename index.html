@@ -52,10 +52,17 @@
                     if (serie.index !== index) {
                       $(serie.data).each(function(j, point){
                         if(x === point.x)
+						{
                           point.select(selected, true);
+						}
                       });
                     }
                   });
+				  var clickedYear = new Date(x).getFullYear();
+				  $('#breakdown tbody').children().remove();
+				  setFundTotals(clickedYear);
+				  $('#timeline h2').html(clickedYear);
+				  
                 }
               }
             },
@@ -121,26 +128,28 @@
     }
     
     function updateTable() {
+		$('.budgeted.num').toNumber();
+		$('.spent.num').toNumber();
 		$('#breakdown > tbody:last').append(returnedData);
 		
-		//var budgetedArray = new Array();
-		//$('.budgeted.num').each(function(){
-		//  budgetedArray.push($(this).html());
-		//});
+		var maxArray = new Array();
+		$('.budgeted.num').each(function(){
+		  maxArray.push(parseInt($(this).html()));
+		});
+		$('.spent.num').each(function(){
+		  maxArray.push(parseInt($(this).html()));
+		});
 		
-		//var maxSpent = new Array();
-		//$('.spent.num').each(function(){
-		//  maxSpent.push($(this).html());
-		//});
-		
-		//var maxBudgeted = Math.max(budgetedArray);
-		//alert('maxBudgeted: ' + maxBudgeted);
-		//$('.budgeted.num').each(function(){
-		  //alert('html: ' + $(this).html());
-		  //alert('% ' + $(this).html()/maxBudgeted);
-		  //$(this).width($(this).html()/maxBudgeted)
-		//});
-		//$('.budgeted.inner').width(($(this).html()/maxSpent) + "%");
+		var maxBudgeted = Math.max.apply( Math, maxArray );
+		if (maxBudgeted > 0)
+		{
+			$('.budgeted.num').each(function(){
+			  $(this).siblings().children().children('.budgeted.outer').width((($(this).html()/maxBudgeted) * 100) + '%');
+			});
+			$('.spent.num').each(function(){
+			  $(this).siblings().children().children('.spent.inner').width((($(this).html()/maxBudgeted) * 100) + '%');
+			});
+		}
 		$('.budgeted.num').formatCurrency();
 		$('.spent.num').formatCurrency();
 	}
