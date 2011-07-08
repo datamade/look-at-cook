@@ -20,6 +20,7 @@
   
   <script type="text/javascript">	
   
+    var breakdownTable;
   	var dataSetsToLoad = 2;
   	var dataSetsLoaded = 0;
     function updateMainChart() {
@@ -59,8 +60,8 @@
                     }
                   });
 				  var clickedYear = new Date(x).getFullYear();
-				  $('#breakdown tbody').children().remove();
-				  setFundTotals(clickedYear);
+				  
+				  getAllFundsForYear(clickedYear, getDataAsBudgetTable);
 				  $('#timeline h2').html(clickedYear);
 				  
                 }
@@ -128,9 +129,11 @@
     }
     
     function updateTable() {
-      $('.budgeted.num').toNumber();
-      $('.spent.num').toNumber();
-      $('#breakdown > tbody:last').append(returnedData);
+	  if (breakdownTable != null)
+		breakdownTable.fnDestroy();
+	
+      $('#breakdown tbody').children().remove();
+      $('#breakdown > tbody:last').append(breakdownData);
       
       var maxArray = new Array();
       $('.budgeted.num').each(function(){
@@ -153,11 +156,7 @@
       $('.budgeted.num').formatCurrency();
       $('.spent.num').formatCurrency();
       
-      var breakdown = $("#breakdown").dataTable();
-      
-      breakdown.fnDestroy();
-      
-      $("#breakdown").dataTable({
+      breakdownTable = $("#breakdown").dataTable({
         "aaSorting": [[1, "desc"]],
         "aoColumns": [
           null,

@@ -9,18 +9,12 @@
 
 <script type="text/javascript">
 	
-	function updateMainChart() {
-		//$('#ftdata').html("<strong>approp:</strong><br /> " + appropTotalArray + "<br /><br /><strong>expend:</strong><br />" + expendTotalArray);
-		$('#ftdata').html(returnedData);
-	
-	}
-	
 	function updateTable() {
-		$('#breakdown > tbody:last').append(returnedData);
+		$('#ftdata').html(breakdownData);
 	}
 	
 	$(document).ready(function() {
-		setFundTotals(2011);
+		getAllFundsForYear(2011, getDataAsBudgetTable);
 		//getFundTotalArray('Corporate Fund', 1);
 		
 		//display the results on the page
