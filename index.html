@@ -14,14 +14,15 @@
   <script src="scripts/jquery.dataTables.js" type="text/javascript"></script>
   <script src="scripts/dataTables.sorting.js" type="text/javascript"></script>
   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <script src="scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
   <script src="scripts/budget.fusiontables.js" type="text/javascript"></script>
-  <script src="jquery.ga-event-tracker.js" type="text/javascript"></script>
+  <script src="scripts/jquery.ga-event-tracker.js" type="text/javascript"></script>
   
   <script type="text/javascript">	
   
   	var dataSetsToLoad = 2;
   	var dataSetsLoaded = 0;
-    function updateDisplay() {
+    function updateMainChart() {
    	  dataSetsLoaded++;
    	  if (dataSetsLoaded >= dataSetsToLoad)
    	  {
@@ -119,6 +120,31 @@
   	}
     }
     
+    function updateTable() {
+		$('#breakdown > tbody:last').append(returnedData);
+		
+		//var budgetedArray = new Array();
+		//$('.budgeted.num').each(function(){
+		//  budgetedArray.push($(this).html());
+		//});
+		
+		//var maxSpent = new Array();
+		//$('.spent.num').each(function(){
+		//  maxSpent.push($(this).html());
+		//});
+		
+		//var maxBudgeted = Math.max(budgetedArray);
+		//alert('maxBudgeted: ' + maxBudgeted);
+		//$('.budgeted.num').each(function(){
+		  //alert('html: ' + $(this).html());
+		  //alert('% ' + $(this).html()/maxBudgeted);
+		  //$(this).width($(this).html()/maxBudgeted)
+		//});
+		//$('.budgeted.inner').width(($(this).html()/maxSpent) + "%");
+		$('.budgeted.num').formatCurrency();
+		$('.spent.num').formatCurrency();
+	}
+    
     $(document).ready(function() {
     	// Table sorting
       /*function fnFormatDetails(oTable, nTr) {
@@ -163,8 +189,9 @@
         }
       });*/
     
-		setTotalArrays();
+		loadDefault();
     });
+    
   </script>
 </head>
 <body>
@@ -196,50 +223,6 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><a href="#">Public safety</a></td>
-            <td class="num budgeted">$1,248,263,013</td>
-            <td class="num spent">$998,610,410</td>
-            <td>
-              <div class="bars">
-                <span class="budgeted outer" style="width: 100%"></span>
-                <span class="spent inner" style="width: 79.9%"></span>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><a href="#">Health</a></td>
-            <td class="num budgeted">$911,860,231</td>
-            <td class="num spent">$729,488,184</td>
-            <td>
-              <div class="bars">
-                <span class="budgeted outer" style="width: 73%"></span>
-                <span class="spent inner" style="width: 58.4%"></span>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><a href="#">Election</a></td>
-            <td class="num budgeted">$616,797,467</td>
-            <td class="num spent">$493,437,973</td>
-            <td>
-              <div class="bars">
-                <span class="budgeted outer" style="width: 49.1%"></span>
-                <span class="spent inner" style="width: 39.5%"></span>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><a href="# budgeted">Corporate</a></td>
-            <td class="num budgeted">$169,406,581</td>
-            <td class="num spent">$135,525,264</td>
-            <td>
-              <div class="bars">
-                <span class="budgeted outer" style="width: 13.5%"></span>
-                <span class="spent inner" style="width: 10.8%"></span>
-              </div>
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>

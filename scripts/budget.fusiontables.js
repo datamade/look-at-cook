@@ -4,6 +4,11 @@
   	var appropTotalArray;
   	var expendTotalArray;
   	
+  	function loadDefault() {
+  		setTotalArrays();
+  		setFundTotals(2011);
+  	}
+  	
   	function setTotalArrays() {
   		getFundTotalArray('', true, updateAppropTotal);
   		getFundTotalArray('', false, updateExpendTotal);
@@ -52,12 +57,12 @@
 	
 	function updateAppropTotal(response) {
 		appropTotalArray = getDataAsArray(response);
-		updateDisplay();
+		updateMainChart();
 	}
 	
 	function updateExpendTotal(response) {
 		expendTotalArray = getDataAsArray(response);
-		updateDisplay();
+		updateMainChart();
 	}
 	
 	function getDataAsArray(response) {
@@ -77,8 +82,8 @@
 	  fusiontabledata += "<td class='num budgeted'>" + response.getDataTable().getValue(0, 1) + "</td>";
 	  fusiontabledata += "<td class='num spent'>" + response.getDataTable().getValue(0, 2) + "</td>";
 	  fusiontabledata += "<td><div class='bars'>";
-      fusiontabledata += "          <span class='budgeted outer' style='width: 100%'></span>";
-      fusiontabledata += "          <span class='spent inner' style='width: 79.9%'></span>";
+      fusiontabledata += "          <span class='budgeted outer'></span>";
+      fusiontabledata += "          <span class='spent inner'></span>";
       fusiontabledata += "        </div></td>";
 	  fusiontabledata += "</tr>";
  
