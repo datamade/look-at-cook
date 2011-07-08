@@ -21,6 +21,7 @@
   <script type="text/javascript">	
   
     var breakdownTable;
+	var loadYear = 2011;
   	var dataSetsToLoad = 2;
   	var dataSetsLoaded = 0;
     function updateMainChart() {
@@ -63,7 +64,7 @@
 				  
 				  getAllFundsForYear(clickedYear, getDataAsBudgetTable);
 				  $('#timeline h2').html(clickedYear);
-				  
+				  setUrlHash(clickedYear);
                 }
               }
             },
@@ -171,7 +172,13 @@
     }
     
     $(function() {
-      loadDefault();
+      setTotalArrays();
+	  if (window.location.hash)
+	  {
+	    loadYear = window.location.hash.replace('#', '').replace(/\+/g, ' ');
+	  }
+	  getAllFundsForYear(loadYear, getDataAsBudgetTable);
+	  $('#timeline h2').html(loadYear);
     });
   </script>
 </head>

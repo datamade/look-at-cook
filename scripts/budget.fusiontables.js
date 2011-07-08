@@ -3,12 +3,7 @@
   	var breakdownData = "";
   	var appropTotalArray;
   	var expendTotalArray;
-  	
-  	function loadDefault() {
-  		setTotalArrays();
-  		getAllFundsForYear(2011, getDataAsBudgetTable);
-  	}
-  	
+  	 	
   	function setTotalArrays() {
   		getFundTotalArray('', true, updateAppropTotal);
   		getFundTotalArray('', false, updateExpendTotal);
@@ -111,4 +106,12 @@
 	  //alert(fusiontabledata);
 	  breakdownData += fusiontabledata;
 	  updateTable();
+	}
+	
+	function setUrlHash(val) {
+		if (/\s$/.test(val))
+			val = val.substr(0, val.length - 2);
+
+		//set the url hash
+		window.location.hash = val;
 	}
