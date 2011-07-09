@@ -1,4 +1,4 @@
-	var fusionTableId = 1086289;
+	var fusionTableId = 1113478;
   	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
   	var breakdownData = "";
   	var appropTotalArray;
@@ -33,6 +33,11 @@
 		var myQuery = "SELECT Fund, SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures' FROM " + fusionTableId + " GROUP BY Fund";			
 		getQuery(myQuery).send(callback);
 	}
+	
+	function getFundInfo(fund, callback) {		
+		var myQuery = "SELECT Fund, 'Fund Description', Count('Control Officer') As NumControlOfficers FROM " + fusionTableId + " WHERE Fund = '" + y + "' GROUP BY Fund";			
+		getQuery(myQuery).send(callback);
+	}
 		
 	function getQuery(myQuery) {
 		//alert(myQuery);
@@ -55,7 +60,10 @@
 	  var fusiontabledata = new Array();
 	  
 	  for(j = 0; j < numCols; j++) {
-	    fusiontabledata[j] = response.getDataTable().getValue(0, j);
+		if (response.getDataTable().getValue(0, j) == "0")
+			fusiontabledata[j] = null;
+		else
+			fusiontabledata[j] = response.getDataTable().getValue(0, j);
 	  }
 	  
 	  return fusiontabledata;

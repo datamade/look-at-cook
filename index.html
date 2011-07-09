@@ -172,6 +172,7 @@
     }
     
     $(function() {
+	  $('#download-button').attr("href","http://www.google.com/fusiontables/DataSource?dsrcid=" + fusionTableId);
       setTotalArrays();
 	  if (window.location.hash)
 	  {
@@ -228,7 +229,7 @@
     </div>
     
     <div id="content-tertiary">
-      <a class="action" href="#">View &amp; download data</a>
+      <a id="download-button" class="action" href="#">View &amp; download data</a>
       <h2>Explore the data</h2>
       
       <p>All the data for this project is freely available to download or explore on Google Fusion Tables.</p>
