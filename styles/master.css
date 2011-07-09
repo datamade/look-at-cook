@@ -139,8 +139,18 @@ ul { list-style: disc; }
   .bars .spent { background: #7d9abb; }
   
   /* Expanded rows */
-  #breakdown .expanded-content td { border-bottom: 2px solid #7f7f7f; border-top: 0; padding:  }
-  #breakdown .expanded-head td { border-bottom: 0; border-top: 2px solid #7f7f7f; font-weight: bold; }
+  #breakdown .expanded-content td {
+    border-bottom: 2px solid #7f7f7f;
+    border-top: 0;
+    padding-top: 15px;
+  }
+  
+  #breakdown .expanded-head td {
+    border-bottom: 0;
+    border-top: 2px solid #7f7f7f;
+    font-weight: bold;
+  }
+  
   .expanded-primary { float: left; width: 48%; }
   .expanded-secondary { float: right; width: 48%; }
   
@@ -197,4 +207,4 @@ a[class*="icon"] {
 #timeline-chart { height: 300px; }
 
   /* Sparklines */
-  .sparkline { height: 80px; }
+  .sparkline { height: 80px; margin-bottom: 15px; }

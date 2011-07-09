@@ -191,6 +191,7 @@
       chart2 = new Highcharts.Chart({
         chart: {
           defaultSeriesType: "area",
+          margin: [0, 0, 0, 0],
           renderTo: "health-chart"
         },
         legend: { enabled: false },
@@ -255,11 +256,16 @@
         tooltip: { enabled: false },
         xAxis: {
           labels: { enabled: false },
-          lineWidth: 0
+          lineWidth: 0,
+          maxPadding: 0,
+          minPadding: 0
         },
         yAxis: {
           endOnTick: false,
+          gridLineWidth: 0,
           labels: { enabled: false },
+          maxPadding: 0,
+          minPadding: 0,
           text: null
         }
       });
@@ -323,6 +329,7 @@
           <tr class="expanded-content">
             <td colspan="5">
               <div class="expanded-primary">
+                <h2>Health fund</h2>
                 <p>Portion of the general fund that pays for costs related to heathcare and prevention.</p>
                 <ul class="stats">
                   <li><strong>11</strong> <a href="#">departments</a></li>
