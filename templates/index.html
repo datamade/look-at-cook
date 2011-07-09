@@ -36,7 +36,7 @@
         this.insertBefore(  nCloneTd.cloneNode(true), this.childNodes[0]);
       });*/
       
-      $("#breakdown").dataTable({
+      /*$("#breakdown").dataTable({
         "aaSorting": [[1, "desc"]],
         "aoColumns": [
           null,
@@ -47,7 +47,7 @@
         "bFilter": false,
         "bInfo": false,
         "bPaginate": false
-      });
+      });*/
       
       /*$('#example tbody td img').live('click', function () {
         var nTr = this.parentNode.parentNode;
@@ -61,7 +61,7 @@
       });*/
       
       
-      // Highcharts
+      // Main timeline
       chart1 = new Highcharts.Chart({
         chart: {
           defaultSeriesType: "area",
@@ -185,6 +185,84 @@
           title: null
         }
       });
+      
+      
+      // Small chart
+      chart2 = new Highcharts.Chart({
+        chart: {
+          defaultSeriesType: "area",
+          renderTo: "health-chart"
+        },
+        legend: { enabled: false },
+        credits: { enabled: false },
+        plotOptions: {
+          area: { fillOpacity: 0.25 },
+          series: {
+            lineWidth: 2,
+            marker: { enabled: false },
+            shadow: false
+          }
+        },
+        series: [
+          {
+            color: "#264870",
+            data: [
+              2142224322,
+              2053234695,
+              2200115746,
+              2174294505,
+              2238798248,
+              2379538916,
+              2434009960,
+              2615477197.30,
+              2717142084,
+              2745055917,
+              1974710669,
+              2988836914,
+              2990337950.55,
+              3080714914,
+              3039621923,
+              3234567992,
+              3283481314,
+              3575558218,
+              3140084198
+            ]
+          }, {
+            color: "#4c7099",
+            data: [
+              1908944078,
+              1841232199,
+              1965158416,
+              1974710669,
+              2006734727.65,
+              2146882210.37,
+              2275936803,
+              2536702487.38,
+              2614172709,
+              2668773254,
+              2671097237.73,
+              2880536605,
+              2940955564.53,
+              3000140207.05,
+              2979021381,
+              2966699311.14,
+              3081534257.35,
+              3529477188.95,
+            ]
+          }
+        ],
+        title: null,
+        tooltip: { enabled: false },
+        xAxis: {
+          labels: { enabled: false },
+          lineWidth: 0
+        },
+        yAxis: {
+          endOnTick: false,
+          labels: { enabled: false },
+          text: null
+        }
+      });
     });
   </script>
 </head>
@@ -210,6 +288,7 @@
       <table id="breakdown">
         <thead>
           <tr>
+            <th class="controls"></th>
             <th><span>Fund</span></th>
             <th class="num"><span>Budgeted</span></th>
             <th class="num"><span>Spent</span></th>
@@ -218,6 +297,7 @@
         </thead>
         <tbody>
           <tr>
+            <td><img src="../images/expand.png" /></td>
             <td><a href="#">Public safety</a></td>
             <td class="num budgeted">$1,248,263,013</td>
             <td class="num spent">$998,610,410</td>
@@ -228,7 +308,8 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr class="expanded-head">
+            <td><img src="../images/collapse.png" /></td>
             <td><a href="#">Health</a></td>
             <td class="num budgeted">$911,860,231</td>
             <td class="num spent">$729,488,184</td>
@@ -239,7 +320,27 @@
               </div>
             </td>
           </tr>
+          <tr class="expanded-content">
+            <td colspan="5">
+              <div class="expanded-primary">
+                <p>Portion of the general fund that pays for costs related to heathcare and prevention.</p>
+                <ul class="stats">
+                  <li><strong>11</strong> <a href="#">departments</a></li>
+                  <li><strong>1</strong> <a href="#">control officer</a></li>
+                </ul>
+              </div>
+              <div class="expanded-secondary">
+                <div class="sparkline" id="health-chart"></div>
+                
+                <ul class="stats">
+                  <li><strong>-6.3%</strong> budgeted from 2010</li>
+                  <li><strong>-8.7%</strong> spent from 2010</li>
+                </ul>
+              </div>
+            </td>
+          </tr>
           <tr>
+            <td><img src="../images/expand.png" /></td>
             <td><a href="#">Election</a></td>
             <td class="num budgeted">$616,797,467</td>
             <td class="num spent">$493,437,973</td>
@@ -251,6 +352,7 @@
             </td>
           </tr>
           <tr>
+            <td><img src="../images/expand.png" /></td>
             <td><a href="# budgeted">Corporate</a></td>
             <td class="num budgeted">$169,406,581</td>
             <td class="num spent">$135,525,264</td>

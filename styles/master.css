@@ -95,6 +95,7 @@ ul { list-style: disc; }
 #breakdown td, #breakdown th { padding: 0.3em 1em 0.3em 0; }
 #breakdown th { font-size: 12px; font-weight: bold; text-align: left; }
 #breakdown th.charts { width: 50%; }
+#breakdown th.controls { width: 20px; }
 #breakdown th span { color: #f85204; cursor: pointer; }
 
 #breakdown th.sorting_asc span {
@@ -136,6 +137,17 @@ ul { list-style: disc; }
   .spent { color: #7d9abb; }
   .bars .budgeted { background: #264870; }
   .bars .spent { background: #7d9abb; }
+  
+  /* Expanded rows */
+  #breakdown .expanded-content td { border-bottom: 2px solid #7f7f7f; border-top: 0; padding:  }
+  #breakdown .expanded-head td { border-bottom: 0; border-top: 2px solid #7f7f7f; font-weight: bold; }
+  .expanded-primary { float: left; width: 48%; }
+  .expanded-secondary { float: right; width: 48%; }
+  
+  /* Stats */
+  .stats { font-size: 16px; list-style: none; margin-left: 0; }
+  .stats li { display: inline; margin-right: 1em; }
+  .stats strong { font-size: 25px; }
 
 /* Columns */
 .columns {
@@ -179,7 +191,10 @@ a[class*="icon"] {
 /* Tertiary content */
 #content-tertiary .action { float: right; }
 
-/* Timeline */
+/* Timelines */
 #timeline { margin-bottom: 20px; }
 #timeline h2 { color: #000; font-size: 21px; text-align: center; }
 #timeline-chart { height: 300px; }
+
+  /* Sparklines */
+  .sparkline { height: 80px; }
