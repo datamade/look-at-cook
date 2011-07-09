@@ -53,10 +53,9 @@
                   $.each(this.series.chart.series, function(i, serie) {
                     if (serie.index !== index) {
                       $(serie.data).each(function(j, point){
-                        if(x === point.x)
-						{
+                        if(x === point.x) {
                           point.select(selected, true);
-						}
+                        }
                       });
                     }
                   });
@@ -130,45 +129,46 @@
     }
     
     function updateTable() {
-	  if (breakdownTable != null)
-		breakdownTable.fnDestroy();
-	
-      $('#breakdown tbody').children().remove();
-      $('#breakdown > tbody:last').append(breakdownData);
-      
-      var maxArray = new Array();
-      $('.budgeted.num').each(function(){
-        maxArray.push(parseInt($(this).html()));
-      });
-      $('.spent.num').each(function(){
-        maxArray.push(parseInt($(this).html()));
-      });
-      
-      var maxBudgeted = Math.max.apply( Math, maxArray );
-      if (maxBudgeted > 0)
-      {
+      $('#breakdown').fadeOut('fast', function(){
+        if (breakdownTable != null) breakdownTable.fnDestroy();
+        
+        $('#breakdown tbody').children().remove();
+        $('#breakdown > tbody:last').append(breakdownData);
+        
+        var maxArray = new Array();
         $('.budgeted.num').each(function(){
-          $(this).siblings().children().children('.budgeted.outer').width((($(this).html()/maxBudgeted) * 100) + '%');
+          maxArray.push(parseInt($(this).html()));
         });
         $('.spent.num').each(function(){
-          $(this).siblings().children().children('.spent.inner').width((($(this).html()/maxBudgeted) * 100) + '%');
+          maxArray.push(parseInt($(this).html()));
         });
-      }
-      $('.budgeted.num').formatCurrency();
-      $('.spent.num').formatCurrency();
-      
-      breakdownTable = $("#breakdown").dataTable({
-        "aaSorting": [[1, "desc"]],
-        "aoColumns": [
-          null,
-          { "sType": "currency" },
-          { "sType": "currency" },
-          { "bSortable": false }
-        ],
-        "bFilter": false,
-        "bInfo": false,
-        "bPaginate": false
-      });
+        
+        var maxBudgeted = Math.max.apply( Math, maxArray );
+        if (maxBudgeted > 0)
+        {
+          $('.budgeted.num').each(function(){
+            $(this).siblings().children().children('.budgeted.outer').width((($(this).html()/maxBudgeted) * 100) + '%');
+          });
+          $('.spent.num').each(function(){
+            $(this).siblings().children().children('.spent.inner').width((($(this).html()/maxBudgeted) * 100) + '%');
+          });
+        }
+        $('.budgeted.num').formatCurrency();
+        $('.spent.num').formatCurrency();
+        
+        breakdownTable = $("#breakdown").dataTable({
+          "aaSorting": [[1, "desc"]],
+          "aoColumns": [
+            null,
+            { "sType": "currency" },
+            { "sType": "currency" },
+            { "bSortable": false }
+          ],
+          "bFilter": false,
+          "bInfo": false,
+          "bPaginate": false
+        });
+      }).fadeIn('fast');
     }
     
     $(function() {

@@ -182,4 +182,4 @@ a[class*="icon"] {
 /* Timeline */
 #timeline { margin-bottom: 20px; }
 #timeline h2 { color: #000; font-size: 21px; text-align: center; }
-#timeline-chart { height: 400px; }
+#timeline-chart { height: 300px; }
