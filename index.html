@@ -160,7 +160,7 @@
         $('.budgeted.num').formatCurrency();
         $('.spent.num').formatCurrency();
         
-        $('a').address(); //after adding the table rows, initialize the address plugin on all the links
+        $('#breakdown a').address(); //after adding the table rows, initialize the address plugin on all the links
         
         breakdownTable = $("#breakdown").dataTable({
           "aaSorting": [[1, "desc"]],
