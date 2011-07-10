@@ -1,6 +1,7 @@
 	var fusionTableId = 1113478;
   	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
   	var breakdownData = "";
+  	var breakdownTable;
   	var appropTotalArray;
   	var expendTotalArray;
   	 	
@@ -8,7 +9,8 @@
   		getFundTotalArray('', true, updateAppropTotal);
   		getFundTotalArray('', false, updateExpendTotal);
   	}
-  	  	
+  	
+  	//gets Fund totals per year for highcharts  	
 	function getFundTotalArray(fundName, isAppropriation, callback) {
 		var typeStr = "Expenditures";
 		if (isAppropriation == true) 
@@ -29,16 +31,25 @@
 		getQuery(myQuery).send(callback);
 	}
 	
+	//returns all funds budgeted/spent totals for given year
 	function getAllFundsForYear(year, callback) {		
-		var myQuery = "SELECT Fund, SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures' FROM " + fusionTableId + " GROUP BY Fund";			
+		var myQuery = "SELECT Fund, SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures', Fund AS '" + year + "' FROM " + fusionTableId + " GROUP BY Fund";			
 		getQuery(myQuery).send(callback);
 	}
 	
+	//for expanded row details - have to calculate the sums by hand ... arg
 	function getFundInfo(fund, callback) {		
-		var myQuery = "SELECT Fund, 'Fund Description', Count('Control Officer') As NumControlOfficers FROM " + fusionTableId + " WHERE Fund = '" + y + "' GROUP BY Fund";			
+		var myQuery = "SELECT Fund, Department, 'Control Officer' FROM " + fusionTableId + " WHERE Fund = '" + fund + "' ORDER BY 'Control Officer'";			
 		getQuery(myQuery).send(callback);
 	}
-		
+	
+	//returns all funds budgeted/spent totals for given year
+	function getDepartmentsForFund(fund, year, callback) {		
+		var myQuery = "SELECT Department, SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures', Department AS '" + year + "'  FROM " + fusionTableId + " WHERE Fund = '" + fund + "' GROUP BY Department";			
+		getQuery(myQuery).send(callback);
+	}
+	
+	//converts SQL query to URL	
 	function getQuery(myQuery) {
 		//alert(myQuery);
 		var queryText = encodeURIComponent(myQuery);
@@ -55,6 +66,7 @@
 		updateMainChart();
 	}
 	
+	//returns a 1D array
 	function getDataAsArray(response) {
 	  numCols = response.getDataTable().getNumberOfColumns();
 	  var fusiontabledata = new Array();
@@ -69,19 +81,27 @@
 	  return fusiontabledata;
 	}
 	
+	//builds out budget breakdown table
 	function getDataAsBudgetTable(response) {	
 		numRows = response.getDataTable().getNumberOfRows();
 		var fusiontabledata;
 		for(i = 0; i < numRows; i++) {
-		  fusiontabledata += "<tr>";
-		  fusiontabledata += "<td><a href='#'>" + response.getDataTable().getValue(i, 0) + "</a></td>";
-		  fusiontabledata += "<td class='num budgeted'>" + response.getDataTable().getValue(i, 1) + "</td>";
-		  fusiontabledata += "<td class='num spent'>" + response.getDataTable().getValue(i, 2) + "</td>";
-		  fusiontabledata += "<td><div class='bars'>";
-		  fusiontabledata += "          <span class='budgeted outer'></span>";
-		  fusiontabledata += "          <span class='spent inner'></span>";
-		  fusiontabledata += "        </div></td>";
-		  fusiontabledata += "</tr>";
+		  var fund = response.getDataTable().getValue(i, 0);
+	  	  var year = response.getDataTable().getColumnLabel(3);
+	  	  var budgeted = response.getDataTable().getValue(i, 1);
+	  	  var spent = response.getDataTable().getValue(i, 2);
+		  if (budgeted != 0 || spent != 0)
+		  {
+			  fusiontabledata += "<tr>";
+			  fusiontabledata += "<td><a href='/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "' rel='address:/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "'>" + fund + "</a></td>";
+			  fusiontabledata += "<td class='num budgeted'>" + budgeted + "</td>";
+			  fusiontabledata += "<td class='num spent'>" + spent + "</td>";
+			  fusiontabledata += "<td><div class='bars'>";
+			  fusiontabledata += "          <span class='budgeted outer'></span>";
+			  fusiontabledata += "          <span class='spent inner'></span>";
+			  fusiontabledata += "        </div></td>";
+			  fusiontabledata += "</tr>";
+		  }
 		}
  
 	  breakdownData = fusiontabledata;
@@ -114,12 +134,4 @@
 	  //alert(fusiontabledata);
 	  breakdownData += fusiontabledata;
 	  updateTable();
-	}
-	
-	function setUrlHash(val) {
-		if (/\s$/.test(val))
-			val = val.substr(0, val.length - 2);
-
-		//set the url hash
-		window.location.hash = val;
 	}

@@ -15,21 +15,27 @@
   <script src="scripts/dataTables.sorting.js" type="text/javascript"></script>
   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
   <script src="scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
+  <script src="scripts/jquery.address-1.4.min.js" type="text/javascript"></script>
   <script src="scripts/budget.fusiontables.js" type="text/javascript"></script>
   <script src="scripts/jquery.ga-event-tracker.js" type="text/javascript"></script>
   
-  <script type="text/javascript">	
+  <script type="text/javascript">
   
-    var breakdownTable;
+  	
+	$.address.change(function(event) {  
+	    // do something depending on the event.value property, e.g.  
+	    //alert('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
+        loadFor($.address.parameter('year'),$.address.parameter('fund'));
+	});  
+  
 	var loadYear = 2011;
-  	var dataSetsToLoad = 2;
-  	var dataSetsLoaded = 0;
+	var fundView = '';
+  	var arraysLoaded = 0;
     function updateMainChart() {
-   	  dataSetsLoaded++;
-   	  if (dataSetsLoaded >= dataSetsToLoad)
+   	  arraysLoaded++;
+   	  if (arraysLoaded >= 2)
    	  {
-	      //alert(appropTotalArray);
-	      //alert(expendTotalArray);
+   	  	var minValuesArray = $.grep(appropTotalArray.concat(expendTotalArray), function(val) { return val != null; });
 	      // Highcharts
 	      chart1 = new Highcharts.Chart({
 	      chart: {
@@ -61,9 +67,7 @@
                   });
 				  var clickedYear = new Date(x).getFullYear();
 				  
-				  getAllFundsForYear(clickedYear, getDataAsBudgetTable);
-				  $('#timeline h2').html(clickedYear);
-				  setUrlHash(clickedYear);
+				  $.address.parameter('year',clickedYear)
                 }
               }
             },
@@ -121,7 +125,7 @@
 	              return "$" + this.value;
 	          }
 	        },
-	        min: 1841232199,
+	        min: Math.min.apply( Math, minValuesArray ),
 	        title: null
 	      }
 	  	});
@@ -156,6 +160,8 @@
         $('.budgeted.num').formatCurrency();
         $('.spent.num').formatCurrency();
         
+        $('a').address(); //after adding the table rows, initialize the address plugin on all the links
+        
         breakdownTable = $("#breakdown").dataTable({
           "aaSorting": [[1, "desc"]],
           "aoColumns": [
@@ -171,15 +177,48 @@
       }).fadeIn('fast');
     }
     
+    function loadFor(year, fund) {
+      var yearChanged = true;
+      fundView = '';
+      if (fund != null && fund != "")
+      	fundView = fund.replace(/\++/g, ' ');
+      
+      if (year != null && year != ""){
+        //alert('year: ' + year + ", loadYear: " + loadYear);
+        if (loadYear+'' == year+''){
+        	yearChanged = false;
+        	//alert('year changed');
+        	}
+      	loadYear = year;
+      }
+      else
+      	loadYear = 2011;
+      	
+      
+      //alert('fundView: ' + fundView + ", loadYear: " + loadYear);	
+      if (fundView != ""){
+        //if (yearChanged){
+        	getFundTotalArray(fundView, true, updateAppropTotal);
+  			getFundTotalArray(fundView, false, updateExpendTotal);
+  		//}
+        getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
+        $('#timeline h2').html(fundView + ' budget for ' + loadYear);
+      }
+      else{
+      	//if (yearChanged){
+      		getFundTotalArray('', true, updateAppropTotal);
+  			getFundTotalArray('', false, updateExpendTotal);
+  		//}
+      	getAllFundsForYear(loadYear, getDataAsBudgetTable);
+      	$('#timeline h2').html('Entire budget for ' + loadYear);
+      }	
+    }    
+    
     $(function() {
+      
+      //loadFor($.address.parameter('year'),$.address.parameter('fund'));
+    
 	  $('#download-button').attr("href","http://www.google.com/fusiontables/DataSource?dsrcid=" + fusionTableId);
-      setTotalArrays();
-	  if (window.location.hash)
-	  {
-	    loadYear = window.location.hash.replace('#', '').replace(/\+/g, ' ');
-	  }
-	  getAllFundsForYear(loadYear, getDataAsBudgetTable);
-	  $('#timeline h2').html(loadYear);
     });
   </script>
 </head>
@@ -195,7 +234,7 @@
   <div id="content">
     <div id="content-primary">
       <h1>Where's the money going?</h1>
-      <p>Explore Cook County's budget over the years and learn how the money is being spent. <a href="#content-secondary">More about this project</a> &raquo;</p>
+      <p>Explore Cook County's budget over the years and learn how the money is being spent. <a href="/budget/?year=2011&fund=Public%20Safety%20Fund" rel="address:/budget/?year=2011&fund=Public%20Safety%20Fund">More about this project</a> &raquo;</p>
       
       <div id="timeline">
         <h2>2011</h2>
