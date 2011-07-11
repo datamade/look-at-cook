@@ -92,8 +92,8 @@
 	  	  var spent = response.getDataTable().getValue(i, 2);
 		  if (budgeted != 0 || spent != 0)
 		  {
-			  fusiontabledata += "<tr>";
-			  fusiontabledata += "<td><a href='/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "' rel='address:/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "'>" + fund + "</a></td>";
+			  fusiontabledata += "<tr id='" + fund.replace(/\s+/g, '-') + "'>";
+			  fusiontabledata += "<td><a href='#' onclick='getRowDetails(\"" + fund.replace(/\s+/g, '-') + "\");'>detail</a> <a href='/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "' rel='address:/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "'>" + fund + "</a></td>";
 			  fusiontabledata += "<td class='num budgeted'>" + budgeted + "</td>";
 			  fusiontabledata += "<td class='num spent'>" + spent + "</td>";
 			  fusiontabledata += "<td><div class='bars'>";
@@ -108,6 +108,33 @@
 	  updateTable();
 	}
 	
+	//shows row details
+	function getRowDetails(itemId) {	
+		//numRows = response.getDataTable().getNumberOfRows();
+		var fusiontabledata;
+		  
+		fusiontabledata = "<tr class='expanded-content'>";
+		fusiontabledata += "	<td colspan='5'>";
+		fusiontabledata += "  <div class='expanded-primary'>";
+		fusiontabledata += "		<h2>Health fund</h2>";
+		fusiontabledata += "		<p>Portion of the general fund that pays for costs related to heathcare and prevention.</p>";
+		fusiontabledata += "		<ul class='stats'>";
+		fusiontabledata += "		  <li><strong>11</strong> <a href='#'>departments</a></li>";
+		fusiontabledata += "		  <li><strong>1</strong> <a href='#'>control officer</a></li>";
+		fusiontabledata += "		</ul>";
+		fusiontabledata += "	  </div>";
+		fusiontabledata += "	  <div class='expanded-secondary'>";
+		fusiontabledata += "		<div class='sparkline' id='health-chart'></div>";
+		fusiontabledata += "		<ul class='stats'>";
+		fusiontabledata += "		  <li><strong>-6.3%</strong> budgeted from 2010</li>";
+		fusiontabledata += "		  <li><strong>-8.7%</strong> spent from 2010</li>";
+		fusiontabledata += "		</ul>";
+		fusiontabledata += "	  </div>";
+		fusiontabledata += "	</td>";
+		fusiontabledata += "  </tr>";
+		updateDetail(itemId, fusiontabledata);
+	}
+
 	//for debugging - prints out data in a table
 	function getDataAsTable(response) {
 	

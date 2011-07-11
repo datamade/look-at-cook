@@ -20,16 +20,9 @@
   <script src="scripts/jquery.ga-event-tracker.js" type="text/javascript"></script>
   
   <script type="text/javascript">
-  
-  	
-	$.address.change(function(event) {  
-	    // do something depending on the event.value property, e.g.  
-	    //alert('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
-        loadFor($.address.parameter('year'),$.address.parameter('fund'));
-	});  
-  
-	var loadYear = 2011;
-	var fundView = '';
+
+	var loadYear;
+	var fundView;
   	var arraysLoaded = 0;
     function updateMainChart() {
    	  arraysLoaded++;
@@ -176,6 +169,13 @@
         });
       }).fadeIn('fast');
     }
+	
+	function updateDetail(itemId, detail) {
+		//alert('itemId: ' + itemId + ', detail: ' + detail);
+		//alert($('#' + itemId));
+		$('#breakdown .expanded-content').remove();
+		$(detail).insertAfter($('#' + itemId));
+	}
     
     function loadFor(year, fund) {
       var yearChanged = true;
@@ -185,39 +185,42 @@
       
       if (year != null && year != ""){
         //alert('year: ' + year + ", loadYear: " + loadYear);
-        if (loadYear+'' == year+''){
+        if (loadYear+'' == year+'')
         	yearChanged = false;
-        	//alert('year changed');
-        	}
       	loadYear = year;
       }
       else
+	  {
       	loadYear = 2011;
+		yearChanged = false;
+	  }
       	
       
       //alert('fundView: ' + fundView + ", loadYear: " + loadYear);	
       if (fundView != ""){
-        //if (yearChanged){
+        if (!yearChanged){
         	getFundTotalArray(fundView, true, updateAppropTotal);
   			getFundTotalArray(fundView, false, updateExpendTotal);
-  		//}
+  		}
         getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
         $('#timeline h2').html(fundView + ' budget for ' + loadYear);
       }
       else{
-      	//if (yearChanged){
+      	if (!yearChanged){
       		getFundTotalArray('', true, updateAppropTotal);
   			getFundTotalArray('', false, updateExpendTotal);
-  		//}
+  		}
       	getAllFundsForYear(loadYear, getDataAsBudgetTable);
       	$('#timeline h2').html('Entire budget for ' + loadYear);
       }	
-    }    
+    }   
+
+	$.address.change(function(event) {  
+	    //alert('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
+        loadFor($.address.parameter('year'),$.address.parameter('fund'));
+	});	
     
-    $(function() {
-      
-      //loadFor($.address.parameter('year'),$.address.parameter('fund'));
-    
+    $(function() {   
 	  $('#download-button').attr("href","http://www.google.com/fusiontables/DataSource?dsrcid=" + fusionTableId);
     });
   </script>
