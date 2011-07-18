@@ -93,7 +93,7 @@
 		  if (budgeted != 0 || spent != 0)
 		  {
 			  fusiontabledata += "<tr id='" + fund.replace(/\s+/g, '-') + "'>";
-			  fusiontabledata += "<td><a href='#' onclick='getRowDetails(\"" + fund.replace(/\s+/g, '-') + "\");'>detail</a> <a href='/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "' rel='address:/?year=" + year + "&amp;fund=" + fund.replace(/\s+/g, '+') + "'>" + fund + "</a></td>";
+			  fusiontabledata += "<td><a onclick='getRowDetails(\"" + fund.replace(/\s+/g, '-') + "\");'><img class='budget-expand-img' src='/budget/images/expand.png' /></a> <a onclick='getRowDetails(\"" + fund.replace(/\s+/g, '-') + "\");'>" + fund + "</a></td>";
 			  fusiontabledata += "<td class='num budgeted'>" + budgeted + "</td>";
 			  fusiontabledata += "<td class='num spent'>" + spent + "</td>";
 			  fusiontabledata += "<td><div class='bars'>";
@@ -113,13 +113,13 @@
 		//numRows = response.getDataTable().getNumberOfRows();
 		var fusiontabledata;
 		  
-		fusiontabledata = "<tr class='expanded-content'>";
+		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
 		fusiontabledata += "	<td colspan='5'>";
 		fusiontabledata += "  <div class='expanded-primary'>";
 		fusiontabledata += "		<h2>Health fund</h2>";
 		fusiontabledata += "		<p>Portion of the general fund that pays for costs related to heathcare and prevention.</p>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><strong>11</strong> <a href='#'>departments</a></li>";
+		fusiontabledata += "		  <li><a href='/?year=" + loadYear + "&amp;fund=" + itemId.replace(/\-+/g, '+') + "' rel='address:/?year=" + loadYear + "&amp;fund=" + itemId.replace(/\-+/g, '+') + "'>View all departments</a></li>";
 		fusiontabledata += "		  <li><strong>1</strong> <a href='#'>control officer</a></li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";

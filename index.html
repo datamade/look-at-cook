@@ -153,7 +153,7 @@
         $('.budgeted.num').formatCurrency();
         $('.spent.num').formatCurrency();
         
-        $('#breakdown a').address(); //after adding the table rows, initialize the address plugin on all the links
+        $('.expanded-content a').address(); //after adding the table rows, initialize the address plugin on all the links
         
         breakdownTable = $("#breakdown").dataTable({
           "aaSorting": [[1, "desc"]],
@@ -171,10 +171,20 @@
     }
 	
 	function updateDetail(itemId, detail) {
-		//alert('itemId: ' + itemId + ', detail: ' + detail);
-		//alert($('#' + itemId));
-		$('#breakdown .expanded-content').remove();
-		$(detail).insertAfter($('#' + itemId));
+		if ($('#' + itemId + '-expanded').length == 0)
+		{
+			//console.log('showing detail');
+			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
+			$('#breakdown .expanded-content').remove();
+			$('#' + itemId + ' .budget-expand-img').attr('src', '/budget/images/collapse.png');
+			$(detail).insertAfter($('#' + itemId));
+		}
+		else
+		{
+			//console.log('hiding all details');
+			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
+			$('#breakdown .expanded-content').remove();
+		}
 	}
     
     function loadFor(year, fund) {
