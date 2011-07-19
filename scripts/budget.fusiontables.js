@@ -1,10 +1,227 @@
+/*--------------------------+
+ | Site: Budget Breakdown   |
+ | Budget Display library   |
+ +--------------------------*/	
+	
+	//init
+	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
+	
 	var fusionTableId = 1113478;
-  	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
   	var breakdownData = "";
   	var breakdownTable;
   	var appropTotalArray;
   	var expendTotalArray;
-  	 	
+	var loadYear;
+	var fundView;
+  	var arraysLoaded = 0;
+	
+	//front end display functions
+	
+	//primary load for graph and table
+	function loadFor(year, fund) {
+      var yearChanged = true;
+      fundView = '';
+      if (fund != null && fund != "")
+      	fundView = convertToPlainString(fund);
+      
+      if (year != null && year != ""){
+        //console.log('year: ' + year + ", loadYear: " + loadYear);
+        if (loadYear+'' == year+'')
+        	yearChanged = false;
+      	loadYear = year;
+      }
+      else
+	  {
+      	loadYear = 2011;
+		yearChanged = false;
+	  }
+      
+      console.log('fundView: ' + fundView + ", loadYear: " + loadYear);	
+      if (fundView != ""){
+        if (!yearChanged){
+        	getFundTotalArray(fundView, true, updateAppropTotal);
+  			getFundTotalArray(fundView, false, updateExpendTotal);
+  		}
+        getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
+        $('#timeline h2').html(fundView + ' budget for ' + loadYear);
+      }
+      else{
+      	if (!yearChanged){
+      		getFundTotalArray('', true, updateAppropTotal);
+  			getFundTotalArray('', false, updateExpendTotal);
+  		}
+      	getAllFundsForYear(loadYear, getDataAsBudgetTable);
+      	$('#timeline h2').html('Entire budget for ' + loadYear);
+      }	
+    }  
+	
+	//displays highchart
+	function updateMainChart() {
+   	  arraysLoaded++;
+   	  if (arraysLoaded >= 2)
+   	  {
+   	  	var minValuesArray = $.grep(appropTotalArray.concat(expendTotalArray), function(val) { return val != null; });
+	      // Highcharts
+	      chart1 = new Highcharts.Chart({
+	      chart: {
+	        defaultSeriesType: "area",
+	        renderTo: "timeline-chart"
+	      },
+	      credits: { enabled: false },
+	      plotOptions: {
+	        area: { fillOpacity: 0.25 },
+	        series: {
+	          lineWidth: 5,
+	          point: {
+              events: {
+                click: function() {
+                  var x = this.x,
+                      selected = !this.selected,
+                      index = this.series.index;
+                  console.log(this)
+                  this.select(selected, false);
+
+                  $.each(this.series.chart.series, function(i, serie) {
+                    if (serie.index !== index) {
+                      $(serie.data).each(function(j, point){
+                        if(x === point.x) {
+                          point.select(selected, true);
+                        }
+                      });
+                    }
+                  });
+				  var clickedYear = new Date(x).getFullYear();
+				  
+				  $.address.parameter('year',clickedYear)
+                }
+              }
+            },
+            pointInterval: 365 * 24 * 3600 * 1000,
+	          pointStart: Date.UTC(1993, 1, 1),
+	          shadow: false
+	        }
+	      },
+	      series: [
+	        {
+	          color: "#264870",
+	          data: appropTotalArray,
+	          marker: {
+	            radius: 6,
+	            symbol: "circle"
+	          },
+	          name: "Budgeted"
+	        }, {
+	          color: "#7d9abb",
+	          data: expendTotalArray,
+	          marker: {
+	            radius: 8,
+	            symbol: "square"
+	          },
+	          name: "Spent"
+	        }
+	      ],
+	      title: null,
+	      tooltip: {
+	        borderColor: "#000",
+	        formatter: function() {
+	          var s = "<strong>" + Highcharts.dateFormat("%Y", this.x) + "</strong>";
+	          $.each(this.points, function(i, point) {
+	            s += "<br /><span style=\"color: " + point.series.color + "\">" + point.series.name + ":</span> $" + Highcharts.numberFormat(point.y, 0);
+	          });
+	          return s;
+	        },
+	        shared: true
+	      },
+	      xAxis: {
+	        dateTimeLabelFormats: { year: "%Y" },
+	        gridLineColor: "#ddd",
+	        gridLineWidth: 1,
+	        type: "datetime"
+	      },
+	      yAxis: {
+	        gridLineColor: "#ddd",
+	        labels: {
+	          formatter: function() {
+	            if (this.value >= 1000000000)
+	              return "$" + this.value / 1000000000 + "B";
+	            else if (this.value >= 1000000)
+	              return "$" + this.value / 1000000 + "M";
+	            else
+	              return "$" + this.value;
+	          }
+	        },
+	        min: Math.min.apply( Math, minValuesArray ),
+	        title: null
+	      }
+	  	});
+  	}
+    }
+    
+	//displays datatables fund/department listing
+    function updateTable() {
+      $('#breakdown').fadeOut('fast', function(){
+        if (breakdownTable != null) breakdownTable.fnDestroy();
+        
+        $('#breakdown tbody').children().remove();
+        $('#breakdown > tbody:last').append(breakdownData);
+        
+        var maxArray = new Array();
+        $('.budgeted.num').each(function(){
+          maxArray.push(parseInt($(this).html()));
+        });
+        $('.spent.num').each(function(){
+          maxArray.push(parseInt($(this).html()));
+        });
+        
+        var maxBudgeted = Math.max.apply( Math, maxArray );
+        if (maxBudgeted > 0)
+        {
+          $('.budgeted.num').each(function(){
+            $(this).siblings().children().children('.budgeted.outer').width((($(this).html()/maxBudgeted) * 100) + '%');
+          });
+          $('.spent.num').each(function(){
+            $(this).siblings().children().children('.spent.inner').width((($(this).html()/maxBudgeted) * 100) + '%');
+          });
+        }
+        $('.budgeted.num').formatCurrency();
+        $('.spent.num').formatCurrency();
+        
+        $('.expanded-content a').address(); //after adding the table rows, initialize the address plugin on all the links
+        
+        breakdownTable = $("#breakdown").dataTable({
+          "aaSorting": [[1, "desc"]],
+          "aoColumns": [
+            null,
+            { "sType": "currency" },
+            { "sType": "currency" },
+            { "bSortable": false }
+          ],
+          "bFilter": false,
+          "bInfo": false,
+          "bPaginate": false
+        });
+      }).fadeIn('fast');
+    }
+	
+	//show/hide expanded detail
+	function updateDetail(itemId, detail) {
+		if ($('#' + itemId + '-expanded').length == 0)
+		{
+			//console.log('showing detail');
+			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
+			$('#breakdown .expanded-content').remove();
+			$('#' + itemId + ' .budget-expand-img').attr('src', '/budget/images/collapse.png');
+			$(detail).insertAfter($('#' + itemId));
+		}
+		else
+		{
+			//console.log('hiding all details');
+			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
+			$('#breakdown .expanded-content').remove();
+		}
+	}
+
+	//back end fusiontables fetch functions	
   	function setTotalArrays() {
   		getFundTotalArray('', true, updateAppropTotal);
   		getFundTotalArray('', false, updateExpendTotal);
@@ -51,7 +268,7 @@
 	
 	//converts SQL query to URL	
 	function getQuery(myQuery) {
-		//alert(myQuery);
+		//console.log(myQuery);
 		var queryText = encodeURIComponent(myQuery);
 	  	return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
 	}
@@ -90,10 +307,15 @@
 	  	  var year = response.getDataTable().getColumnLabel(3);
 	  	  var budgeted = response.getDataTable().getValue(i, 1);
 	  	  var spent = response.getDataTable().getValue(i, 2);
+		  
+		  var detailLoadFunction = "getFundDetails";
+		  if (fundView != null && fundView != "")
+			detailLoadFunction = "getDepartmentDetails";
+		  
 		  if (budgeted != 0 || spent != 0)
 		  {
-			  fusiontabledata += "<tr id='" + fund.replace(/\s+/g, '-') + "'>";
-			  fusiontabledata += "<td><a onclick='getRowDetails(\"" + fund.replace(/\s+/g, '-') + "\");'><img class='budget-expand-img' src='/budget/images/expand.png' /></a> <a onclick='getRowDetails(\"" + fund.replace(/\s+/g, '-') + "\");'>" + fund + "</a></td>";
+			  fusiontabledata += "<tr id='" + convertToSlug(fund) + "'>";
+			  fusiontabledata += "<td><a onclick='" + detailLoadFunction + "(\"" + convertToSlug(fund) + "\");'><img class='budget-expand-img' src='/budget/images/expand.png' /></a> <a onclick='" + detailLoadFunction + "(\"" + convertToSlug(fund) + "\");'>" + fund + "</a></td>";
 			  fusiontabledata += "<td class='num budgeted'>" + budgeted + "</td>";
 			  fusiontabledata += "<td class='num spent'>" + spent + "</td>";
 			  fusiontabledata += "<td><div class='bars'>";
@@ -108,8 +330,8 @@
 	  updateTable();
 	}
 	
-	//shows row details
-	function getRowDetails(itemId) {	
+	//shows fund details
+	function getFundDetails(itemId) {	
 		//numRows = response.getDataTable().getNumberOfRows();
 		var fusiontabledata;
 		  
@@ -119,8 +341,35 @@
 		fusiontabledata += "		<h2>Health fund</h2>";
 		fusiontabledata += "		<p>Portion of the general fund that pays for costs related to heathcare and prevention.</p>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><a href='/?year=" + loadYear + "&amp;fund=" + itemId.replace(/\-+/g, '+') + "' rel='address:/?year=" + loadYear + "&amp;fund=" + itemId.replace(/\-+/g, '+') + "'>View all departments</a></li>";
+		fusiontabledata += "		  <li><a href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>View all departments</a></li>";
 		fusiontabledata += "		  <li><strong>1</strong> <a href='#'>control officer</a></li>";
+		fusiontabledata += "		</ul>";
+		fusiontabledata += "	  </div>";
+		fusiontabledata += "	  <div class='expanded-secondary'>";
+		fusiontabledata += "		<div class='sparkline' id='health-chart'></div>";
+		fusiontabledata += "		<ul class='stats'>";
+		fusiontabledata += "		  <li><strong>-6.3%</strong> budgeted from 2010</li>";
+		fusiontabledata += "		  <li><strong>-8.7%</strong> spent from 2010</li>";
+		fusiontabledata += "		</ul>";
+		fusiontabledata += "	  </div>";
+		fusiontabledata += "	</td>";
+		fusiontabledata += "  </tr>";
+		updateDetail(itemId, fusiontabledata);
+	}
+	
+	//shows department details
+	function getDepartmentDetails(itemId) {	
+		//numRows = response.getDataTable().getNumberOfRows();
+		var fusiontabledata;
+		  
+		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
+		fusiontabledata += "	<td colspan='5'>";
+		fusiontabledata += "  <div class='expanded-primary'>";
+		fusiontabledata += "		<h2>Example department</h2>";
+		fusiontabledata += "		<p>Etc etc etc.</p>";
+		fusiontabledata += "		<ul class='stats'>";
+		fusiontabledata += "		  <li><a href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>View all departments</a></li>";
+		fusiontabledata += "		  <li>Control officer: John Smith</li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
@@ -158,7 +407,22 @@
 	    fusiontabledata += "</tr>";
 	  }
 	  fusiontabledata += "</table>";  
-	  //alert(fusiontabledata);
+	  //console.log(fusiontabledata);
 	  breakdownData += fusiontabledata;
 	  updateTable();
+	}
+	
+	function convertToSlug(Text)
+	{
+		return Text.replace(/ /g,'-').replace(/[^\w-]+/g,'');
+	}
+	
+	function convertToQueryString(Text)
+	{
+		return Text.replace(/\-+/g, '+');
+	}
+	
+	function convertToPlainString(Text)
+	{
+		return Text.replace(/\++/g, ' ');
 	}
