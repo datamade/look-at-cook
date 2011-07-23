@@ -7,6 +7,7 @@
 	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
 	
 	var fusionTableId = 1113478;
+	var fundDescriptionTableId = 1113392;
   	var breakdownData = "";
   	var breakdownTable;
   	var appropTotalArray;
@@ -19,39 +20,31 @@
 	
 	//primary load for graph and table
 	function loadFor(year, fund) {
-      var yearChanged = true;
       fundView = '';
       if (fund != null && fund != "")
       	fundView = convertToPlainString(fund);
       
       if (year != null && year != ""){
-        //console.log('year: ' + year + ", loadYear: " + loadYear);
-        if (loadYear+'' == year+'')
-        	yearChanged = false;
       	loadYear = year;
       }
       else
 	  {
       	loadYear = 2011;
-		yearChanged = false;
 	  }
       
       console.log('fundView: ' + fundView + ", loadYear: " + loadYear);	
       if (fundView != ""){
-        if (!yearChanged){
-        	getFundTotalArray(fundView, true, updateAppropTotal);
-  			getFundTotalArray(fundView, false, updateExpendTotal);
-  		}
+    	getFundTotalArray(fundView, true, updateAppropTotal);
+		getFundTotalArray(fundView, false, updateExpendTotal);
         getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
-        $('#timeline h2').html(fundView + ' budget for ' + loadYear);
+        $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'>" + loadYear + " Cook County budget</a> &raquo; " + fundView);
+        $('#timeline h2 a').address();
       }
       else{
-      	if (!yearChanged){
-      		getFundTotalArray('', true, updateAppropTotal);
-  			getFundTotalArray('', false, updateExpendTotal);
-  		}
+  		getFundTotalArray('', true, updateAppropTotal);
+		getFundTotalArray('', false, updateExpendTotal);
       	getAllFundsForYear(loadYear, getDataAsBudgetTable);
-      	$('#timeline h2').html('Entire budget for ' + loadYear);
+      	$('#timeline h2').html(loadYear + ' Cook County budget');
       }	
     }  
 	
@@ -210,14 +203,17 @@
 			//console.log('showing detail');
 			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
 			$('#breakdown .expanded-content').remove();
+			$('#breakdown tr').removeClass('selected');
 			$('#' + itemId + ' .budget-expand-img').attr('src', '/budget/images/collapse.png');
 			$(detail).insertAfter($('#' + itemId));
+			$('#' + itemId).addClass('selected');
 		}
 		else
 		{
 			//console.log('hiding all details');
 			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
 			$('#breakdown .expanded-content').remove();
+			$('#breakdown tr').removeClass('selected');
 		}
 	}
 
@@ -254,21 +250,25 @@
 		getQuery(myQuery).send(callback);
 	}
 	
-	//for expanded row details - have to calculate the sums by hand ... arg
-	function getFundInfo(fund, callback) {		
-		var myQuery = "SELECT Fund, Department, 'Control Officer' FROM " + fusionTableId + " WHERE Fund = '" + fund + "' ORDER BY 'Control Officer'";			
+	//returns all funds budgeted/spent totals for given year
+	function getDepartmentsForFund(fund, year, callback) {		
+		var myQuery = "SELECT 'Short Title', SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures', 'Short Title' AS '" + year + "', 'Department ID' FROM " + fusionTableId + " WHERE Fund = '" + fund + "' GROUP BY 'Department ID', 'Short Title'";			
 		getQuery(myQuery).send(callback);
 	}
 	
-	//returns all funds budgeted/spent totals for given year
-	function getDepartmentsForFund(fund, year, callback) {		
-		var myQuery = "SELECT Department, SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures', Department AS '" + year + "'  FROM " + fusionTableId + " WHERE Fund = '" + fund + "' GROUP BY Department";			
+	function getFundDescription(fund, callback) {
+		var myQuery = "SELECT 'Fund Description' FROM " + fundDescriptionTableId + " WHERE Item = '" + fund + "'";			
+		getQuery(myQuery).send(callback);
+	}
+	
+	function getDepartmentDescription(departmentId, callback) {
+		var myQuery = "SELECT 'Department ID', Department, 'Link to Website', 'Department Description', 'Control Officer' FROM " + fusionTableId + " WHERE 'Department ID' = " + departmentId;			
 		getQuery(myQuery).send(callback);
 	}
 	
 	//converts SQL query to URL	
 	function getQuery(myQuery) {
-		//console.log(myQuery);
+		console.log(myQuery);
 		var queryText = encodeURIComponent(myQuery);
 	  	return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
 	}
@@ -301,21 +301,30 @@
 	//builds out budget breakdown table
 	function getDataAsBudgetTable(response) {	
 		numRows = response.getDataTable().getNumberOfRows();
+		console.log('rows found: ' + numRows);
 		var fusiontabledata;
 		for(i = 0; i < numRows; i++) {
-		  var fund = response.getDataTable().getValue(i, 0);
+		  var rowName = response.getDataTable().getValue(i, 0);
+		  var departmentId = 0;
+		  if (response.getDataTable().getNumberOfColumns() > 4)
+		  	departmentId = response.getDataTable().getValue(i, 4);
 	  	  var year = response.getDataTable().getColumnLabel(3);
 	  	  var budgeted = response.getDataTable().getValue(i, 1);
 	  	  var spent = response.getDataTable().getValue(i, 2);
+	  	  
+	  	  console.log('rowName: ' + rowName);
 		  
-		  var detailLoadFunction = "getFundDetails";
-		  if (fundView != null && fundView != "")
-			detailLoadFunction = "getDepartmentDetails";
+		  var rowId = convertToSlug(rowName);
+		  var detailLoadFunction = "getFundDetails(\"" + convertToSlug(rowName) + "\");";
+		  if (fundView != null && fundView != "") {
+		    rowId = "department-" + departmentId;
+			detailLoadFunction = "getDepartmentDetails(\"department-" + departmentId + "\");";
+		  }
 		  
 		  if (budgeted != 0 || spent != 0)
 		  {
-			  fusiontabledata += "<tr id='" + convertToSlug(fund) + "'>";
-			  fusiontabledata += "<td><a onclick='" + detailLoadFunction + "(\"" + convertToSlug(fund) + "\");'><img class='budget-expand-img' src='/budget/images/expand.png' /></a> <a onclick='" + detailLoadFunction + "(\"" + convertToSlug(fund) + "\");'>" + fund + "</a></td>";
+			  fusiontabledata += "<tr id='" + rowId + "'>";
+			  fusiontabledata += "<td><a onclick='" + detailLoadFunction + "'><img class='budget-expand-img' src='/budget/images/expand.png' /></a> <a onclick='" + detailLoadFunction + "'>" + rowName + "</a></td>";
 			  fusiontabledata += "<td class='num budgeted'>" + budgeted + "</td>";
 			  fusiontabledata += "<td class='num spent'>" + spent + "</td>";
 			  fusiontabledata += "<td><div class='bars'>";
@@ -332,14 +341,13 @@
 	
 	//shows fund details
 	function getFundDetails(itemId) {	
-		//numRows = response.getDataTable().getNumberOfRows();
 		var fusiontabledata;
 		  
 		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
 		fusiontabledata += "	<td colspan='5'>";
 		fusiontabledata += "  <div class='expanded-primary'>";
-		fusiontabledata += "		<h2>Health fund</h2>";
-		fusiontabledata += "		<p>Portion of the general fund that pays for costs related to heathcare and prevention.</p>";
+		fusiontabledata += "		<h2>" + convertToPlainString(itemId) + "</h2>";
+		fusiontabledata += "		<p id='fund-description'></p>";
 		fusiontabledata += "		<ul class='stats'>";
 		fusiontabledata += "		  <li><a href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>View all departments</a></li>";
 		fusiontabledata += "		  <li><strong>1</strong> <a href='#'>control officer</a></li>";
@@ -355,21 +363,46 @@
 		fusiontabledata += "	</td>";
 		fusiontabledata += "  </tr>";
 		updateDetail(itemId, fusiontabledata);
+		getFundDescription(convertToPlainString(itemId), updateFundDescription);
+	}
+	
+	function updateFundDescription(response) {
+		var description = 'Description not available';
+		
+		if (response.getDataTable().getNumberOfRows() > 0)
+			description = response.getDataTable().getValue(0, 0);
+			
+		$('#fund-description').fadeOut('fast', function(){
+			$('#fund-description').html(description);
+		}).fadeIn('fast');
+	}
+	
+	function getDepartmentDetails(departmentId) {
+		departmentId = departmentId.replace('department-', '')
+		
+		getDepartmentDescription(departmentId, updateDepartmentDetails);
 	}
 	
 	//shows department details
-	function getDepartmentDetails(itemId) {	
-		//numRows = response.getDataTable().getNumberOfRows();
+	function updateDepartmentDetails(response) {	
+		console.log('updateDepartmentDetails');
 		var fusiontabledata;
-		  
-		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
+		var departmentId = response.getDataTable().getValue(0, 0);
+		var department = response.getDataTable().getValue(0, 1);
+		var linkToWebsite = response.getDataTable().getValue(0, 2);
+		var description = response.getDataTable().getValue(0, 3);
+		var controlOfficer = response.getDataTable().getValue(0, 4);
+		
+		fusiontabledata = "<tr class='expanded-content' id='department-" + departmentId + "-expanded'>";
 		fusiontabledata += "	<td colspan='5'>";
 		fusiontabledata += "  <div class='expanded-primary'>";
-		fusiontabledata += "		<h2>Example department</h2>";
-		fusiontabledata += "		<p>Etc etc etc.</p>";
+		fusiontabledata += "		<h2>" + department + "</h2>";
+		fusiontabledata += "		<p>" + description + "</p>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><a href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>View all departments</a></li>";
-		fusiontabledata += "		  <li>Control officer: John Smith</li>";
+		if (controlOfficer != '')
+			fusiontabledata += "		  <li>Control officer: " + controlOfficer + "</li>";
+		if (linkToWebsite != '')
+			fusiontabledata += "		  <li><a href='" + linkToWebsite + "'>More information &raquo;</a></li>";	
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
@@ -381,7 +414,7 @@
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	</td>";
 		fusiontabledata += "  </tr>";
-		updateDetail(itemId, fusiontabledata);
+		updateDetail('department-' + departmentId, fusiontabledata);
 	}
 
 	//for debugging - prints out data in a table
@@ -414,15 +447,16 @@
 	
 	function convertToSlug(Text)
 	{
-		return Text.replace(/ /g,'-').replace(/[^\w-]+/g,'');
+		return (Text+'').replace(/ /g,'-').replace(/[^\w-]+/g,'');
 	}
 	
 	function convertToQueryString(Text)
 	{
-		return Text.replace(/\-+/g, '+');
+		return (Text+'').replace(/\-+/g, '+');
 	}
 	
 	function convertToPlainString(Text)
 	{
-		return Text.replace(/\++/g, ' ');
+		return (Text+'').replace(/\++/g, ' ')
+		.replace(/\-+/g, ' ');
 	}
