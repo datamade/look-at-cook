@@ -259,17 +259,17 @@
 			//console.log('showing detail');
 			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
 			$('#breakdown .expanded-content').remove();
-			$('#breakdown tr').removeClass('selected');
+			$('#breakdown tr').removeClass('expanded-head');
 			$('#' + itemId + ' .budget-expand-img').attr('src', '/budget/images/collapse.png');
 			$(detail).insertAfter($('#' + itemId));
-			$('#' + itemId).addClass('selected');
+			$('#' + itemId).addClass('expanded-head');
 		}
 		else
 		{
 			//console.log('hiding all details');
 			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
 			$('#breakdown .expanded-content').remove();
-			$('#breakdown tr').removeClass('selected');
+			$('#breakdown tr').removeClass('expanded-head');
 		}
 	}
   	
