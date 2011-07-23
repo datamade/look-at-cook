@@ -235,7 +235,7 @@
         $('.budgeted.num').formatCurrency();
         $('.spent.num').formatCurrency();
         
-        $('.expanded-content a').address(); //after adding the table rows, initialize the address plugin on all the links
+        $('.adr').address(); //after adding the table rows, initialize the address plugin on all the links
         
         breakdownTable = $("#breakdown").dataTable({
           "aaSorting": [[1, "desc"]],
@@ -414,15 +414,15 @@
 		fusiontabledata += "		<h2>" + convertToPlainString(itemId) + "</h2>";
 		fusiontabledata += "		<p id='fund-description'></p>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><a href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>View all departments</a></li>";
-		fusiontabledata += "		  <li><strong>1</strong> <a href='#'>control officer</a></li>";
+		fusiontabledata += "		  <li><a class='adr' href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>View all departments</a></li>";
+		fusiontabledata += "		  <li><a href='#'>View control officers</a></li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
 		fusiontabledata += "		<div class='sparkline' id='selected-chart'></div>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><strong>-6.3%</strong> budgeted from 2010</li>";
-		fusiontabledata += "		  <li><strong>-8.7%</strong> spent from 2010</li>";
+		fusiontabledata += "		  <li><strong>x.x%</strong> budgeted from 2010</li>";
+		fusiontabledata += "		  <li><strong>y.y%</strong> spent from 2010</li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	</td>";
@@ -475,8 +475,8 @@
 		fusiontabledata += "	  <div class='expanded-secondary'>";
 		fusiontabledata += "		<div class='sparkline' id='selected-chart'></div>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><strong>-6.3%</strong> budgeted from 2010</li>";
-		fusiontabledata += "		  <li><strong>-8.7%</strong> spent from 2010</li>";
+		fusiontabledata += "		  <li><strong>x.x%</strong> budgeted from 2010</li>";
+		fusiontabledata += "		  <li><strong>y.y%</strong> spent from 2010</li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	</td>";
