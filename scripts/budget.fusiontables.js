@@ -12,6 +12,8 @@
   	var breakdownTable;
   	var appropTotalArray;
   	var expendTotalArray;
+  	var sparkAppropTotalArray;
+  	var sparkExpendTotalArray;
 	var loadYear;
 	var fundView;
   	var arraysLoaded = 0;
@@ -34,15 +36,15 @@
       
       console.log('fundView: ' + fundView + ", loadYear: " + loadYear);	
       if (fundView != ""){
-    	getFundTotalArray(fundView, true, updateAppropTotal);
-		getFundTotalArray(fundView, false, updateExpendTotal);
+    	getTotalArray(fundView, false, true, updateAppropTotal);
+		getTotalArray(fundView, false, false, updateExpendTotal);
         getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
         $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'>" + loadYear + " Cook County budget</a> &raquo; " + fundView);
         $('#timeline h2 a').address();
       }
       else{
-  		getFundTotalArray('', true, updateAppropTotal);
-		getFundTotalArray('', false, updateExpendTotal);
+  		getTotalArray('', false, true, updateAppropTotal);
+		getTotalArray('', false, false, updateExpendTotal);
       	getAllFundsForYear(loadYear, getDataAsBudgetTable);
       	$('#timeline h2').html(loadYear + ' Cook County budget');
       }	
@@ -53,6 +55,7 @@
    	  arraysLoaded++;
    	  if (arraysLoaded >= 2)
    	  {
+   	    arraysLoaded = 0;
    	  	var minValuesArray = $.grep(appropTotalArray.concat(expendTotalArray), function(val) { return val != null; });
 	      // Highcharts
 	      chart1 = new Highcharts.Chart({
@@ -150,6 +153,59 @@
   	}
     }
     
+    function updateSparkline() {
+      arraysLoaded++;
+   	  if (arraysLoaded >= 2)
+   	  {
+   	  	var minValuesArray = $.grep(sparkAppropTotalArray.concat(sparkExpendTotalArray), function(val) { return val != null; });
+	   	  arraysLoaded = 0;
+	      // Small chart
+	      chart2 = new Highcharts.Chart({
+	        chart: {
+	          defaultSeriesType: "area",
+	          margin: [0, 0, 0, 0],
+	          renderTo: "selected-chart"
+	        },
+	        legend: { enabled: false },
+	        credits: { enabled: false },
+	        plotOptions: {
+	          area: { fillOpacity: 0.25 },
+	          series: {
+	            lineWidth: 2,
+	            marker: { enabled: false },
+	            shadow: false
+	          }
+	        },
+	        series: [
+	          {
+	            color: "#264870",
+	            data: sparkAppropTotalArray
+	          }, {
+	            color: "#4c7099",
+	            data: sparkExpendTotalArray
+	          }
+	        ],
+	        title: null,
+	        tooltip: { enabled: false },
+	        xAxis: {
+	          labels: { enabled: false },
+	          lineWidth: 0,
+	          maxPadding: 0,
+	          minPadding: 0
+	        },
+	        yAxis: {
+	          endOnTick: false,
+	          gridLineWidth: 0,
+	          labels: { enabled: false },
+	          min: Math.min.apply( Math, minValuesArray ),
+	          maxPadding: 0,
+	          minPadding: 0,
+	          text: null
+	        }
+	      });
+      }
+    }
+    
 	//displays datatables fund/department listing
     function updateTable() {
       $('#breakdown').fadeOut('fast', function(){
@@ -216,15 +272,9 @@
 			$('#breakdown tr').removeClass('selected');
 		}
 	}
-
-	//back end fusiontables fetch functions	
-  	function setTotalArrays() {
-  		getFundTotalArray('', true, updateAppropTotal);
-  		getFundTotalArray('', false, updateExpendTotal);
-  	}
   	
-  	//gets Fund totals per year for highcharts  	
-	function getFundTotalArray(fundName, isAppropriation, callback) {
+  	//gets fund or department totals per year for highcharts  	
+	function getTotalArray(name, forDepartment, isAppropriation, callback) {
 		var typeStr = "Expenditures";
 		if (isAppropriation == true) 
 			typeStr = "Appropriations";
@@ -238,8 +288,13 @@
 		}
 		myQuery = myQuery.slice(0,myQuery.length-2);  
 		myQuery += " FROM " + fusionTableId;
-		if (fundName != '')
-			myQuery += " WHERE 'Fund' = '" + fundName + "'";
+		if (name != '')
+		{
+			if (forDepartment)
+				myQuery += " WHERE 'Department ID' = '" + name + "'";
+			else
+				myQuery += " WHERE 'Fund' = '" + name + "'";
+		}
 		
 		getQuery(myQuery).send(callback);
 	}
@@ -268,7 +323,7 @@
 	
 	//converts SQL query to URL	
 	function getQuery(myQuery) {
-		console.log(myQuery);
+		//console.log(myQuery);
 		var queryText = encodeURIComponent(myQuery);
 	  	return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
 	}
@@ -281,6 +336,16 @@
 	function updateExpendTotal(response) {
 		expendTotalArray = getDataAsArray(response);
 		updateMainChart();
+	}
+	
+	function updateSparkAppropTotal(response) {
+		sparkAppropTotalArray = getDataAsArray(response);
+		updateSparkline();
+	}
+	
+	function updateSparkExpendTotal(response) {
+		sparkExpendTotalArray = getDataAsArray(response);
+		updateSparkline();
 	}
 	
 	//returns a 1D array
@@ -354,7 +419,7 @@
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
-		fusiontabledata += "		<div class='sparkline' id='health-chart'></div>";
+		fusiontabledata += "		<div class='sparkline' id='selected-chart'></div>";
 		fusiontabledata += "		<ul class='stats'>";
 		fusiontabledata += "		  <li><strong>-6.3%</strong> budgeted from 2010</li>";
 		fusiontabledata += "		  <li><strong>-8.7%</strong> spent from 2010</li>";
@@ -364,6 +429,9 @@
 		fusiontabledata += "  </tr>";
 		updateDetail(itemId, fusiontabledata);
 		getFundDescription(convertToPlainString(itemId), updateFundDescription);
+
+		getTotalArray(convertToPlainString(itemId), false, true, updateSparkAppropTotal);
+		getTotalArray(convertToPlainString(itemId), false, false, updateSparkExpendTotal);
 	}
 	
 	function updateFundDescription(response) {
@@ -385,7 +453,6 @@
 	
 	//shows department details
 	function updateDepartmentDetails(response) {	
-		console.log('updateDepartmentDetails');
 		var fusiontabledata;
 		var departmentId = response.getDataTable().getValue(0, 0);
 		var department = response.getDataTable().getValue(0, 1);
@@ -406,7 +473,7 @@
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
-		fusiontabledata += "		<div class='sparkline' id='health-chart'></div>";
+		fusiontabledata += "		<div class='sparkline' id='selected-chart'></div>";
 		fusiontabledata += "		<ul class='stats'>";
 		fusiontabledata += "		  <li><strong>-6.3%</strong> budgeted from 2010</li>";
 		fusiontabledata += "		  <li><strong>-8.7%</strong> spent from 2010</li>";
@@ -415,6 +482,9 @@
 		fusiontabledata += "	</td>";
 		fusiontabledata += "  </tr>";
 		updateDetail('department-' + departmentId, fusiontabledata);
+		
+		getTotalArray(departmentId, true, true, updateSparkAppropTotal);
+		getTotalArray(departmentId, true, false, updateSparkExpendTotal);
 	}
 
 	//for debugging - prints out data in a table
