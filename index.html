@@ -21,9 +21,14 @@
   
   <script type="text/javascript">
 
-	$.address.change(function(event) {  
+	$.address.externalChange(function(event) {  
 	    //console.log('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
-        loadFor($.address.parameter('year'),$.address.parameter('fund'));
+        loadFor($.address.parameter('year'), $.address.parameter('fund'), true);
+	});	
+	
+	$.address.internalChange(function(event) {  
+	    //console.log('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
+        loadFor($.address.parameter('year'), $.address.parameter('fund'), false);
 	});	
     
     $(function() {   
@@ -42,18 +47,20 @@
   
   <div id="content">
     <div id="content-primary">
-      <h1>Where's the money going?</h1>
-      <p>Explore Cook County's budget over the years and learn how the money is being spent. <a href="/budget/?year=2011&fund=Public%20Safety%20Fund" rel="address:/budget/?year=2011&fund=Public%20Safety%20Fund">More about this project</a> &raquo;</p>
+      <h1 id='main-header'>Where's the money going?</h1>
+      <p id='teaser-text'>Explore Cook County's budget from 1993 to 2011 and learn how the money is being spent. Select a chart point a fund below to get started. <a href="/budget/?year=2011&fund=Public%20Safety%20Fund" rel="address:/budget/?year=2011&fund=Public%20Safety%20Fund">More about this project</a> &raquo;</p>
       
       <div id="timeline">
-        <h2>2011</h2>
+        <h2></h2>
         <div id="timeline-chart"></div>
       </div>
+      
+      <div id='secondary-title'></div>
       
       <table id="breakdown">
         <thead>
           <tr>
-            <th><span>Fund</span></th>
+            <th id='breakdown-item-title'><span>Fund</span></th>
             <th class="num"><span>Budgeted</span></th>
             <th class="num"><span>Spent</span></th>
             <th class="charts">Budgeted vs. spent</th>

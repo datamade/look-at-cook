@@ -21,32 +21,53 @@
 	//front end display functions
 	
 	//primary load for graph and table
-	function loadFor(year, fund) {
-      fundView = '';
+	function loadFor(year, fund, externalLoad) {
+	  console.log('externalLoad: ' + externalLoad);
+      var fundChanged = false;
+      if (fundView != convertToPlainString(fund))
+        	fundChanged = true;
+      
       if (fund != null && fund != "")
       	fundView = convertToPlainString(fund);
-      
-      if (year != null && year != ""){
-      	loadYear = year;
-      }
       else
-	  {
+        fundView = '';
+        
+      console.log('fundChanged: ' + fundChanged);
+      
+      if (year != null && year != "")
+      	loadYear = year;
+      else
       	loadYear = 2011;
-	  }
       
       console.log('fundView: ' + fundView + ", loadYear: " + loadYear);	
       if (fundView != ""){
-    	getTotalArray(fundView, false, true, updateAppropTotal);
-		getTotalArray(fundView, false, false, updateExpendTotal);
+        if (fundChanged || externalLoad)
+        {
+	        window.scrollTo(0, 0);
+	    	getTotalArray(fundView, false, true, updateAppropTotal);
+			getTotalArray(fundView, false, false, updateExpendTotal);
+		}
         getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
-        $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'>" + loadYear + " Cook County budget</a> &raquo; " + fundView);
+        
+        $('#main-header').hide();
+        $('#teaser-text').hide();
+        $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + fundView);
+        $('#secondary-title').html('<h3>' + loadYear + ' Breakdown by Department</h3>');
+        $('#breakdown-item-title span').html('Department');
         $('#timeline h2 a').address();
       }
       else{
-  		getTotalArray('', false, true, updateAppropTotal);
-		getTotalArray('', false, false, updateExpendTotal);
+        if (fundChanged || externalLoad) {
+  			getTotalArray('', false, true, updateAppropTotal);
+			getTotalArray('', false, false, updateExpendTotal);
+		}
       	getAllFundsForYear(loadYear, getDataAsBudgetTable);
-      	$('#timeline h2').html(loadYear + ' Cook County budget');
+      	
+      	$('#main-header').show();
+        $('#teaser-text').show();
+      	$('#timeline h2').html('Cook County Budget');
+      	$('#secondary-title').html('<h3>' + loadYear + ' Breakdown by Fund</h3>');
+      	$('#breakdown-item-title span').html('Fund');
       }	
     }  
 	
@@ -377,7 +398,7 @@
 	  	  var budgeted = response.getDataTable().getValue(i, 1);
 	  	  var spent = response.getDataTable().getValue(i, 2);
 	  	  
-	  	  console.log('rowName: ' + rowName);
+	  	  //console.log('rowName: ' + rowName);
 		  
 		  var rowId = convertToSlug(rowName);
 		  var detailLoadFunction = "getFundDetails(\"" + convertToSlug(rowName) + "\");";
@@ -414,8 +435,8 @@
 		fusiontabledata += "		<h2>" + convertToPlainString(itemId) + "</h2>";
 		fusiontabledata += "		<p id='fund-description'></p>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><a class='adr' href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>View all departments</a></li>";
-		fusiontabledata += "		  <li><a href='#'>View control officers</a></li>";
+		fusiontabledata += "		  <li><a class='adr' href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>Breakdown by department&nbsp;&raquo;</a></li>";
+		//fusiontabledata += "		  <li><a href='#'>Breakdown by control officer&nbsp;&raquo;</a></li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
@@ -469,7 +490,7 @@
 		if (controlOfficer != '')
 			fusiontabledata += "		  <li>Control officer: " + controlOfficer + "</li>";
 		if (linkToWebsite != '')
-			fusiontabledata += "		  <li><a href='" + linkToWebsite + "'>More information &raquo;</a></li>";	
+			fusiontabledata += "		  <li><a href='" + linkToWebsite + "'>Official website &raquo;</a></li>";	
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
