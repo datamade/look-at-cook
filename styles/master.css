@@ -198,6 +198,9 @@ a[class*="icon"] {
 .icon-facebook { background-image: url(../images/facebook-sm.png); }
 .icon-twitter { background-image: url(../images/twitter-sm.png); }
 
+/* Print-only */
+.print { display: none; }
+
 /* Tertiary content */
 #content-tertiary .action { float: right; }
 
