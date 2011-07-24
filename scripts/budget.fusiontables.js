@@ -23,6 +23,8 @@
 	//primary load for graph and table
 	function loadFor(year, fund, externalLoad) {
 	  console.log('externalLoad: ' + externalLoad);
+	  console.log('fundView: ' + fundView + ', fund: ' + convertToPlainString(fund));
+	  
       var fundChanged = false;
       if (fundView != convertToPlainString(fund))
         	fundChanged = true;
@@ -548,6 +550,8 @@
 	
 	function convertToPlainString(Text)
 	{
+	    if (Text == undefined) return '';
+	    
 		return (Text+'').replace(/\++/g, ' ')
 		.replace(/\-+/g, ' ');
 	}
