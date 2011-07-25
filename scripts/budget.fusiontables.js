@@ -51,8 +51,6 @@
 		}
         getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
         
-        $('#main-header').hide();
-        $('#teaser-text').hide();
         $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + fundView);
         $('#secondary-title').html('<h3>' + loadYear + ' Breakdown by Department</h3>');
         $('#breakdown-item-title span').html('Department');
@@ -65,8 +63,6 @@
 		}
       	getAllFundsForYear(loadYear, getDataAsBudgetTable);
       	
-      	$('#main-header').show();
-        $('#teaser-text').show();
       	$('#timeline h2').html('Cook County Budget');
       	$('#secondary-title').html('<h3>' + loadYear + ' Breakdown by Fund</h3>');
       	$('#breakdown-item-title span').html('Fund');
@@ -95,15 +91,17 @@
               events: {
                 click: function() {
                   var x = this.x,
+				      y = this.y,
                       selected = !this.selected,
                       index = this.series.index;
-                  console.log(this)
+                  //console.log(this)
                   this.select(selected, false);
 
                   $.each(this.series.chart.series, function(i, serie) {
                     if (serie.index !== index) {
                       $(serie.data).each(function(j, point){
-                        if(x === point.x) {
+                        if(x === point.x && y != null) {
+						  console.log('y: ' + y);
                           point.select(selected, true);
                         }
                       });
@@ -173,7 +171,15 @@
 	        title: null
 	      }
 	  	});
-  	}
+		//select the current year on load
+		console.log('loadYear: ' + loadYear);
+		var selectedYearIndex = 18 - (2011 - loadYear);
+		console.log('selectedYearIndex: ' + selectedYearIndex);
+		if (chart1.series[0].data[selectedYearIndex] != null)
+			chart1.series[0].data[selectedYearIndex].select(true,false);
+		//if (chart1.series[1].data[selectedYearIndex] != null)
+		//	chart1.series[1].data[selectedYearIndex].select(true,false);
+		}
     }
     
     function updateSparkline() {
