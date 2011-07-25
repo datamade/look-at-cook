@@ -80,6 +80,9 @@
 	      chart1 = new Highcharts.Chart({
 	      chart: {
 	        defaultSeriesType: "area",
+	        marginBottom: 20,
+	        marginRight: 0,
+	        marginTop: 10,
 	        renderTo: "timeline-chart"
 	      },
 	      credits: { enabled: false },
