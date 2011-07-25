@@ -83,6 +83,13 @@
 	        renderTo: "timeline-chart"
 	      },
 	      credits: { enabled: false },
+	      legend: {
+	        backgroundColor: "#ffffff",
+	        floating: true,
+	        verticalAlign: "top",
+	        x: -300,
+	        y: 10,
+	      },
 	      plotOptions: {
 	        area: { fillOpacity: 0.25 },
 	        series: {
