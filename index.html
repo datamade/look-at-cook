@@ -50,19 +50,21 @@
   <div id="content">
     <div id="content-primary">
       <h1>Where's the money going?</h1>
-      <p>Explore Cook County's budget from 1993 to 2011 and learn how the money is being spent. Select a year or a fund below to get started. <a onclick="window.scrollTo(0, document.body.scrollHeight);">More about this project</a> &raquo;</p>
+      <p>Explore Cook County's budget from 1993 to 2011 and learn how the money is being spent. <a onclick="window.scrollTo(0, document.body.scrollHeight);">More about this project</a> &raquo;</p>
       
       <div id="timeline">
         <h2></h2>
         <div id="timeline-chart"></div>
       </div>
       
-      <div id='secondary-title'></div>
+      <div id="breakdown-header">
+        <h3 id="secondary-title"></h3>
+      </div>
       
       <table id="breakdown">
         <thead>
           <tr>
-            <th id='breakdown-item-title'><span>Fund</span></th>
+            <th id='breakdown-item-title'><span id="secondary-title">Fund</span></th>
             <th class="num"><span>Budgeted</span></th>
             <th class="num"><span>Spent</span></th>
             <th class="charts">Budgeted vs. spent</th>

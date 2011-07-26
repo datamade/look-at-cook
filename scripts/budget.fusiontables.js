@@ -64,7 +64,7 @@
       	getAllFundsForYear(loadYear, getDataAsBudgetTable);
       	
       	$('#timeline h2').html('Cook County Budget');
-      	$('#secondary-title').html('<h3>' + loadYear + ' Breakdown by Fund</h3>');
+      	$('#secondary-title').text(loadYear + ' Breakdown by Fund');
       	$('#breakdown-item-title span').html('Fund');
       }	
     }  
