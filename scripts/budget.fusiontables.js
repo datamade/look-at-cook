@@ -52,7 +52,7 @@
         getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
         
         $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + fundView);
-        $('#secondary-title').html('<h3>' + loadYear + ' Breakdown by Department</h3>');
+        $('#secondary-title').html('<h3>' + loadYear + ' ' + fundView + '</h3>');
         $('#breakdown-item-title span').html('Department');
         $('#timeline h2 a').address();
       }
@@ -64,9 +64,12 @@
       	getAllFundsForYear(loadYear, getDataAsBudgetTable);
       	
       	$('#timeline h2').html('Cook County Budget');
-      	$('#secondary-title').text(loadYear + ' Breakdown by Fund');
+      	$('#secondary-title').text(loadYear + ' Cook County Budget');
       	$('#breakdown-item-title span').html('Fund');
-      }	
+      }
+      
+      getFundDescription(fundView, updateScorecardDescription);
+      getTotalsForYear(loadYear, fundView, updateScorecard);	
     }  
 	
 	//displays highchart
@@ -343,6 +346,16 @@
 		getQuery(myQuery).send(callback);
 	}
 	
+	//returns total given year
+	function getTotalsForYear(year, fund, callback) {
+		var whereClause = "";
+		if (fund != "")
+			whereClause = " WHERE Fund = '" + fund + "'";
+			
+		var myQuery = "SELECT SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures' FROM " + fusionTableId + whereClause;			
+		getQuery(myQuery).send(callback);
+	}
+	
 	//returns all funds budgeted/spent totals for given year
 	function getAllFundsForYear(year, callback) {		
 		var myQuery = "SELECT Fund, SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures', Fund AS '" + year + "' FROM " + fusionTableId + " GROUP BY Fund";			
@@ -390,6 +403,36 @@
 	function updateSparkExpendTotal(response) {
 		sparkExpendTotalArray = getDataAsArray(response);
 		updateSparkline();
+	}
+	
+	function updateScorecardDescription(response) {		
+		if (response.getDataTable().getNumberOfRows() > 0)
+		{
+			$('#scorecard-desc p').fadeOut('fast', function(){
+				$('#scorecard-desc p').html(response.getDataTable().getValue(0, 0));
+			}).fadeIn('fast');
+		}
+		else if (fundView == '')
+		{
+			$('#scorecard-desc p').fadeOut('fast', function(){
+				$('#scorecard-desc p').html('Breakdown by department');
+			}).fadeIn('fast');
+		}
+	}
+	
+	function updateScorecard(response) {		
+		if (response.getDataTable().getNumberOfRows() > 0)
+		{
+			$('#scorecard .budgeted').fadeOut('fast', function(){
+				$('#scorecard .budgeted').html(response.getDataTable().getValue(0, 0));
+				$('#scorecard .budgeted').formatCurrency();
+			}).fadeIn('fast');
+			
+			$('#scorecard .spent').fadeOut('fast', function(){
+				$('#scorecard .spent').html(response.getDataTable().getValue(0, 1));
+				$('#scorecard .spent').formatCurrency();
+			}).fadeIn('fast');
+		}
 	}
 	
 	//returns a 1D array
@@ -479,7 +522,7 @@
 	}
 	
 	function updateFundDescription(response) {
-		var description = 'Description not available';
+		var description = '';
 		
 		if (response.getDataTable().getNumberOfRows() > 0)
 			description = response.getDataTable().getValue(0, 0);
