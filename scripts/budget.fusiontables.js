@@ -88,9 +88,10 @@
 	      credits: { enabled: false },
 	      legend: {
 	        backgroundColor: "#ffffff",
+	        borderColor: "#cccccc",
 	        floating: true,
 	        verticalAlign: "top",
-	        x: -300,
+	        x: -310,
 	        y: 10,
 	      },
 	      plotOptions: {
