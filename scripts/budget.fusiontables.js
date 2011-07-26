@@ -113,13 +113,11 @@
 				      y = this.y,
                       selected = !this.selected,
                       index = this.series.index;
-                  //console.log(this)
                   this.select(selected, false);
 
                   $.each(this.series.chart.series, function(i, serie) {
                     if (serie.index !== index) {
                       $(serie.data).each(function(j, point){
-                        //console.log('y: ' + point.y);
                         if(x === point.x && point.y != null) {
                           point.select(selected, true);
                         }
@@ -223,8 +221,14 @@
 	            point: {
 	              events: {
 	                click: function() {
+						var x = this.x;
 	                	if (fundView == '')
+						{
+							var clickedYear = new Date(x).getFullYear();				  
+							$.address.parameter('year',clickedYear)
 							$.address.parameter('fund',convertToQueryString($('.expanded-primary h2').html()));
+							
+						}
 	                }
 	              }
 	            },
