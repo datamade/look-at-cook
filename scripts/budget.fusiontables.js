@@ -9,6 +9,7 @@
 	var fusionTableId = 1113478;
 	var fundDescriptionTableId = 1113392;
   	var breakdownData = "";
+  	var sparkChart;
   	var breakdownTable;
   	var appropTotalArray;
   	var expendTotalArray;
@@ -80,7 +81,7 @@
    	    arraysLoaded = 0;
    	  	var minValuesArray = $.grep(appropTotalArray.concat(expendTotalArray), function(val) { return val != null; });
 	      // Highcharts
-	      chart1 = new Highcharts.Chart({
+	      mainChart = new Highcharts.Chart({
 	      chart: {
 	        borderColor: "#dddddd",
 	        borderRadius: 0,
@@ -118,8 +119,8 @@
                   $.each(this.series.chart.series, function(i, serie) {
                     if (serie.index !== index) {
                       $(serie.data).each(function(j, point){
-                        if(x === point.x && y != null) {
-						  console.log('y: ' + y);
+                        //console.log('y: ' + point.y);
+                        if(x === point.x && point.y != null) {
                           point.select(selected, true);
                         }
                       });
@@ -193,10 +194,10 @@
 		console.log('loadYear: ' + loadYear);
 		var selectedYearIndex = 18 - (2011 - loadYear);
 		console.log('selectedYearIndex: ' + selectedYearIndex);
-		if (chart1.series[0].data[selectedYearIndex] != null)
-			chart1.series[0].data[selectedYearIndex].select(true,false);
-		//if (chart1.series[1].data[selectedYearIndex] != null)
-		//	chart1.series[1].data[selectedYearIndex].select(true,false);
+		if (mainChart.series[0].data[selectedYearIndex].y != null)
+			mainChart.series[0].data[selectedYearIndex].select(true,true);
+		if (mainChart.series[1].data[selectedYearIndex].y != null)
+			mainChart.series[1].data[selectedYearIndex].select(true,true);
 		}
     }
     
@@ -207,7 +208,7 @@
    	  	var minValuesArray = $.grep(sparkAppropTotalArray.concat(sparkExpendTotalArray), function(val) { return val != null; });
 	   	  arraysLoaded = 0;
 	      // Small chart
-	      chart2 = new Highcharts.Chart({
+	      sparkChart = new Highcharts.Chart({
 	        chart: {
 	          defaultSeriesType: "area",
 	          margin: [0, 0, 0, 0],
@@ -219,6 +220,14 @@
 	          area: { fillOpacity: 0.25 },
 	          series: {
 	            lineWidth: 2,
+	            point: {
+	              events: {
+	                click: function() {
+	                	if (fundView == '')
+							$.address.parameter('fund',convertToQueryString($('.expanded-primary h2').html()));
+	                }
+	              }
+	            },
 	            marker: { enabled: false },
 	            shadow: false
 	          }
@@ -301,9 +310,14 @@
 	
 	//show/hide expanded detail
 	function updateDetail(itemId, detail) {
+		if (sparkChart != null)
+		{
+			sparkChart.destroy();
+			sparkChart = null;
+		}
+		
 		if ($('#' + itemId + '-expanded').length == 0)
 		{
-			//console.log('showing detail');
 			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
 			$('#breakdown .expanded-content').remove();
 			$('#breakdown tr').removeClass('expanded-head');
@@ -313,7 +327,6 @@
 		}
 		else
 		{
-			//console.log('hiding all details');
 			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
 			$('#breakdown .expanded-content').remove();
 			$('#breakdown tr').removeClass('expanded-head');
@@ -609,7 +622,10 @@
 	
 	function convertToQueryString(Text)
 	{
-		return (Text+'').replace(/\-+/g, '+');
+		if (Text == undefined) return '';
+		
+		return (Text+'').replace(/\-+/g, '+')
+		.replace(/\s+/g, '+');
 	}
 	
 	function convertToPlainString(Text)
