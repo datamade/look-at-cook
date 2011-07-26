@@ -228,28 +228,50 @@
 	                }
 	              }
 	            },
-	            marker: { enabled: false },
+              pointInterval: 365 * 24 * 3600 * 1000,
+              pointStart: Date.UTC(1993, 1, 1),
 	            shadow: false
 	          }
 	        },
 	        series: [
-	          {
+            {
 	            color: "#264870",
-	            data: sparkAppropTotalArray
+	            data: sparkAppropTotalArray,
+              marker: {
+                radius: 4,
+                symbol: "circle"
+              },
+              name: "Budgeted"
 	          }, {
-	            color: "#4c7099",
-	            data: sparkExpendTotalArray
+	            color: "#7d9abb",
+	            data: sparkExpendTotalArray,
+              marker: {
+                radius: 5,
+                symbol: "square"
+              },
+              name: "Spent"
 	          }
 	        ],
 	        title: null,
-	        tooltip: { enabled: false },
-	        xAxis: {
+	        tooltip: {
+            borderColor: "#000",
+            formatter: function() {
+              var s = "<strong>" + Highcharts.dateFormat("%Y", this.x) + "</strong>";
+              $.each(this.points, function(i, point) {
+                s += "<br /><span style=\"color: " + point.series.color + "\">" + point.series.name + ":</span> $" + Highcharts.numberFormat(point.y, 0);
+              });
+              return s;
+            },
+            shared: true
+          },
+          xAxis: {
 	          labels: { enabled: false },
 	          lineWidth: 0,
 	          maxPadding: 0,
-	          minPadding: 0
+	          minPadding: 0,
+            type: "datetime"
 	        },
-	        yAxis: {
+          yAxis: {
 	          endOnTick: false,
 	          gridLineWidth: 0,
 	          labels: { enabled: false },
