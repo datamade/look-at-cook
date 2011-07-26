@@ -79,10 +79,14 @@
 	      // Highcharts
 	      chart1 = new Highcharts.Chart({
 	      chart: {
+	        borderColor: "#dddddd",
+	        borderRadius: 0,
+	        borderWidth: 1,
 	        defaultSeriesType: "area",
-	        marginBottom: 20,
-	        marginRight: 0,
-	        marginTop: 10,
+	        marginBottom: 30,
+	        marginLeft: 60,
+	        marginRight: 15,
+	        marginTop: 20,
 	        renderTo: "timeline-chart"
 	      },
 	      credits: { enabled: false },
@@ -91,8 +95,8 @@
 	        borderColor: "#cccccc",
 	        floating: true,
 	        verticalAlign: "top",
-	        x: -310,
-	        y: 10,
+	        x: -300,
+	        y: 20,
 	      },
 	      plotOptions: {
 	        area: { fillOpacity: 0.25 },

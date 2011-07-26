@@ -91,10 +91,8 @@ ul { list-style: disc; }
 /* Breakdown table */
 #breakdown a { cursor: pointer; }
 #breakdown .num { text-align: right; }
-#breakdown td { border: 1px solid #ddd; border-width: 1px 0; }
-#breakdown td:last-child { padding-right: 0; }
-#breakdown td, #breakdown th { padding: 0.3em 1em 0.3em 0; }
-#breakdown th { font-size: 12px; font-weight: bold; text-align: left; }
+#breakdown td, #breakdown th { border: 1px solid #ddd; font-size: 14px; padding: 0.3em 10px; }
+#breakdown th { background: #e1e9f2; font-size: 12px; font-weight: bold; text-align: left; }
 #breakdown th.charts { width: 50%; }
 #breakdown th.controls { width: 20px; }
 #breakdown th span { color: #f85204; cursor: pointer; }
@@ -110,7 +108,7 @@ ul { list-style: disc; }
 }
 
   /* Bars */
-  .bars span { border-style: solid; border-width: 6px 0; display: block; margin: 1px 0; }
+  .bars span { border-style: solid; border-width: 5px 0; display: block; margin: 1px 0; }
   
   /* Colors */
   .budgeted { color: #264870; }
@@ -122,11 +120,10 @@ ul { list-style: disc; }
   #breakdown .expanded-content td {
     border-bottom: 2px solid #7f7f7f;
     border-top: 0;
-    padding-top: 15px;
+    padding-top: 20px;
   }
   
   #breakdown .expanded-head td {
-    border-bottom: 0;
     border-top: 2px solid #7f7f7f;
     font-weight: bold;
   }
@@ -135,7 +132,7 @@ ul { list-style: disc; }
   .expanded-secondary { float: right; width: 48%; }
   
   /* Stats */
-  .stats { font-size: 16px; list-style: none; margin-left: 0; }
+  .stats { font-size: 16px; list-style: none; margin: 0 0 0.5em 0; }
   .stats li { display: inline; margin-right: 1em; }
   .stats strong { font-size: 25px; }
 
@@ -169,11 +166,17 @@ a[class*="icon"] {
 .icon-facebook { background-image: url(../images/facebook-sm.png); }
 .icon-twitter { background-image: url(../images/twitter-sm.png); }
 
+/* Scorecard */
+#scorecard { border-top: 3px solid #666; margin: 0; }
+#scorecard td { border: 1px solid #ddd; border-bottom: 0; padding: 0.8em 10px; }
+#scorecard-desc { width: 50%; }
+#scorecard h2 { font-size: 20px; }
+#scorecard h2, #scorecard p { margin: 0; }
+
 /* Tertiary content */
 #content-tertiary .action { float: right; }
 
 /* Timelines */
-#timeline { margin-bottom: 20px; }
 #timeline-chart { height: 300px; }
 
   /* Sparklines */
