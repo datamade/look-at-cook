@@ -648,8 +648,8 @@
 			
 			if (budgetedTop > 0 && budgetedBottom > 0)
 			{
-				var budgetedPercent = ((budgetedTop / budgetedBottom) - 1).toFixed(3) * 100;
-				if (budgetedPercent >= 0) budgetedPercent = '+' + budgetedPercent
+				var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
+				if (budgetedPercent >= 0) budgetedPercent = '+' + budgetedPercent;
 				console.log('budgetedPercent: ' + budgetedPercent);
 				
 				$('#sparkline-budgeted').fadeOut('fast', function(){
@@ -659,8 +659,8 @@
 			
 			if (spentTop > 0 && spentBottom > 0)
 			{
-				var spentPercent = ((spentTop / spentBottom) - 1).toFixed(3) * 100;
-				if (spentPercent >= 0) spentPercent = '+' + spentPercent
+				var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
+				if (spentPercent >= 0) spentPercent = '+' + spentPercent;
 				console.log('spentPercent: ' + spentPercent);
 				
 				$('#sparkline-spent').fadeOut('fast', function(){
