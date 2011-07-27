@@ -132,8 +132,8 @@ ul { list-style: disc; }
   .expanded-secondary { float: right; width: 48%; }
   
   /* Stats */
-  .stats { font-size: 16px; list-style: none; margin: 0 0 0.5em 0; }
-  .stats li { display: inline; margin-right: 1em; }
+  .stats { list-style: none; margin: 0 0 0.5em 0; }
+  .stats li { display: inline; margin-right: 1em; white-space: nowrap; }
   .stats strong { font-size: 25px; }
 
 /* Footer */
