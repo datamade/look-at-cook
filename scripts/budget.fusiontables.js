@@ -23,7 +23,7 @@
 	
 	//primary load for graph and table
 	function loadFor(year, fund, externalLoad) {
-	  console.log('externalLoad: ' + externalLoad);
+	  //console.log('externalLoad: ' + externalLoad);
 	  console.log('fundView: ' + fundView + ', fund: ' + convertToPlainString(fund));
 	  
       var fundChanged = false;
@@ -35,14 +35,14 @@
       else
         fundView = '';
         
-      console.log('fundChanged: ' + fundChanged);
+      //console.log('fundChanged: ' + fundChanged);
       
       if (year != null && year != "")
       	loadYear = year;
       else
       	loadYear = 2011;
       
-      console.log('fundView: ' + fundView + ", loadYear: " + loadYear);	
+      //console.log('fundView: ' + fundView + ", loadYear: " + loadYear);	
       if (fundView != ""){
         if (fundChanged || externalLoad)
         {
@@ -189,9 +189,9 @@
 	      }
 	  	});
 		//select the current year on load
-		console.log('loadYear: ' + loadYear);
+		//console.log('loadYear: ' + loadYear);
 		var selectedYearIndex = 18 - (2011 - loadYear);
-		console.log('selectedYearIndex: ' + selectedYearIndex);
+		//console.log('selectedYearIndex: ' + selectedYearIndex);
 		if (mainChart.series[0].data[selectedYearIndex].y != null)
 			mainChart.series[0].data[selectedYearIndex].select(true,true);
 		if (mainChart.series[1].data[selectedYearIndex].y != null)
@@ -285,6 +285,11 @@
 	          text: null
 	        }
 	      });
+	    var selectedYearIndex = 18 - (2011 - loadYear);
+		if (sparkChart.series[0].data[selectedYearIndex].y != null)
+			sparkChart.series[0].data[selectedYearIndex].select(true,true);
+		if (sparkChart.series[1].data[selectedYearIndex].y != null)
+			sparkChart.series[1].data[selectedYearIndex].select(true,true);
       }
     }
     
@@ -417,6 +422,19 @@
 		getQuery(myQuery).send(callback);
 	}
 	
+	function getSparklinePercentages(name, forDepartment, year, callback) {	
+		if (year > 1993) {
+			var whereClause = "";
+			if (forDepartment)
+				whereClause += " WHERE 'Department ID' = '" + name + "'";
+			else
+				whereClause += " WHERE 'Fund' = '" + name + "'";
+				
+			var myQuery = "SELECT SUM('Appropriations " + year + "') AS 'Appropriations Top', SUM('Expenditures " + year + "') AS 'Expenditures Top', SUM('Appropriations " + (year - 1) + "') AS 'Appropriations Bottom', SUM('Expenditures " + (year - 1) + "') AS 'Expenditures Bottom' FROM " + fusionTableId + whereClause;			
+			getQuery(myQuery).send(callback);
+		}
+	}
+	
 	//converts SQL query to URL	
 	function getQuery(myQuery) {
 		//console.log(myQuery);
@@ -547,17 +565,18 @@
 		fusiontabledata += "	  <div class='expanded-secondary'>";
 		fusiontabledata += "		<div class='sparkline' id='selected-chart'></div>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><strong>x.x%</strong> budgeted from 2010</li>";
-		fusiontabledata += "		  <li><strong>y.y%</strong> spent from 2010</li>";
+		fusiontabledata += "		  <li id='sparkline-budgeted'></li>";
+		fusiontabledata += "		  <li id='sparkline-spent'></li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	</td>";
 		fusiontabledata += "  </tr>";
+		
 		updateDetail(itemId, fusiontabledata);
 		getFundDescription(convertToPlainString(itemId), updateFundDescription);
-
 		getTotalArray(convertToPlainString(itemId), false, true, updateSparkAppropTotal);
 		getTotalArray(convertToPlainString(itemId), false, false, updateSparkExpendTotal);
+		getSparklinePercentages(convertToPlainString(itemId), false, loadYear, updateSparklinePercentages);
 	}
 	
 	function updateFundDescription(response) {
@@ -601,8 +620,8 @@
 		fusiontabledata += "	  <div class='expanded-secondary'>";
 		fusiontabledata += "		<div class='sparkline' id='selected-chart'></div>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><strong>x.x%</strong> budgeted from 2010</li>";
-		fusiontabledata += "		  <li><strong>y.y%</strong> spent from 2010</li>";
+		fusiontabledata += "		  <li id='sparkline-budgeted'></li>";
+		fusiontabledata += "		  <li id='sparkline-spent'></li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	</td>";
@@ -611,6 +630,44 @@
 		
 		getTotalArray(departmentId, true, true, updateSparkAppropTotal);
 		getTotalArray(departmentId, true, false, updateSparkExpendTotal);
+		getSparklinePercentages(departmentId, true, loadYear, updateSparklinePercentages); 
+	}
+	
+	function updateSparklinePercentages(response) {
+		if (response.getDataTable().getNumberOfRows() > 0)
+		{
+			var budgetedTop = response.getDataTable().getValue(0, 0);
+			var spentTop = response.getDataTable().getValue(0, 1);
+			var budgetedBottom = response.getDataTable().getValue(0, 2);
+			var spentBottom = response.getDataTable().getValue(0, 3);
+			
+			console.log('budgeted top: ' + budgetedTop);
+			console.log('spent top: ' + spentTop);
+			console.log('budgeted bottom: ' + budgetedBottom);
+			console.log('spent bottom: ' + spentBottom);
+			
+			if (budgetedTop > 0 && budgetedBottom > 0)
+			{
+				var budgetedPercent = ((budgetedTop / budgetedBottom) - 1).toFixed(1) * 100;
+				if (budgetedPercent >= 0) budgetedPercent = '+' + budgetedPercent
+				console.log('budgetedPercent: ' + budgetedPercent);
+				
+				$('#sparkline-budgeted').fadeOut('fast', function(){
+					$('#sparkline-budgeted').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (loadYear - 1));
+				}).fadeIn('fast');
+			}
+			
+			if (spentTop > 0 && spentBottom > 0)
+			{
+				var spentPercent = ((spentTop / spentBottom) - 1).toFixed(1) * 100;
+				if (spentPercent >= 0) spentPercent = '+' + spentPercent
+				console.log('spentPercent: ' + spentPercent);
+				
+				$('#sparkline-spent').fadeOut('fast', function(){
+					$('#sparkline-spent').html('<strong>' + spentPercent + '%</strong> spent from ' + (loadYear - 1));
+				}).fadeIn('fast');
+			}
+		}
 	}
 
 	//for debugging - prints out data in a table
