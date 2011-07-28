@@ -180,4 +180,4 @@ a[class*="icon"] {
 #timeline-chart { height: 300px; }
 
   /* Sparklines */
-  .sparkline { height: 80px; margin-bottom: 15px; }
+  .sparkline { height: 100px; margin-bottom: 15px; }

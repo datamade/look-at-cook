@@ -174,6 +174,7 @@
 	      },
 	      yAxis: {
 	        gridLineColor: "#ddd",
+	        lineWidth: 1,
 	        labels: {
 	          formatter: function() {
 	            if (this.value >= 1000000000)
@@ -209,7 +210,8 @@
 	      sparkChart = new Highcharts.Chart({
 	        chart: {
 	          defaultSeriesType: "area",
-	          margin: [0, 0, 0, 0],
+	          marginBottom: 15,
+	          marginRight: 0,
 	          renderTo: "selected-chart"
 	        },
 	        legend: { enabled: false },
@@ -269,20 +271,25 @@
             shared: true
           },
           xAxis: {
-	          labels: { enabled: false },
-	          lineWidth: 0,
-	          maxPadding: 0,
-	          minPadding: 0,
-            type: "datetime"
-	        },
-          yAxis: {
-	          endOnTick: false,
+  	        dateTimeLabelFormats: { year: "%Y" },
+  	        gridLineWidth: 0,
+  	        type: "datetime"
+  	      },
+  	      yAxis: {
 	          gridLineWidth: 0,
-	          labels: { enabled: false },
-	          min: Math.min.apply( Math, minValuesArray ),
-	          maxPadding: 0,
-	          minPadding: 0,
-	          text: null
+	          labels: {
+  	          formatter: function() {
+  	            if (this.value >= 1000000000)
+  	              return "$" + this.value / 1000000000 + "B";
+  	            else if (this.value >= 1000000)
+  	              return "$" + this.value / 1000000 + "M";
+  	            else
+  	              return "$" + this.value;
+  	          }
+  	        },
+  	        lineWidth: 1,
+  	        min: Math.min.apply( Math, minValuesArray ),
+	          title: { text: null }
 	        }
 	      });
 	    var selectedYearIndex = 18 - (2011 - loadYear);
