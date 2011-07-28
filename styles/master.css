@@ -169,10 +169,10 @@ a[class*="icon"] {
 
 /* Scorecard */
 #scorecard { border-top: 3px solid #666; margin: 0; }
-#scorecard td { border: 1px solid #ddd; border-bottom: 0; padding: 0.8em 10px; }
-#scorecard-desc { width: 50%; }
 #scorecard h2 { font-size: 20px; }
 #scorecard h2, #scorecard p { margin: 0; }
+#scorecard td { border: 1px solid #ddd; border-bottom: 0; padding: 0.8em 10px; width: 25%; }
+#scorecard td#scorecard-desc { width: 50%; }
 
 /* Tertiary content */
 #content-tertiary .action { float: right; }
