@@ -152,7 +152,15 @@ ul { list-style: disc; }
 /* Header */
 #header { color: #b7c6d6; font-size: 13px; padding-bottom: 30px; }
 #header a { color: #fff; }
-#header-secondary { float: right; font-style: italic; padding-top: 54px; text-align: right; }
+
+#header-secondary {
+  background: url(../images/signature.png) no-repeat 100% 100%;
+  float: right;
+  font-style: italic;
+  padding: 17px 0 47px;
+  text-align: right;
+}
+
 #logo { float: left; }
 #logo-print { display: none; }
 
