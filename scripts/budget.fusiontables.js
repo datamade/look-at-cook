@@ -86,6 +86,12 @@
 	        borderColor: "#dddddd",
 	        borderRadius: 0,
 	        borderWidth: 1,
+          events: {
+            click: function() {
+              $("#readme").fadeOut("fast");
+              $.cookie("budgetbreakdownreadme", "read", { expires: 7 });
+            }
+          },
 	        defaultSeriesType: "area",
 	        marginBottom: 30,
 	        marginLeft: 60,
@@ -109,6 +115,8 @@
 	          point: {
               events: {
                 click: function() {
+                  $("#readme").fadeOut("fast");
+                  $.cookie("budgetbreakdownreadme", "read", { expires: 7 });
                   var x = this.x,
 				      y = this.y,
                       selected = !this.selected,

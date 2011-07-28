@@ -178,7 +178,9 @@ a[class*="icon"] {
 #content-tertiary .action { float: right; }
 
 /* Timelines */
+#timeline { position: relative; }
 #timeline-chart { height: 300px; }
+#readme { display: none; left: -75px; position: absolute; top: 110px; }
 
   /* Sparklines */
   .sparkline { height: 100px; margin-bottom: 15px; }

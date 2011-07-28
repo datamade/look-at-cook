@@ -19,6 +19,7 @@
   <script src="scripts/jquery.address-1.4.min.js" type="text/javascript"></script>
   <script src="scripts/budget.fusiontables.js" type="text/javascript"></script>
   <script src="scripts/jquery.ga-event-tracker.js" type="text/javascript"></script>
+  <script src="scripts/jquery.cookie.js" type="text/javascript"></script>
   <script src="/source/analytics_lib.js" type="text/javascript"></script>
   
   <script type="text/javascript">
@@ -34,8 +35,18 @@
 	});	
     
     $(function() {   
-	  $('#download-button').attr("href","http://www.google.com/fusiontables/DataSource?dsrcid=" + fusionTableId);
+      $('#download-button').attr("href","http://www.google.com/fusiontables/DataSource?dsrcid=" + fusionTableId);
+      
+      $("body").bind("click", function(e){
+        $.cookie("budgetbreakdownreadme", "read", { expires: 7 });
+        $("#readme").fadeOut("fast");
+      });
+      
+      if ($.cookie("budgetbreakdownreadme") != "read") {
+        $("#readme").fadeIn("fast");
+      }
     });
+    
   </script>
 </head>
 <body>
@@ -59,6 +70,7 @@
       <div id="timeline">
         <h2></h2>
         <div id="timeline-chart"></div>
+        <div id="readme"><img alt="Click points to see annual budgets below" src="images/readme.png" /></div>
       </div>
       
       <table id="scorecard">
