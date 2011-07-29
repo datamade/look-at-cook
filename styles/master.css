@@ -40,6 +40,10 @@ table { border-collapse: collapse; width: 100%; }
 td { vertical-align: top; }
 ul { list-style: disc; }
 
+/* Stock classes */
+.l { float: left; }
+.r { float: right; }
+
 
 /* Core layout
 ======================================================================*/

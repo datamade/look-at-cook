@@ -26,12 +26,12 @@
 
 	$.address.externalChange(function(event) {  
 	    //console.log('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
-        loadFor($.address.parameter('year'), $.address.parameter('fund'), true);
+        loadFor($.address.parameter('viewMode'), $.address.parameter('year'), $.address.parameter('controlOfficer'), $.address.parameter('fund'), true);
 	});	
 	
 	$.address.internalChange(function(event) {  
 	    //console.log('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
-        loadFor($.address.parameter('year'), $.address.parameter('fund'), false);
+        loadFor($.address.parameter('viewMode'), $.address.parameter('year'), $.address.parameter('controlOfficer'), $.address.parameter('fund'), false);
 	});	
     
     $(function() {   
@@ -68,6 +68,7 @@
       <p>Explore Cook County's budget from 1993 to 2011 and learn how the money is being spent. <a onclick="window.scrollTo(0, document.body.scrollHeight);">More about this project</a> &raquo;</p>
       
       <div id="timeline">
+        <p class='r'></p>
         <h2></h2>
         <div id="timeline-chart"></div>
         <div id="readme"><img alt="Click points to see annual budgets below" src="images/readme.png" /></div>
