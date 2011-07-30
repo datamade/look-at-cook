@@ -36,7 +36,7 @@ h2 { font-size: 25px; line-height: 1.2; margin-bottom: 0.3em; }
 h3 { font-size: 20px; line-height: 1.2; }
 ol { list-style: decimal; }
 ol, ul { margin-left: 2em; }
-table { border-collapse: collapse; width: 100%; }
+table { border-collapse: collapse; width: 100% !important; }
 td { vertical-align: top; }
 ul { list-style: disc; }
 
@@ -135,6 +135,20 @@ ul { list-style: disc; }
   .expanded-primary { float: left; width: 48%; }
   .expanded-secondary { float: right; width: 48%; }
   
+  /* Nav */
+  #breakdown-nav { margin-top: -1px; }
+  #breakdown-nav a { display: block; padding: 0.4em 1em 0.3em; }
+  #breakdown-nav li { float: left; }
+  #breakdown-nav li.current { background: #264870; color: #fff; padding: 0.4em 1em 0.3em; }
+  #breakdown-nav ul { list-style: none; margin: 0; }
+  
+  /* Scorecard */
+  #scorecard { border-top: 3px solid #264870; margin: 0; }
+  #scorecard h2 { font-size: 20px; }
+  #scorecard h2, #scorecard p { margin: 0; }
+  #scorecard td { border: 1px solid #ddd; border-bottom: 0; padding: 0.8em 10px; width: 25%; }
+  #scorecard td#scorecard-desc { width: 50%; }  
+  
   /* Stats */
   .stats { list-style: none; margin: 0 0 0.5em 0; }
   .stats li { display: inline; margin-right: 1em; white-space: nowrap; }
@@ -170,13 +184,6 @@ a[class*="icon"] {
 
 .icon-facebook { background-image: url(../images/facebook-sm.png); }
 .icon-twitter { background-image: url(../images/twitter-sm.png); }
-
-/* Scorecard */
-#scorecard { border-top: 3px solid #666; margin: 0; }
-#scorecard h2 { font-size: 20px; }
-#scorecard h2, #scorecard p { margin: 0; }
-#scorecard td { border: 1px solid #ddd; border-bottom: 0; padding: 0.8em 10px; width: 25%; }
-#scorecard td#scorecard-desc { width: 50%; }
 
 /* Tertiary content */
 #content-tertiary .action { float: right; }

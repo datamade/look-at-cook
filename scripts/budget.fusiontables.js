@@ -80,16 +80,16 @@
 		if (viewByOfficer)
 		{
 			getAllControlOfficersForYear(loadYear, getDataAsBudgetTable);
-			$("#timeline .r").html("<a href='#' rel='address:/?year=" + loadYear + "&viewMode=fund'>View by fund</a> | View by control officer");
+			$("#breakdown-nav ul").html("<li><a href='#' rel='address:/?year=" + loadYear + "&viewMode=fund'>Where's it going?</a></li><li class='current'>Who controls it?</li>");
 			$('#breakdown-item-title span').html('Control Officer');
 		}
 		else
 		{
       		getAllFundsForYear(loadYear, getDataAsBudgetTable);
-      		$("#timeline .r").html("View by fund | <a href='#' rel='address:/?year=" + loadYear + "&viewMode=officer'>View by control officer</a>");
+      		$("#breakdown-nav ul").html("<li class='current'>Where's it going?</li><li><a href='#' rel='address:/?year=" + loadYear + "&viewMode=officer'>Who controls it?</a></li>");
 	      	$('#breakdown-item-title span').html('Fund');
       	}
-      	$("#timeline a").address();
+      	$("#breakdown-nav a").address();
       }
       
       getFundDescription(fundView, updateScorecardDescription);
