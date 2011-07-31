@@ -8,6 +8,7 @@
 	
 	var fusionTableId = 1113478;
 	var fundDescriptionTableId = 1113392;
+	var officerDescriptionTableId = 1113485;
   	var breakdownData = "";
   	var sparkChart;
   	var breakdownTable;
@@ -58,20 +59,42 @@
         if (viewChanged || externalLoad)
         {
 	        window.scrollTo(0, 0);
-	    	getTotalArray(fundView, false, true, updateAppropTotal);
-			getTotalArray(fundView, false, false, updateExpendTotal);
+	    	getTotalArray(fundView, 'Fund', true, updateAppropTotal);
+			getTotalArray(fundView, 'Fund', false, updateExpendTotal);
 		}
-        getDepartmentsForFund(fundView, loadYear, getDataAsBudgetTable);
+        getDepartments(fundView, 'Fund', loadYear, getDataAsBudgetTable);
         
         $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + fundView);
         $('#secondary-title').html('<h3>' + loadYear + ' ' + fundView + '</h3>');
         $('#breakdown-item-title span').html('Department');
+        $("#breakdown-nav").html("");
         $('#timeline h2 a').address();
+        
+        getTotalsForYear(fundView, 'Fund', loadYear, updateScorecard);
+        getFundDescription(fundView, updateScorecardDescription);
+      }
+      else if (officerView != ""){
+        if (viewChanged || externalLoad)
+        {
+	        window.scrollTo(0, 0);
+	    	getTotalArray(officerView, 'Control Officer', true, updateAppropTotal);
+			getTotalArray(officerView, 'Control Officer', false, updateExpendTotal);
+		}
+        getDepartments(officerView, 'Control Officer', loadYear, getDataAsBudgetTable);
+        
+        $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + officerView);
+        $('#secondary-title').html('<h3>' + loadYear + ' ' + officerView + '</h3>');
+        $('#breakdown-item-title span').html('Department');
+        $('#timeline h2 a').address();
+		$("#breakdown-nav").html("");
+		
+		getTotalsForYear(officerView, 'Control Officer', loadYear, updateScorecard);
+		getControlOfficerDescription(officerView, updateScorecardDescription);
       }
       else{
         if (viewChanged || externalLoad) {
-  			getTotalArray('', false, true, updateAppropTotal);
-			getTotalArray('', false, false, updateExpendTotal);
+  			getTotalArray('', '', true, updateAppropTotal);
+			getTotalArray('', '', false, updateExpendTotal);
 		}
 		
 		$('#timeline h2').html('Cook County Budget');
@@ -80,20 +103,20 @@
 		if (viewByOfficer)
 		{
 			getAllControlOfficersForYear(loadYear, getDataAsBudgetTable);
-			$("#breakdown-nav ul").html("<li><a href='#' rel='address:/?year=" + loadYear + "&viewMode=fund'>Where's it going?</a></li><li class='current'>Who controls it?</li>");
+			$("#breakdown-nav").html("<ul><li><a href='#' rel='address:/?year=" + loadYear + "&viewMode=fund'>Where's it going?</a></li><li class='current'>Who controls it?</li></ul><div class='clear'></div>");
 			$('#breakdown-item-title span').html('Control Officer');
 		}
 		else
 		{
       		getAllFundsForYear(loadYear, getDataAsBudgetTable);
-      		$("#breakdown-nav ul").html("<li class='current'>Where's it going?</li><li><a href='#' rel='address:/?year=" + loadYear + "&viewMode=officer'>Who controls it?</a></li>");
+      		$("#breakdown-nav").html("<ul><li class='current'>Where's it going?</li><li><a href='#' rel='address:/?year=" + loadYear + "&viewMode=officer'>Who controls it?</a></li></ul><div class='clear'></div>");
 	      	$('#breakdown-item-title span').html('Fund');
       	}
       	$("#breakdown-nav a").address();
+      	
+      	getTotalsForYear('', '', loadYear, updateScorecard);
+      	getFundDescription(fundView, updateScorecardDescription);
       }
-      
-      getFundDescription(fundView, updateScorecardDescription);
-      getTotalsForYear(loadYear, fundView, updateScorecard);	
     }  
 	
 	//displays highchart
@@ -255,12 +278,15 @@
 	              events: {
 	                click: function() {
 						var x = this.x;
-	                	if (fundView == '')
+	                	if (fundView == '' && officerView == '')
 						{
 							var clickedYear = new Date(x).getFullYear();				  
 							$.address.parameter('year',clickedYear)
 							$.address.parameter('fund',convertToQueryString($('.expanded-primary h2').html()));
-							
+						}
+						else
+						{
+						
 						}
 	                }
 	              }
@@ -403,7 +429,7 @@
 	}
   	
   	//gets fund or department totals per year for highcharts  	
-	function getTotalArray(name, forDepartment, isAppropriation, callback) {
+	function getTotalArray(name, queryType, isAppropriation, callback) {
 		var typeStr = "Expenditures";
 		if (isAppropriation == true) 
 			typeStr = "Appropriations";
@@ -418,21 +444,16 @@
 		myQuery = myQuery.slice(0,myQuery.length-2);  
 		myQuery += " FROM " + fusionTableId;
 		if (name != '')
-		{
-			if (forDepartment)
-				myQuery += " WHERE 'Department ID' = '" + name + "'";
-			else
-				myQuery += " WHERE 'Fund' = '" + name + "'";
-		}
+			myQuery += " WHERE '" + queryType + "' = '" + name + "'";
 		
 		getQuery(myQuery).send(callback);
 	}
 	
 	//returns total given year
-	function getTotalsForYear(year, fund, callback) {
+	function getTotalsForYear(name, queryType, year, callback) {
 		var whereClause = "";
-		if (fund != "")
-			whereClause = " WHERE Fund = '" + fund + "'";
+		if (name != "")
+			whereClause = " WHERE '" + queryType + "' = '" + name + "'";
 			
 		var myQuery = "SELECT SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures' FROM " + fusionTableId + whereClause;			
 		getQuery(myQuery).send(callback);
@@ -445,8 +466,8 @@
 	}
 	
 	//returns all funds budgeted/spent totals for given year
-	function getDepartmentsForFund(fund, year, callback) {		
-		var myQuery = "SELECT 'Short Title', SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures', 'Short Title' AS '" + year + "', 'Department ID' FROM " + fusionTableId + " WHERE Fund = '" + fund + "' GROUP BY 'Department ID', 'Short Title'";			
+	function getDepartments(name, queryType, year, callback) {		
+		var myQuery = "SELECT 'Short Title', SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures', 'Short Title' AS '" + year + "', 'Department ID' FROM " + fusionTableId + " WHERE '" + queryType + "' = '" + name + "' GROUP BY 'Department ID', 'Short Title'";			
 		getQuery(myQuery).send(callback);
 	}
 	
@@ -461,18 +482,21 @@
 		getQuery(myQuery).send(callback);
 	}
 	
+	function getControlOfficerDescription(officer, callback) {
+		var myQuery = "SELECT 'Control Officer Description' FROM " + officerDescriptionTableId + " WHERE Item = '" + officer + "'";			
+		getQuery(myQuery).send(callback);
+	}
+	
 	function getDepartmentDescription(departmentId, callback) {
 		var myQuery = "SELECT 'Department ID', Department, 'Link to Website', 'Department Description', 'Control Officer' FROM " + fusionTableId + " WHERE 'Department ID' = " + departmentId;			
 		getQuery(myQuery).send(callback);
 	}
 	
-	function getSparklinePercentages(name, forDepartment, year, callback) {	
+	function getSparklinePercentages(name, queryType, year, callback) {	
 		if (year > 1993) {
 			var whereClause = "";
-			if (forDepartment)
-				whereClause += " WHERE 'Department ID' = '" + name + "'";
-			else
-				whereClause += " WHERE 'Fund' = '" + name + "'";
+			if (queryType != "")
+				whereClause += " WHERE '" + queryType + "' = '" + name + "'";
 				
 			var myQuery = "SELECT SUM('Appropriations " + year + "') AS 'Appropriations Top', SUM('Expenditures " + year + "') AS 'Expenditures Top', SUM('Appropriations " + (year - 1) + "') AS 'Appropriations Bottom', SUM('Expenditures " + (year - 1) + "') AS 'Expenditures Bottom' FROM " + fusionTableId + whereClause;			
 			getQuery(myQuery).send(callback);
@@ -481,7 +505,7 @@
 	
 	//converts SQL query to URL	
 	function getQuery(myQuery) {
-		//console.log(myQuery);
+		console.log(myQuery);
 		var queryText = encodeURIComponent(myQuery);
 	  	return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
 	}
@@ -575,12 +599,13 @@
 		  
 		  var rowId = convertToSlug(rowName);
 		  var detailLoadFunction = "getFundDetails(\"" + convertToSlug(rowName) + "\");";
-		  if (viewByOfficer)
-		  	detailLoadFunction = "getControlOfficerDetails(\"" + convertToSlug(rowName) + "\");";
-		  else if ((fundView != null && fundView != "") || (officerView != null && officerView != "")) {
+		  
+		  if ((fundView != null && fundView != "") || (officerView != null && officerView != "")) {
 		    rowId = "department-" + departmentId;
 			detailLoadFunction = "getDepartmentDetails(\"department-" + departmentId + "\");";
 		  }
+		  else if (viewByOfficer)
+		  	detailLoadFunction = "getControlOfficerDetails(\"" + convertToSlug(rowName) + "\");";
 		  
 		  if (budgeted != 0 || spent != 0)
 		  {
@@ -602,13 +627,14 @@
 	
 	//shows fund details
 	function getFundDetails(itemId) {	
+		//console.log('getFundDetails');
 		var fusiontabledata;
 		  
 		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
 		fusiontabledata += "	<td colspan='5'>";
 		fusiontabledata += "  <div class='expanded-primary'>";
 		fusiontabledata += "		<h2>" + convertToPlainString(itemId) + "</h2>";
-		fusiontabledata += "		<p id='fund-description'></p>";
+		fusiontabledata += "		<p id='expanded-description'></p>";
 		fusiontabledata += "		<ul class='stats'>";
 		fusiontabledata += "		  <li><a class='adr' href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>Breakdown by department&nbsp;&raquo;</a></li>";
 		//fusiontabledata += "		  <li><a href='#'>Breakdown by control officer&nbsp;&raquo;</a></li>";
@@ -625,23 +651,24 @@
 		fusiontabledata += "  </tr>";
 		
 		updateDetail(itemId, fusiontabledata);
-		getFundDescription(convertToPlainString(itemId), updateFundDescription);
-		getTotalArray(convertToPlainString(itemId), false, true, updateSparkAppropTotal);
-		getTotalArray(convertToPlainString(itemId), false, false, updateSparkExpendTotal);
-		getSparklinePercentages(convertToPlainString(itemId), false, loadYear, updateSparklinePercentages);
+		getFundDescription(convertToPlainString(itemId), updateExpandedDescription);
+		getTotalArray(convertToPlainString(itemId), 'Fund', true, updateSparkAppropTotal);
+		getTotalArray(convertToPlainString(itemId), 'Fund', false, updateSparkExpendTotal);
+		getSparklinePercentages(convertToPlainString(itemId), 'Fund', loadYear, updateSparklinePercentages);
 	}
 	
 	//shows fund details
 	function getControlOfficerDetails(itemId) {	
+		//console.log('getControlOfficerDetails');
 		var fusiontabledata;
 		  
 		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
 		fusiontabledata += "	<td colspan='5'>";
 		fusiontabledata += "  <div class='expanded-primary'>";
 		fusiontabledata += "		<h2>" + convertToPlainString(itemId) + "</h2>";
-		fusiontabledata += "		<p id='fund-description'></p>";
+		fusiontabledata += "		<p id='expanded-description'></p>";
 		fusiontabledata += "		<ul class='stats'>";
-		fusiontabledata += "		  <li><a class='adr' href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>Breakdown by department&nbsp;&raquo;</a></li>";
+		fusiontabledata += "		  <li><a class='adr' href='/?year=" + loadYear + "&amp;controlOfficer=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;controlOfficer=" + convertToQueryString(itemId) + "'>Breakdown by department&nbsp;&raquo;</a></li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
@@ -655,20 +682,21 @@
 		fusiontabledata += "  </tr>";
 		
 		updateDetail(itemId, fusiontabledata);
-		//getFundDescription(convertToPlainString(itemId), updateFundDescription);
-		//getTotalArray(convertToPlainString(itemId), false, true, updateSparkAppropTotal);
-		//getTotalArray(convertToPlainString(itemId), false, false, updateSparkExpendTotal);
-		//getSparklinePercentages(convertToPlainString(itemId), false, loadYear, updateSparklinePercentages);
+		getControlOfficerDescription(convertToPlainString(itemId), updateExpandedDescription);
+		getTotalArray(convertToPlainString(itemId), 'Control Officer', true, updateSparkAppropTotal);
+		getTotalArray(convertToPlainString(itemId), 'Control Officer', false, updateSparkExpendTotal);
+		getSparklinePercentages(convertToPlainString(itemId), 'Control Officer', loadYear, updateSparklinePercentages);
 	}
 	
-	function updateFundDescription(response) {
+	function updateExpandedDescription(response) {
 		var description = '';
 		
 		if (response.getDataTable().getNumberOfRows() > 0)
 			description = response.getDataTable().getValue(0, 0);
-			
-		$('#fund-description').fadeOut('fast', function(){
-			$('#fund-description').html(description);
+		
+		console.log('description: ' + description);
+		$('#expanded-description').fadeOut('fast', function(){
+			$('#expanded-description').html(description);
 		}).fadeIn('fast');
 	}
 	
@@ -691,12 +719,13 @@
 		fusiontabledata += "	<td colspan='5'>";
 		fusiontabledata += "  <div class='expanded-primary'>";
 		fusiontabledata += "		<h2>" + department + "</h2>";
-		fusiontabledata += "		<p>" + description + "</p>";
+		fusiontabledata += "		<p>" + description + " ";
+		if (linkToWebsite != '')
+			fusiontabledata += "		  <a href='" + linkToWebsite + "'>Official&nbsp;website&nbsp;&raquo;</a>";
+		fusiontabledata += "</p>";		
 		fusiontabledata += "		<ul class='stats'>";
 		if (controlOfficer != '')
 			fusiontabledata += "		  <li>Control officer: " + controlOfficer + "</li>";
-		if (linkToWebsite != '')
-			fusiontabledata += "		  <li><a href='" + linkToWebsite + "'>Official website &raquo;</a></li>";	
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
@@ -710,9 +739,9 @@
 		fusiontabledata += "  </tr>";
 		updateDetail('department-' + departmentId, fusiontabledata);
 		
-		getTotalArray(departmentId, true, true, updateSparkAppropTotal);
-		getTotalArray(departmentId, true, false, updateSparkExpendTotal);
-		getSparklinePercentages(departmentId, true, loadYear, updateSparklinePercentages); 
+		getTotalArray(departmentId, 'Department ID', true, updateSparkAppropTotal);
+		getTotalArray(departmentId, 'Department ID', false, updateSparkExpendTotal);
+		getSparklinePercentages(departmentId, 'Department ID', loadYear, updateSparklinePercentages); 
 	}
 	
 	function updateSparklinePercentages(response) {
