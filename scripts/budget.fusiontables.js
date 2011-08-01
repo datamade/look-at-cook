@@ -157,7 +157,7 @@
 	        floating: true,
 	        verticalAlign: "top",
 	        x: -300,
-	        y: 20,
+	        y: 20
 	      },
 	      plotOptions: {
 	        area: { fillOpacity: 0.25 },
