@@ -556,7 +556,7 @@
 		else if (fundView == '')
 		{
 			$('#scorecard-desc p').fadeOut('fast', function(){
-				$('#scorecard-desc p').html('Breakdown by department');
+				$('#scorecard-desc p').html('Breakdown by fund');
 			}).fadeIn('fast');
 		}
 	}
