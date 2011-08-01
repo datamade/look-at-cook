@@ -184,7 +184,7 @@
                     }
                   });
 				  var clickedYear = new Date(x).getFullYear();
-				  _trackClickEvent("Charts", "Choose year", clickedYear + " (" + $('#secondary-title').html() + ")");
+				  _trackClickEvent("Charts", "Choose year", clickedYear + " (from " + $('#secondary-title').html() + ")");
 				  $.address.parameter('year',clickedYear);
                 }
               }
@@ -669,7 +669,7 @@
 	
 	//shows fund details
 	function getFundDetails(itemId) {	
-		_trackClickEvent("Charts", "Expand row", convertToPlainString(itemId) + " (" + loadYear + ")");
+		_trackClickEvent("Charts", "Expand row", "Fund: " + convertToPlainString(itemId) + " (" + loadYear + ")");
 		var fusiontabledata;
 		  
 		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
@@ -700,7 +700,7 @@
 	
 	//shows fund details
 	function getControlOfficerDetails(itemId) {	
-		_trackClickEvent("Charts", "Expand row", convertToPlainString(itemId) + " (" + loadYear + ")");
+		_trackClickEvent("Charts", "Expand row", "Control officer: " + convertToPlainString(itemId) + " (" + loadYear + ")");
 		var fusiontabledata;
 		  
 		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
@@ -756,7 +756,7 @@
 		var description = response.getDataTable().getValue(0, 3);
 		var controlOfficer = response.getDataTable().getValue(0, 4);
 		
-		_trackClickEvent("Charts", "Expand row", department + " (" + loadYear + ")");	
+		_trackClickEvent("Charts", "Expand row", "Department: " + department + " (" + loadYear + ")");	
 		
 		fusiontabledata = "<tr class='expanded-content' id='department-" + departmentId + "-expanded'>";
 		fusiontabledata += "	<td colspan='5'>";
