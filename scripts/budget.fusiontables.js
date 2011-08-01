@@ -65,7 +65,7 @@
         getDepartments(fundView, 'Fund', loadYear, getDataAsBudgetTable);
         
         $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + fundView);
-        $('#secondary-title').html('<h3>' + loadYear + ' ' + fundView + '</h3>');
+        $('#secondary-title').html(loadYear + ' ' + fundView);
         $('#breakdown-item-title span').html('Department');
         $("#breakdown-nav").html("");
         $('#timeline h2 a').address();
@@ -83,7 +83,7 @@
         getDepartments(officerView, 'Control Officer', loadYear, getDataAsBudgetTable);
         
         $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + officerView);
-        $('#secondary-title').html('<h3>' + loadYear + ' ' + officerView + '</h3>');
+        $('#secondary-title').html(loadYear + ' ' + officerView);
         $('#breakdown-item-title span').html('Department');
         $('#timeline h2 a').address();
 		$("#breakdown-nav").html("");
@@ -98,7 +98,7 @@
 		}
 		
 		$('#timeline h2').html('Cook County Budget');
-	    $('#secondary-title').text(loadYear + ' Cook County Budget');
+	    $('#secondary-title').html(loadYear + ' Cook County Budget');
 	      	
 		if (viewByOfficer)
 		{
@@ -116,6 +116,9 @@
       	
       	getTotalsForYear('', '', loadYear, updateScorecard);
       	getFundDescription(fundView, updateScorecardDescription);
+      	
+      	if (externalLoad)
+      		_trackClickEvent("Charts", "External load", $('#secondary-title').html());
       }
     }  
 	
@@ -179,8 +182,8 @@
                     }
                   });
 				  var clickedYear = new Date(x).getFullYear();
-				  
-				  $.address.parameter('year',clickedYear)
+				  _trackClickEvent("Charts", "Choose year", clickedYear + " (" + $('#secondary-title').html() + ")");
+				  $.address.parameter('year',clickedYear);
                 }
               }
             },
@@ -627,7 +630,7 @@
 	
 	//shows fund details
 	function getFundDetails(itemId) {	
-		//console.log('getFundDetails');
+		_trackClickEvent("Charts", "Expand row", convertToPlainString(itemId) + " (" + loadYear + ")");
 		var fusiontabledata;
 		  
 		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
@@ -659,7 +662,7 @@
 	
 	//shows fund details
 	function getControlOfficerDetails(itemId) {	
-		//console.log('getControlOfficerDetails');
+		_trackClickEvent("Charts", "Expand row", convertToPlainString(itemId) + " (" + loadYear + ")");
 		var fusiontabledata;
 		  
 		fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
@@ -707,13 +710,15 @@
 	}
 	
 	//shows department details
-	function updateDepartmentDetails(response) {	
+	function updateDepartmentDetails(response) {
 		var fusiontabledata;
 		var departmentId = response.getDataTable().getValue(0, 0);
 		var department = response.getDataTable().getValue(0, 1);
 		var linkToWebsite = response.getDataTable().getValue(0, 2);
 		var description = response.getDataTable().getValue(0, 3);
 		var controlOfficer = response.getDataTable().getValue(0, 4);
+		
+		_trackClickEvent("Charts", "Expand row", department + " (" + loadYear + ")");	
 		
 		fusiontabledata = "<tr class='expanded-content' id='department-" + departmentId + "-expanded'>";
 		fusiontabledata += "	<td colspan='5'>";
