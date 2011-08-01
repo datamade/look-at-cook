@@ -118,7 +118,9 @@
       	getFundDescription(fundView, updateScorecardDescription);
       	
       	if (externalLoad)
-      		_trackClickEvent("Charts", "External load", $('#secondary-title').html());
+      		_trackClickEvent("Charts", "Load timeline", $('#secondary-title').html());
+      	else if (viewChanged)
+      		_trackClickEvent("Charts", "View timeline", $('#secondary-title').html());
       }
     }  
 	
