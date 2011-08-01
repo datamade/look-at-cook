@@ -27,13 +27,13 @@
 	//primary load for graph and table
 	function loadFor(viewMode, year, fund, officer, externalLoad) {
 	  //console.log('externalLoad: ' + externalLoad);
-	  console.log('fundView: ' + fundView + ', fund: ' + convertToPlainString(fund) + ', officer: ' + convertToPlainString(officer));
+	  //console.log('fundView: ' + fundView + ', fund: ' + convertToPlainString(fund) + ', officer: ' + convertToPlainString(officer));
 	  
       var viewChanged = false;
       if (fundView != convertToPlainString(fund) || officerView != convertToPlainString(officer))
         	viewChanged = true;
         	
-      console.log('viewChanged: ' + viewChanged)
+      //console.log('viewChanged: ' + viewChanged)
         	
       if (viewMode != null && viewMode == "officer")
       	viewByOfficer = true;
@@ -457,8 +457,13 @@
 		var whereClause = "";
 		if (name != "")
 			whereClause = " WHERE '" + queryType + "' = '" + name + "'";
+		
+		var percentageQuery = "";	
+		if (year > 1993) {
+			percentageQuery = ", SUM('Appropriations " + year + "') AS 'Appropriations Top', SUM('Expenditures " + year + "') AS 'Expenditures Top', SUM('Appropriations " + (year - 1) + "') AS 'Appropriations Bottom', SUM('Expenditures " + (year - 1) + "') AS 'Expenditures Bottom'";
+		}
 			
-		var myQuery = "SELECT SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures' FROM " + fusionTableId + whereClause;			
+		var myQuery = "SELECT SUM('Appropriations " + year + "') AS 'Appropriations', SUM('Expenditures " + year + "') AS 'Expenditures' " + percentageQuery + " FROM " + fusionTableId + whereClause;			
 		getQuery(myQuery).send(callback);
 	}
 	
@@ -508,7 +513,7 @@
 	
 	//converts SQL query to URL	
 	function getQuery(myQuery) {
-		console.log(myQuery);
+		//console.log(myQuery);
 		var queryText = encodeURIComponent(myQuery);
 	  	return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
 	}
@@ -566,6 +571,34 @@
 				$('#scorecard .spent').html(response.getDataTable().getValue(0, 1));
 				$('#scorecard .spent').formatCurrency();
 			}).fadeIn('fast');
+			
+			if (response.getDataTable().getNumberOfColumns() > 2)
+			{
+				var budgetedTop = response.getDataTable().getValue(0, 2);
+				var spentTop = response.getDataTable().getValue(0, 3);
+				var budgetedBottom = response.getDataTable().getValue(0, 4);
+				var spentBottom = response.getDataTable().getValue(0, 5);
+				
+				if (budgetedTop > 0 && budgetedBottom > 0)
+				{
+					var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
+					if (budgetedPercent >= 0) budgetedPercent = '+' + budgetedPercent;
+					
+					$('#budgeted-percent').fadeOut('fast', function(){
+						$('#budgeted-percent').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (loadYear - 1));
+					}).fadeIn('fast');
+				}
+				
+				if (spentTop > 0 && spentBottom > 0)
+				{
+					var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
+					if (spentPercent >= 0) spentPercent = '+' + spentPercent;
+					
+					$('#spent-percent').fadeOut('fast', function(){
+						$('#spent-percent').html('<strong>' + spentPercent + '%</strong> spent from ' + (loadYear - 1));
+					}).fadeIn('fast');
+				}
+			}
 		}
 	}
 	
@@ -587,7 +620,7 @@
 	//builds out budget breakdown table
 	function getDataAsBudgetTable(response) {	
 		numRows = response.getDataTable().getNumberOfRows();
-		console.log('rows found: ' + numRows);
+		//console.log('rows found: ' + numRows);
 		var fusiontabledata;
 		for(i = 0; i < numRows; i++) {
 		  var rowName = response.getDataTable().getValue(i, 0);
@@ -640,7 +673,6 @@
 		fusiontabledata += "		<p id='expanded-description'></p>";
 		fusiontabledata += "		<ul class='stats'>";
 		fusiontabledata += "		  <li><a class='adr' href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(itemId) + "'>Breakdown by department&nbsp;&raquo;</a></li>";
-		//fusiontabledata += "		  <li><a href='#'>Breakdown by control officer&nbsp;&raquo;</a></li>";
 		fusiontabledata += "		</ul>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
@@ -697,7 +729,7 @@
 		if (response.getDataTable().getNumberOfRows() > 0)
 			description = response.getDataTable().getValue(0, 0);
 		
-		console.log('description: ' + description);
+		//console.log('description: ' + description);
 		$('#expanded-description').fadeOut('fast', function(){
 			$('#expanded-description').html(description);
 		}).fadeIn('fast');
@@ -757,16 +789,16 @@
 			var budgetedBottom = response.getDataTable().getValue(0, 2);
 			var spentBottom = response.getDataTable().getValue(0, 3);
 			
-			console.log('budgeted top: ' + budgetedTop);
-			console.log('spent top: ' + spentTop);
-			console.log('budgeted bottom: ' + budgetedBottom);
-			console.log('spent bottom: ' + spentBottom);
+			//console.log('budgeted top: ' + budgetedTop);
+			//console.log('spent top: ' + spentTop);
+			//console.log('budgeted bottom: ' + budgetedBottom);
+			//console.log('spent bottom: ' + spentBottom);
 			
 			if (budgetedTop > 0 && budgetedBottom > 0)
 			{
 				var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
 				if (budgetedPercent >= 0) budgetedPercent = '+' + budgetedPercent;
-				console.log('budgetedPercent: ' + budgetedPercent);
+				//console.log('budgetedPercent: ' + budgetedPercent);
 				
 				$('#sparkline-budgeted').fadeOut('fast', function(){
 					$('#sparkline-budgeted').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (loadYear - 1));
@@ -777,7 +809,7 @@
 			{
 				var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
 				if (spentPercent >= 0) spentPercent = '+' + spentPercent;
-				console.log('spentPercent: ' + spentPercent);
+				//console.log('spentPercent: ' + spentPercent);
 				
 				$('#sparkline-spent').fadeOut('fast', function(){
 					$('#sparkline-spent').html('<strong>' + spentPercent + '%</strong> spent from ' + (loadYear - 1));
