@@ -588,6 +588,8 @@
 						$('#budgeted-percent').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (loadYear - 1));
 					}).fadeIn('fast');
 				}
+				else
+					$('#budgeted-percent').fadeOut();
 				
 				if (spentTop > 0 && spentBottom > 0)
 				{
@@ -598,6 +600,8 @@
 						$('#spent-percent').html('<strong>' + spentPercent + '%</strong> spent from ' + (loadYear - 1));
 					}).fadeIn('fast');
 				}
+				else
+					$('#spent-percent').fadeOut();
 			}
 		}
 	}
@@ -804,6 +808,8 @@
 					$('#sparkline-budgeted').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (loadYear - 1));
 				}).fadeIn('fast');
 			}
+			else
+				$('#sparkline-budgeted').fadeOut();
 			
 			if (spentTop > 0 && spentBottom > 0)
 			{
@@ -815,6 +821,8 @@
 					$('#sparkline-spent').html('<strong>' + spentPercent + '%</strong> spent from ' + (loadYear - 1));
 				}).fadeIn('fast');
 			}
+			else
+				$('#sparkline-spent').fadeOut();
 		}
 	}
 
