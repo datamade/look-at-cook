@@ -6,7 +6,7 @@
 	//init
 	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
 	
-	var fusionTableId = 1113478;
+	var fusionTableId = 1227404;
 	var fundDescriptionTableId = 1113392;
 	var officerDescriptionTableId = 1113485;
   	var breakdownData = "";
