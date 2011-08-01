@@ -550,7 +550,7 @@
 		else if (viewByOfficer == true)
 		{
 			$('#scorecard-desc p').fadeOut('fast', function(){
-				$('#scorecard-desc p').html('Breakdown by control officer');
+				$('#scorecard-desc p').html('Breakdown by control officer*');
 			}).fadeIn('fast');
 		}
 		else if (fundView == '')
