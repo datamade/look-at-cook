@@ -544,23 +544,31 @@
 	}
 	
 	function updateScorecardDescription(response) {		
+		//console.log('officerView: ' + officerView);
+		//console.log('viewByOfficer: ' + viewByOfficer);
+		//console.log('fundView: ' + fundView);
+		
 		if (response.getDataTable().getNumberOfRows() > 0)
 		{
 			$('#scorecard-desc p').fadeOut('fast', function(){
 				$('#scorecard-desc p').html(response.getDataTable().getValue(0, 0));
 			}).fadeIn('fast');
 		}
-		else if (viewByOfficer == true)
+		else if (viewByOfficer)
 		{
 			$('#scorecard-desc p').fadeOut('fast', function(){
 				$('#scorecard-desc p').html('Breakdown by control officer*');
 			}).fadeIn('fast');
 		}
-		else if (fundView == '')
+		else if (!viewByOfficer && fundView == '' && officerView == '')
 		{
 			$('#scorecard-desc p').fadeOut('fast', function(){
 				$('#scorecard-desc p').html('Breakdown by fund');
 			}).fadeIn('fast');
+		}
+		else
+		{
+		$('#scorecard-desc p').html('');
 		}
 	}
 	
@@ -587,7 +595,7 @@
 				if (budgetedTop > 0 && budgetedBottom > 0)
 				{
 					var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
-					if (budgetedPercent > -0.1) budgetedPercent = '+' + budgetedPercent;
+					if (budgetedPercent > -0.05) budgetedPercent = '+' + budgetedPercent;
 					
 					$('#budgeted-percent').fadeOut('fast', function(){
 						$('#budgeted-percent').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (loadYear - 1));
@@ -599,7 +607,7 @@
 				if (spentTop > 0 && spentBottom > 0)
 				{
 					var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
-					if (spentPercent > -0.1) spentPercent = '+' + spentPercent;
+					if (spentPercent > -0.05) spentPercent = '+' + spentPercent;
 					
 					$('#spent-percent').fadeOut('fast', function(){
 						$('#spent-percent').html('<strong>' + spentPercent + '%</strong> spent from ' + (loadYear - 1));
@@ -806,7 +814,7 @@
 			if (budgetedTop > 0 && budgetedBottom > 0)
 			{
 				var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
-				if (budgetedPercent >= 0) budgetedPercent = '+' + budgetedPercent;
+				if (budgetedPercent >= -0.05) budgetedPercent = '+' + budgetedPercent;
 				//console.log('budgetedPercent: ' + budgetedPercent);
 				
 				$('#sparkline-budgeted').fadeOut('fast', function(){
@@ -819,7 +827,7 @@
 			if (spentTop > 0 && spentBottom > 0)
 			{
 				var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
-				if (spentPercent >= 0) spentPercent = '+' + spentPercent;
+				if (spentPercent >= -0.05) spentPercent = '+' + spentPercent;
 				//console.log('spentPercent: ' + spentPercent);
 				
 				$('#sparkline-spent').fadeOut('fast', function(){
