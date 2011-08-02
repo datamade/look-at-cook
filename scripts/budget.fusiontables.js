@@ -7,8 +7,8 @@
 	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
 	
 	var fusionTableId = 1227404;
-	var fundDescriptionTableId = 1113392;
-	var officerDescriptionTableId = 1113485;
+	var fundDescriptionTableId = 1232266;
+	var officerDescriptionTableId = 1232427;
   	var breakdownData = "";
   	var sparkChart;
   	var breakdownTable;
