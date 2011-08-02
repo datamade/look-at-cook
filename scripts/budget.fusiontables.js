@@ -547,6 +547,7 @@
 		//console.log('officerView: ' + officerView);
 		//console.log('viewByOfficer: ' + viewByOfficer);
 		//console.log('fundView: ' + fundView);
+    $("#footnote").hide();
 		
 		if (response.getDataTable().getNumberOfRows() > 0)
 		{
@@ -559,6 +560,7 @@
 			$('#scorecard-desc p').fadeOut('fast', function(){
 				$('#scorecard-desc p').html('Breakdown by control officer*');
 			}).fadeIn('fast');
+      $("#footnote").show();
 		}
 		else if (!viewByOfficer && fundView == '' && officerView == '')
 		{

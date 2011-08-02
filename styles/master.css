@@ -5,14 +5,14 @@
 
 /* Imports
 =====================================================================*/
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Droid+Serif:400,400italic,700,700italic);
 @import "../styles/reset.css";
 
 
 /* Fonts
 ======================================================================*/
-body { font-family: "Droid Sans", Arial, sans-serif; }
-#header { font-family: Georgia, "Times New Roman", Times, serif; }
+body, #credit { font-family: "Droid Sans", Arial, sans-serif; }
+#header { font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif; }
 
 
 /* Basics
@@ -61,7 +61,7 @@ ul { list-style: disc; }
 
 #content-primary, #content-secondary, #content-tertiary { padding: 30px 30px 15px }
 #content-secondary { background: #e1e9f2; }
-#content-tertiary { background: #d3dfed; }
+#content-tertiary { background: #d3dfed; padding-bottom: 30px; }
 
 
 /* Content
@@ -168,12 +168,18 @@ ul { list-style: disc; }
   .share strong { display: block; font-size: 20px; }
 
 /* Header */
-#header { color: #b7c6d6; font-size: 13px; padding-bottom: 30px; }
+#header { color: #b7c6d6; font-size: 13px; padding-bottom: 30px; position: relative; }
 #header a { color: #fff; }
 #header-secondary { float: right; font-style: italic; padding-top: 17px; text-align: right; }
 #header-secondary p { margin: 0; }
-#logo { float: left; }
-#logo-print { display: none; }
+
+  /* Credit */
+  #header #credit { color: #93a4b8; font-size: 11px; font-style: normal; position: absolute; right: 0; top: 122px; }
+  #header #credit a { color: #c8ced5; }
+  
+  /* Logo */
+  #logo { float: left; }
+  #logo-print { display: none; }
 
 /* Icons */
 a[class*="icon"] {
@@ -185,13 +191,16 @@ a[class*="icon"] {
 .icon-facebook { background-image: url(../images/facebook-sm.png); }
 .icon-twitter { background-image: url(../images/twitter-sm.png); }
 
+/* Muted text */
+.mute { color: #777; display: none; font-size: 13px; }
+
 /* Tertiary content */
-#content-tertiary .action { float: right; }
+#content-tertiary .action { margin-right: 1em; }
 
 /* Timelines */
+#readme { display: none; left: -75px; position: absolute; top: 110px; }
 #timeline { position: relative; }
 #timeline-chart { height: 300px; }
-#readme { display: none; left: -75px; position: absolute; top: 110px; }
 
   /* Sparklines */
   .sparkline { height: 100px; margin-bottom: 15px; }
