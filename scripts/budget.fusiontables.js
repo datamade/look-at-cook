@@ -64,11 +64,12 @@
 		}
         getDepartments(fundView, 'Fund', loadYear, getDataAsBudgetTable);
         
-        $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + fundView);
+        $('h1').html(fundView);
+        $('#breadcrumbs').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'>&laquo back to Cook County Budget</a>");
+        $('#breadcrumbs a').address();
         $('#secondary-title').html(loadYear + ' ' + fundView);
         $('#breakdown-item-title span').html('Department');
         $("#breakdown-nav").html("");
-        $('#timeline h2 a').address();
         
         getTotalsForYear(fundView, 'Fund', loadYear, updateScorecard);
         getFundDescription(fundView, updateScorecardDescription);
@@ -82,10 +83,11 @@
 		}
         getDepartments(officerView, 'Control Officer', loadYear, getDataAsBudgetTable);
         
-        $('#timeline h2').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'> Cook County Budget</a> &raquo; " + officerView);
+        $('h1').html(officerView);
+        $('#breadcrumbs').html("<a href='/?year=" + loadYear + "' rel='address:/?year=" + loadYear + "'>&laquo back to Cook County Budget</a>");
+        $('#breadcrumbs a').address();
         $('#secondary-title').html(loadYear + ' ' + officerView);
         $('#breakdown-item-title span').html('Department');
-        $('#timeline h2 a').address();
 		$("#breakdown-nav").html("");
 		
 		getTotalsForYear(officerView, 'Control Officer', loadYear, updateScorecard);
@@ -97,7 +99,7 @@
 			getTotalArray('', '', false, updateExpendTotal);
 		}
 		
-		$('#timeline h2').html('Cook County Budget');
+		$('h1').html('Cook County Budget');
 	    $('#secondary-title').html(loadYear + ' Cook County Budget');
 	      	
 		if (viewByOfficer)
@@ -112,6 +114,7 @@
       		$("#breakdown-nav").html("<ul><li class='current'>Where's it going?</li><li><a href='#' rel='address:/?year=" + loadYear + "&viewMode=officer'>Who controls it?</a></li></ul><div class='clear'></div>");
 	      	$('#breakdown-item-title span').html('Fund');
       	}
+      	$('#breadcrumbs').html('');
       	$("#breakdown-nav a").address();
       	
       	getTotalsForYear('', '', loadYear, updateScorecard);
@@ -584,7 +587,7 @@
 				if (budgetedTop > 0 && budgetedBottom > 0)
 				{
 					var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
-					if (budgetedPercent >= 0) budgetedPercent = '+' + budgetedPercent;
+					if (budgetedPercent > -0.1) budgetedPercent = '+' + budgetedPercent;
 					
 					$('#budgeted-percent').fadeOut('fast', function(){
 						$('#budgeted-percent').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (loadYear - 1));
@@ -596,7 +599,7 @@
 				if (spentTop > 0 && spentBottom > 0)
 				{
 					var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
-					if (spentPercent >= 0) spentPercent = '+' + spentPercent;
+					if (spentPercent > -0.1) spentPercent = '+' + spentPercent;
 					
 					$('#spent-percent').fadeOut('fast', function(){
 						$('#spent-percent').html('<strong>' + spentPercent + '%</strong> spent from ' + (loadYear - 1));
