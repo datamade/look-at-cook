@@ -547,7 +547,7 @@
 		//console.log('officerView: ' + officerView);
 		//console.log('viewByOfficer: ' + viewByOfficer);
 		//console.log('fundView: ' + fundView);
-    $("#footnote").hide();
+    $("#f-officers").hide();
 		
 		if (response.getDataTable().getNumberOfRows() > 0)
 		{
@@ -560,7 +560,7 @@
 			$('#scorecard-desc p').fadeOut('fast', function(){
 				$('#scorecard-desc p').html('Breakdown by control officer*');
 			}).fadeIn('fast');
-      $("#footnote").show();
+      $("#f-officers").show();
 		}
 		else if (!viewByOfficer && fundView == '' && officerView == '')
 		{
@@ -583,8 +583,15 @@
 			}).fadeIn('fast');
 			
 			$('#scorecard .spent').fadeOut('fast', function(){
-				$('#scorecard .spent').html(response.getDataTable().getValue(0, 1));
-				$('#scorecard .spent').formatCurrency();
+        $('#scorecard .spent').html(response.getDataTable().getValue(0, 1));
+        $('#scorecard .spent').formatCurrency();
+        
+        if (loadYear == 2011 && response.getDataTable().getValue(0, 1) == 0) {
+          $('#scorecard .spent').append("<sup class='ref'>&dagger;</sup>");
+          $('#f-zero2011').show();
+        } else {
+          $('#f-zero2011').hide();
+        }
 			}).fadeIn('fast');
 			
 			if (response.getDataTable().getNumberOfColumns() > 2)

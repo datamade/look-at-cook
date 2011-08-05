@@ -39,6 +39,7 @@ ol { list-style: decimal; }
 ol, ul { margin-left: 2em; }
 table { border-collapse: collapse; width: 100% !important; }
 td { vertical-align: top; }
+sup { font-size: 11px; vertical-align: top; }
 ul { list-style: disc; }
 
 /* Stock classes */
@@ -171,6 +172,10 @@ ul { list-style: disc; }
   .share li { float: left; font-size: 11px; line-height: 1.1; width: 155px; }
   .share strong { display: block; font-size: 20px; }
 
+/* Footnotes */
+#footnotes { color: #777; font-size: 13px; }
+#footnotes ul { list-style: none; margin: 0; }
+
 /* Header */
 #header { color: #b7c6d6; font-size: 13px; padding-bottom: 30px; position: relative; }
 #header a { color: #fff; }
@@ -199,7 +204,7 @@ a[class*="icon"] {
 .mute { color: #777; display: none; font-size: 13px; }
 
 /* Tertiary content */
-#content-tertiary .action { margin-right: 1em; }
+#content-tertiary .action { margin-right: 10px; }
 
 /* Timelines */
 #readme { display: none; left: -75px; position: absolute; top: 110px; }
