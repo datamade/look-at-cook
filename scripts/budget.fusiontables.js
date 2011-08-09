@@ -6,9 +6,9 @@
 	//init
 	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
 	
-	var fusionTableId = 1227404;
-	var fundDescriptionTableId = 1232266;
-	var officerDescriptionTableId = 1232427;
+	var fusionTableId = 1270347;
+	var fundDescriptionTableId = 1270538;
+	var officerDescriptionTableId = 1270539;
   	var breakdownData = "";
   	var sparkChart;
   	var breakdownTable;
