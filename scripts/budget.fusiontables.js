@@ -6,9 +6,9 @@
 	//init
 	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
 	
-	var fusionTableId = 1227404;
-	var fundDescriptionTableId = 1232266;
-	var officerDescriptionTableId = 1232427;
+	var fusionTableId = 1270347;
+	var fundDescriptionTableId = 1270538;
+	var officerDescriptionTableId = 1270539;
   	var breakdownData = "";
   	var sparkChart;
   	var breakdownTable;
@@ -421,16 +421,16 @@
 		
 		if ($('#' + itemId + '-expanded').length == 0)
 		{
-			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
+			$('.budget-expand-img').attr('src', 'images/expand.png');
 			$('#breakdown .expanded-content').remove();
 			$('#breakdown tr').removeClass('expanded-head');
-			$('#' + itemId + ' .budget-expand-img').attr('src', '/budget/images/collapse.png');
+			$('#' + itemId + ' .budget-expand-img').attr('src', 'images/collapse.png');
 			$(detail).insertAfter($('#' + itemId));
 			$('#' + itemId).addClass('expanded-head');
 		}
 		else
 		{
-			$('.budget-expand-img').attr('src', '/budget/images/expand.png');
+			$('.budget-expand-img').attr('src', 'images/expand.png');
 			$('#breakdown .expanded-content').remove();
 			$('#breakdown tr').removeClass('expanded-head');
 		}
@@ -672,7 +672,7 @@
 		  if (budgeted != 0 || spent != 0)
 		  {
 			  fusiontabledata += "<tr id='" + rowId + "'>";
-			  fusiontabledata += "<td><a onclick='" + detailLoadFunction + "'><img class='budget-expand-img' src='/budget/images/expand.png' /></a> <a onclick='" + detailLoadFunction + "'>" + rowName + "</a></td>";
+			  fusiontabledata += "<td><a onclick='" + detailLoadFunction + "'><img class='budget-expand-img' src='images/expand.png' /></a> <a onclick='" + detailLoadFunction + "'>" + rowName + "</a></td>";
 			  fusiontabledata += "<td class='num budgeted'>" + budgeted + "</td>";
 			  fusiontabledata += "<td class='num spent'>" + spent + "</td>";
 			  fusiontabledata += "<td><div class='bars'>";
