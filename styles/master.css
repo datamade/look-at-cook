@@ -179,11 +179,11 @@ ul { list-style: disc; }
 /* Header */
 #header { color: #b7c6d6; font-size: 13px; padding-bottom: 30px; position: relative; }
 #header a { color: #fff; }
-#header-secondary { float: right; font-style: italic; padding-top: 17px; text-align: right; }
+#header-secondary { float: right; font-style: italic; padding-top: 23px; text-align: right; }
 #header-secondary p { margin: 0; }
 
   /* Credit */
-  #header #credit { color: #93a4b8; font-size: 11px; font-style: normal; position: absolute; right: 0; top: 122px; }
+  #header #credit { color: #93a4b8; font-size: 11px; font-style: normal; }
   #header #credit a { color: #c8ced5; }
   
   /* Logo */
