@@ -27,9 +27,7 @@
         loadFor($.address.parameter('viewMode'), $.address.parameter('year'), $.address.parameter('fund'), $.address.parameter('controlOfficer'), false);
 	});
     
-    $(function() {   
-      $('#download-button').attr("href","http://www.google.com/fusiontables/DataSource?dsrcid=1227404");
-      
+    $(function() {        
       $("body").bind("click", function(e){
         $.cookie("budgetbreakdownreadme", "read", { expires: 7 });
         $("#readme").fadeOut("fast");
@@ -119,15 +117,15 @@
     </div>
     
     <div id="content-tertiary">
-      <a id="download-button" class="action" href="#">View &amp; download data</a>
+      <a id="download-button" class="action" href="http://www.google.com/fusiontables/DataSource?dsrcid=1227404">View &amp; download data</a>
       All the data for this project is freely available to download or explore on Google Fusion Tables.
     </div>
   </div>
   
   <div id="footer">
     <ul class="share">
-      <li><a href="http://www.facebook.com/share.php?u=http%3a%2f%2fwww.fritchey.com%2fbudget"><img alt="Facebook" src="images/facebook-lg.png" /> Share budget on <strong>Facebook</strong></a></li>
-      <li><a href="http://twitter.com/share?text=Where's%20the%20money%20going%3F%20Explore%20Cook%20County's%20budget&amp;url=http%3a%2f%2fwww.fritchey.com%2fbudget"><img alt="Twitter" src="images/twitter-lg.png" /> Share budget on <strong>Twitter</strong></a></li>
+      <li><a href="http://www.facebook.com/share.php?u=http%3a%2f%2flookatcook.com"><img alt="Facebook" src="images/facebook-lg.png" /> Share budget on <strong>Facebook</strong></a></li>
+      <li><a href="http://twitter.com/share?text=Where's%20the%20money%20going%3F%20Explore%20Cook%20County's%20budget&amp;url=http%3a%2f%2flookatcook.com"><img alt="Twitter" src="images/twitter-lg.png" /> Share budget on <strong>Twitter</strong></a></li>
     </ul>
   </div>
 </div>
