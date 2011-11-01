@@ -174,6 +174,7 @@ ul { list-style: disc; }
 
 /* Footnotes */
 #footnotes { color: #777; font-size: 13px; }
+#footnotes li { display: none; }
 #footnotes ul { list-style: none; margin: 0; }
 
 /* Header */
@@ -201,7 +202,7 @@ a[class*="icon"] {
 .icon-twitter { background-image: url(../images/twitter-sm.png); }
 
 /* Muted text */
-.mute { color: #777; display: none; font-size: 13px; }
+.mute { color: #777; font-size: 13px; }
 
 /* Tertiary content */
 #content-tertiary .action { margin-right: 10px; }

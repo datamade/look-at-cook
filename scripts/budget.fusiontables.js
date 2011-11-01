@@ -501,7 +501,7 @@
 	}
 	
 	function getDepartmentDescription(departmentId, callback) {
-		var myQuery = "SELECT 'Department ID', Department, 'Link to Website', 'Department Description', 'Control Officer' FROM " + fusionTableId + " WHERE 'Department ID' = " + departmentId;			
+		var myQuery = "SELECT 'Department ID', Department, 'Link to Website', 'Department Description', 'Control Officer', Fund FROM " + fusionTableId + " WHERE 'Department ID' = " + departmentId;			
 		getQuery(myQuery).send(callback);
 	}
 	
@@ -775,6 +775,7 @@
 		var linkToWebsite = response.getDataTable().getValue(0, 2);
 		var description = response.getDataTable().getValue(0, 3);
 		var controlOfficer = response.getDataTable().getValue(0, 4);
+		var departmentFund = response.getDataTable().getValue(0, 5);
 		
 		_trackClickEvent("Charts", "Expand row", "Department: " + department + " (" + loadYear + ")");	
 		
@@ -786,10 +787,11 @@
 		if (linkToWebsite != '')
 			fusiontabledata += "		  <a href='" + linkToWebsite + "'>Official&nbsp;website&nbsp;&raquo;</a>";
 		fusiontabledata += "</p>";		
-		fusiontabledata += "		<ul class='stats'>";
+		fusiontabledata += "		<p>";
+		fusiontabledata += "		  Fund: <a class='adr' href='/?year=" + loadYear + "&amp;fund=" + convertToQueryString(departmentFund) + "' rel='address:/?year=" + loadYear + "&amp;fund=" + convertToQueryString(departmentFund) + "'>" + departmentFund + " &raquo;</a>";
 		if (controlOfficer != '')
-			fusiontabledata += "		  <li>Control officer: " + controlOfficer + "</li>";
-		fusiontabledata += "		</ul>";
+			fusiontabledata += "	  <br/>Control officer: <a class='adr' href='/?year=" + loadYear + "&amp;controlOfficer=" + convertToQueryString(controlOfficer) + "' rel='address:/?year=" + loadYear + "&amp;controlOfficer=" + convertToQueryString(controlOfficer) + "'>" + controlOfficer + " &raquo;</a>";
+		fusiontabledata += "		</p>";
 		fusiontabledata += "	  </div>";
 		fusiontabledata += "	  <div class='expanded-secondary'>";
 		fusiontabledata += "		<div class='sparkline' id='selected-chart'></div>";
