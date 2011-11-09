@@ -56,4 +56,6 @@ Known issues
 
 More to come
 
-This is my initial pass at documentation for this visualization. It is by no means a 'plug and play' application. There is quite a bit of complexity and Cook County specific code in here. By all means feel free to use any of this code, but know before you do that it will take at least an intermediate understanding of coding and javascript/jQuery to get anywhere with it. I'd like to make it simpler to use in the future, so if you have any suggestions, comments or want to make additions, contact me at derek.eder+git@gmail.com or tweet at me @derek_eder.
+This is my initial pass at documentation. This is by no means a 'plug and play' application. There is quite a bit of complexity and Cook County specific code/language/styles in here. By all means feel free to use any of this code, but know before you do that it will take at least an intermediate understanding of coding and javascript/jQuery to get anywhere with it. 
+
+I'd like to make it simpler to use in the future, so if you have any suggestions, comments or want to make additions, contact me at derek.eder+git@gmail.com or tweet at me @derek_eder.
