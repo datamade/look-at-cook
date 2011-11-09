@@ -1,39 +1,51 @@
 /*--------------------------+
- | Site: Budget Breakdown   |
+ | Site: Look at Cook       |
  | Budget Display library   |
  +--------------------------*/	
+	
+	//this is where all the 'magic' happens. jQuery address detects changes in the URL, and calls the 'loadFor' function which displays the 
+	//appropriate data for that view.
+	
+	//data is stored in Google Fusion tables, and fetches it using the Google visualization API
+	
+	//for display, the data is passed to Highcharts, another javascript library that specializes in graphs, and an HTML table which displays the
+	//budget broken down by department.
+	
+	//every fund, control officer or department that is clicked updates the URL query string using jQuery Address and the page loads the data
+	//dynamically.
 	
 	//init
 	google.load('visualization', '1', {}); //using Google visulaization API to do Fusion Tables SQL calls
 	
-	var fusionTableId = 1270347;
+	//storing all of our data in Google Fusion Tables. For this visualization, I split it up in to 3 tables
+	var fusionTableId = 1270347; //main budget table with expenditures/appropriations per department per year
 	var fundDescriptionTableId = 1270538;
 	var officerDescriptionTableId = 1270539;
-  	var breakdownData = "";
-  	var sparkChart;
+  	
+  	var breakdownData = ""; //place to store secondary bar chart
+  	var sparkChart; 
   	var breakdownTable;
-  	var appropTotalArray;
-  	var expendTotalArray;
-  	var sparkAppropTotalArray;
+  	var appropTotalArray; //used to populate main highcharts graph
+  	var expendTotalArray; 
+  	var sparkAppropTotalArray; //used to populate sparkline graph in expanded detail
   	var sparkExpendTotalArray;
-	var loadYear;
-	var fundView;
-	var officerView;
-	var viewByOfficer;
+	var loadYear; //viewing year
+	var fundView; //viewing fund
+	var officerView; //viewing control officer
+	var viewByOfficer; //flag to switch between department and control officer view
   	var arraysLoaded = 0;
 	
-	//front end display functions
+	//-------------front end display functions-------------------
 	
 	//primary load for graph and table
 	function loadFor(viewMode, year, fund, officer, externalLoad) {
 	  //console.log('externalLoad: ' + externalLoad);
 	  //console.log('fundView: ' + fundView + ', fund: ' + convertToPlainString(fund) + ', officer: ' + convertToPlainString(officer));
 	  
+	  //load in values and update internal variables
       var viewChanged = false;
       if (fundView != convertToPlainString(fund) || officerView != convertToPlainString(officer))
         	viewChanged = true;
-        	
-      //console.log('viewChanged: ' + viewChanged)
         	
       if (viewMode != null && viewMode == "officer")
       	viewByOfficer = true;
@@ -55,6 +67,7 @@
       else
       	loadYear = 2011;
 
+	  //show fund view
       if (fundView != ""){
         if (viewChanged || externalLoad)
         {
@@ -73,7 +86,7 @@
         
         getTotalsForYear(fundView, 'Fund', loadYear, updateScorecard);
         getFundDescription(fundView, updateScorecardDescription);
-      }
+      } //show control officer view
       else if (officerView != ""){
         if (viewChanged || externalLoad)
         {
@@ -93,7 +106,7 @@
 		getTotalsForYear(officerView, 'Control Officer', loadYear, updateScorecard);
 		getControlOfficerDescription(officerView, updateScorecardDescription);
       }
-      else{
+      else{ //load default view
         if (viewChanged || externalLoad) {
   			getTotalArray('', '', true, updateAppropTotal);
 			getTotalArray('', '', false, updateExpendTotal);
@@ -120,6 +133,7 @@
       	getTotalsForYear('', '', loadYear, updateScorecard);
       	getFundDescription(fundView, updateScorecardDescription);
       	
+      	//track view in Google analytics
       	if (externalLoad)
       		_trackClickEvent("Charts", "Load timeline", $('#secondary-title').html());
       	else if (viewChanged)
@@ -127,7 +141,9 @@
       }
     }  
 	
-	//displays highchart
+	//displays main graph using highcharts
+	//see http://www.highcharts.com/ref/ for highcharts documentation 
+	//see http://www.highcharts.com/demo/ for highcharts examples
 	function updateMainChart() {
    	  arraysLoaded++;
    	  if (arraysLoaded >= 2)
@@ -262,6 +278,9 @@
 		}
     }
     
+    //displays detail sparkling using high charts
+	//see http://www.highcharts.com/ref/ for highcharts documentation 
+	//see http://www.highcharts.com/demo/ for highcharts examples
     function updateSparkline() {
       arraysLoaded++;
    	  if (arraysLoaded >= 2)
@@ -365,7 +384,7 @@
       }
     }
     
-	//displays datatables fund/department listing
+	//displays secondary datatables fund/department listing
     function updateTable() {
       $('#breakdown').fadeOut('fast', function(){
         if (breakdownTable != null) breakdownTable.fnDestroy();
@@ -411,7 +430,7 @@
       }).fadeIn('fast');
     }
 	
-	//show/hide expanded detail
+	//show/hide expanded detail for a clicked row
 	function updateDetail(itemId, detail) {
 		if (sparkChart != null)
 		{
@@ -490,21 +509,25 @@
 		getQuery(myQuery).send(callback);
 	}
 	
+	//gets a fund description based on a fund name
 	function getFundDescription(fund, callback) {
 		var myQuery = "SELECT 'Fund Description' FROM " + fundDescriptionTableId + " WHERE Item = '" + fund + "'";			
 		getQuery(myQuery).send(callback);
 	}
 	
+	//get a control officer description based on the officer name
 	function getControlOfficerDescription(officer, callback) {
 		var myQuery = "SELECT 'Control Officer Description' FROM " + officerDescriptionTableId + " WHERE Item = '" + officer + "'";			
 		getQuery(myQuery).send(callback);
 	}
 	
+	//get a department description from a department ID
 	function getDepartmentDescription(departmentId, callback) {
 		var myQuery = "SELECT 'Department ID', Department, 'Link to Website', 'Department Description', 'Control Officer', Fund FROM " + fusionTableId + " WHERE 'Department ID' = " + departmentId;			
 		getQuery(myQuery).send(callback);
 	}
 	
+	//get percentage change per year for display below the sparkline in expanded row detail
 	function getSparklinePercentages(name, queryType, year, callback) {	
 		if (year > 1993) {
 			var whereClause = "";
@@ -515,14 +538,11 @@
 			getQuery(myQuery).send(callback);
 		}
 	}
+
+	//----------display callback functions----------------
 	
-	//converts SQL query to URL	
-	function getQuery(myQuery) {
-		//console.log(myQuery);
-		var queryText = encodeURIComponent(myQuery);
-	  	return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
-	}
-	
+	//these all work by being called (callback function) once Fusion Tables returns a result. 
+	//the function then takes the response and handles updating the page
 	function updateAppropTotal(response) {
 		appropTotalArray = getDataAsArray(response);
 		updateMainChart();
@@ -543,6 +563,7 @@
 		updateSparkline();
 	}
 	
+	//shows the description of the current view below the main chart
 	function updateScorecardDescription(response) {		
 		//console.log('officerView: ' + officerView);
 		//console.log('viewByOfficer: ' + viewByOfficer);
@@ -574,6 +595,7 @@
 		}
 	}
 	
+	//shows totals and percentage changes of the current view below the main chart
 	function updateScorecard(response) {		
 		if (response.getDataTable().getNumberOfRows() > 0)
 		{
@@ -628,22 +650,7 @@
 		}
 	}
 	
-	//returns a 1D array
-	function getDataAsArray(response) {
-	  numCols = response.getDataTable().getNumberOfColumns();
-	  var fusiontabledata = new Array();
-	  
-	  for(j = 0; j < numCols; j++) {
-		if (response.getDataTable().getValue(0, j) == "0")
-			fusiontabledata[j] = null;
-		else
-			fusiontabledata[j] = response.getDataTable().getValue(0, j);
-	  }
-	  
-	  return fusiontabledata;
-	}
-	
-	//builds out budget breakdown table
+	//builds out budget breakdown (secondary) table
 	function getDataAsBudgetTable(response) {	
 		numRows = response.getDataTable().getNumberOfRows();
 		//console.log('rows found: ' + numRows);
@@ -687,7 +694,7 @@
 	  updateTable();
 	}
 	
-	//shows fund details
+	//shows fund details when row is clicked
 	function getFundDetails(itemId) {	
 		_trackClickEvent("Charts", "Expand row", "Fund: " + convertToPlainString(itemId) + " (" + loadYear + ")");
 		var fusiontabledata;
@@ -718,7 +725,7 @@
 		getSparklinePercentages(convertToPlainString(itemId), 'Fund', loadYear, updateSparklinePercentages);
 	}
 	
-	//shows fund details
+	//shows fund details when row is clicked
 	function getControlOfficerDetails(itemId) {	
 		_trackClickEvent("Charts", "Expand row", "Control officer: " + convertToPlainString(itemId) + " (" + loadYear + ")");
 		var fusiontabledata;
@@ -749,6 +756,7 @@
 		getSparklinePercentages(convertToPlainString(itemId), 'Control Officer', loadYear, updateSparklinePercentages);
 	}
 	
+	//shows description in expanded row when row is clicked
 	function updateExpandedDescription(response) {
 		var description = '';
 		
@@ -761,13 +769,14 @@
 		}).fadeIn('fast');
 	}
 	
+	//requests department details from Fusion Tables when row is clicked
 	function getDepartmentDetails(departmentId) {
 		departmentId = departmentId.replace('department-', '')
 		
 		getDepartmentDescription(departmentId, updateDepartmentDetails);
 	}
 	
-	//shows department details
+	//shows department details when row is clicked
 	function updateDepartmentDetails(response) {
 		var fusiontabledata;
 		var departmentId = response.getDataTable().getValue(0, 0);
@@ -809,6 +818,7 @@
 		getSparklinePercentages(departmentId, 'Department ID', loadYear, updateSparklinePercentages); 
 	}
 	
+	//updates percentages that display below the expanded row sparkling
 	function updateSparklinePercentages(response) {
 		if (response.getDataTable().getNumberOfRows() > 0)
 		{
@@ -849,6 +859,30 @@
 				$('#sparkline-spent').fadeOut();
 		}
 	}
+	
+	//------------- helper functions -----------
+	
+	//converts SQL query to URL	
+	function getQuery(myQuery) {
+		//console.log(myQuery);
+		var queryText = encodeURIComponent(myQuery);
+	  	return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
+	}
+	
+	//converts a Fusion Table response in to an array for passing in to highcharts
+	function getDataAsArray(response) {
+	  numCols = response.getDataTable().getNumberOfColumns();
+	  var fusiontabledata = new Array();
+	  
+	  for(j = 0; j < numCols; j++) {
+		if (response.getDataTable().getValue(0, j) == "0")
+			fusiontabledata[j] = null;
+		else
+			fusiontabledata[j] = response.getDataTable().getValue(0, j);
+	  }
+	  
+	  return fusiontabledata;
+	}
 
 	//for debugging - prints out data in a table
 	function getDataAsTable(response) {
@@ -878,11 +912,13 @@
 	  updateTable();
 	}
 	
+	//converts a text in to a URL slug
 	function convertToSlug(Text)
 	{
 		return (Text+'').replace(/ /g,'-').replace(/[^\w-]+/g,'');
 	}
 	
+	//converts text to a formatted query string
 	function convertToQueryString(Text)
 	{
 		if (Text == undefined) return '';
@@ -891,6 +927,7 @@
 		.replace(/\s+/g, '+');
 	}
 	
+	//converts a slug or query string in to readable text
 	function convertToPlainString(Text)
 	{
 	    if (Text == undefined) return '';

@@ -10,24 +10,24 @@
   
   <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
   
-  <!--
+  <!-- javascript libraries -->
+  <script src="http://www.google.com/jsapi" type="text/javascript"></script>
   <script src="scripts/jquery.js" type="text/javascript"></script>
   <script src="scripts/highcharts.js" type="text/javascript"></script>
   <script src="scripts/jquery.dataTables.js" type="text/javascript"></script>
   <script src="scripts/dataTables.sorting.js" type="text/javascript"></script>
   <script src="scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
   <script src="scripts/jquery.address-1.4.min.js" type="text/javascript"></script>
+  <script src="scripts/jquery.cookie.js" type="text/javascript"></script>
+  
+  <!-- custom javascript -->
   <script src="scripts/budget.fusiontables.js" type="text/javascript"></script>
   <script src="scripts/jquery.ga-event-tracker.js" type="text/javascript"></script>
-  <script src="scripts/jquery.cookie.js" type="text/javascript"></script>
-  -->
-  
-  <script src="http://www.google.com/jsapi" type="text/javascript"></script>
-  <script src="scripts/budget.min.js" type="text/javascript"></script>
   <script src="scripts/analytics_lib.js" type="text/javascript"></script>
   
   <script type="text/javascript">
 
+	//every action is handled by jQuery Address, which detects when the URL has changed
 	$.address.externalChange(function(event) {  
 	    //console.log('year: ' + $.address.parameter('year') + ', fund: ' + $.address.parameter('fund'));
         loadFor($.address.parameter('viewMode'), $.address.parameter('year'), $.address.parameter('fund'), $.address.parameter('controlOfficer'), true);
@@ -39,6 +39,7 @@
         loadFor($.address.parameter('viewMode'), $.address.parameter('year'), $.address.parameter('fund'), $.address.parameter('controlOfficer'), false);
 	});
     
+    //cookies for first time visitors
     $(function() {        
       $("body").bind("click", function(e){
         $.cookie("budgetbreakdownreadme", "read", { expires: 7 });
