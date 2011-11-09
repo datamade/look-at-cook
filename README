@@ -9,6 +9,7 @@ Every year our Cook County government budgets and spends more than $3 billion. T
 This budget transparency tool was created to answer that question, but it's only the first step. We need your help. What questions do you have about County spending? What do you want to know about the County budget that this visualization isn't explaining? What do you think of our spending? What can we do to make Cook County government better?
 
 Press
+
  - O'reilly Radar - http://radar.oreilly.com/2011/09/look-at-cook-gov-data-visualization.html
  - govfresh - http://govfresh.com/2011/09/beautiful-budgets-look-at-cook/
  - Civic Commons - http://civiccommons.org/2011/11/look-at-cook-open-sourced/
@@ -31,7 +32,7 @@ This budget visualization is built entirely using HTML and jQuery. There is no s
 
 The bulk of the code is in /scripts/budget.fusiontables.js. This file contains all of the init, data fetching, display and helper functions that the visualization uses to run. To get a good idea of how it works, you should first look at the data in Fusion Tables that it uses:
 
- - Main budget table (contains expenditures and appropriations per department per year) - http://www.google.com/fusiontables/DataSource?dsrcid=1227404
+ - Main budget table (expenditures and appropriations per department per year) - http://www.google.com/fusiontables/DataSource?dsrcid=1227404
  - Fund descriptions - http://www.google.com/fusiontables/DataSource?dsrcid=1270538
  - Control officer descriptions - http://www.google.com/fusiontables/DataSource?dsrcid=1270539
 
@@ -41,10 +42,12 @@ The appropriations and expenditures per year are then fetched based on the view 
 
 When a row is clicked, the details for that row are fetched and then displayed using either the 'getFundDetails', 'getControlOfficerDetails' or 'updateDepartmentDetails' functions. From inside that expanded row are links to other views (depending on your current view) which are handled the same way as above. 
 
-Here is the view hierarchy. Note that at any point, the year could also be updated by clicking on a point on the main chart:
+View paths / hierarchy 
 
-List of funds (default view when loading the site) -> Expanded fund detail -> Fund view with list of departments -> Expanded department detail
-List of control officers -> Expanded control officer detail -> Control officer view with list of departments -> Expanded department detail
+* note that at any point, the year could also be updated by clicking on a point on the main chart.
+
+ - List of funds (default view when loading the site) -> Expanded fund detail -> Fund view with list of departments -> Expanded department detail
+ - List of control officers -> Expanded control officer detail -> Control officer view with list of departments -> Expanded department detail
 
 Known issues
 
