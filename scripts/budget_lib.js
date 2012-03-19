@@ -26,17 +26,20 @@
 	BudgetLib.FUND_DESCRIPTION_TABLE_ID = 1270538;
 	BudgetLib.OFFICER_DESCRIPTION_TABLE_ID = 1270539;
 	
-  BudgetLib.breakdownData = ""; //place to store secondary bar chart
-  BudgetLib.sparkChart; 
-	BudgetLib.breakdownTable;
+	//containers for data
+  BudgetLib.sparkChart; //sparkline using Highcharts 
+	BudgetLib.breakdownTable; //secondary table show funds or departments
 	BudgetLib.appropTotalArray; //used to populate main highcharts graph
 	BudgetLib.expendTotalArray; 
 	BudgetLib.sparkAppropTotalArray; //used to populate sparkline graph in expanded detail
 	BudgetLib.sparkExpendTotalArray;
-	BudgetLib.loadYear; //viewing year
-	BudgetLib.fundView; //viewing fund
-	BudgetLib.officerView; //viewing control officer
-	BudgetLib.viewByOfficer; //flag to switch between department and control officer view
+	
+	BudgetLib.Title = "Cook County Budget"
+	BudgetLib.breakdownData = ""; //place to store secondary bar chart
+	BudgetLib.loadYear = 2011; //viewing year
+	BudgetLib.fundView = ""; //viewing fund
+	BudgetLib.officerView = ""; //viewing control officer
+	BudgetLib.viewByOfficer = false; //flag to switch between department and control officer view
   BudgetLib.arraysLoaded = 0;
 
 	//-------------front end display functions-------------------
@@ -46,7 +49,7 @@
     //load in values and update internal variables
     var viewChanged = false;
     if (BudgetLib.fundView != BudgetHelpers.convertToPlainString(fund) || BudgetLib.officerView != BudgetHelpers.convertToPlainString(officer))
-      	viewChanged = true;
+    viewChanged = true;
       	
     if (viewMode != null && viewMode == "officer") BudgetLib.viewByOfficer = true;
     else BudgetLib.viewByOfficer = false;
@@ -58,7 +61,6 @@
     else BudgetLib.officerView = '';
     
     if (year != null && year != "") BudgetLib.loadYear = year;
-    else BudgetLib.loadYear = 2011;
   
     //show fund view
     if (BudgetLib.fundView != ""){
@@ -68,71 +70,67 @@
         BudgetQueries.getTotalArray(BudgetLib.fundView, 'Fund', true, BudgetLib.updateAppropTotal);
         BudgetQueries.getTotalArray(BudgetLib.fundView, 'Fund', false, BudgetLib.updateExpendTotal);
       }
+      
       BudgetQueries.getDepartments(BudgetLib.fundView, 'Fund', BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
-      
-      $('h1').html(BudgetLib.fundView);
-      $('#breadcrumbs').html("<a href='/?year=" + BudgetLib.loadYear + "' rel='address:/?year=" + BudgetLib.loadYear + "'>&laquo back to Cook County Budget</a>");
-      $('#breadcrumbs a').address();
-      $('#secondary-title').html(BudgetLib.loadYear + ' ' + BudgetLib.fundView);
-      $('#breakdown-item-title span').html('Department');
-      $("#breakdown-nav").html("");
-      
+      BudgetLib.updateHeader(BudgetLib.fundView, 'Department');
       BudgetQueries.getTotalsForYear(BudgetLib.fundView, 'Fund', BudgetLib.loadYear, BudgetLib.updateScorecard);
       BudgetQueries.getFundDescription(BudgetLib.fundView, BudgetLib.updateScorecardDescription);
-    } //show control officer view
-    else if (BudgetLib.officerView != ""){
+    } 
+    else if (BudgetLib.officerView != ""){ //show control officer view
       if (viewChanged || externalLoad)
       {
         window.scrollTo(0, 0);
     	  BudgetQueries.getTotalArray(BudgetLib.officerView, 'Control Officer', true, BudgetLib.updateAppropTotal);
         BudgetQueries.getTotalArray(BudgetLib.officerView, 'Control Officer', false, BudgetLib.updateExpendTotal);
       }
-      BudgetQueries.getDepartments(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
       
-      $('h1').html(BudgetLib.officerView);
-      $('#breadcrumbs').html("<a href='/?year=" + BudgetLib.loadYear + "' rel='address:/?year=" + BudgetLib.loadYear + "'>&laquo back to Cook County Budget</a>");
-      $('#breadcrumbs a').address();
-      $('#secondary-title').html(BudgetLib.loadYear + ' ' + BudgetLib.officerView);
-      $('#breakdown-item-title span').html('Department');
-      $("#breakdown-nav").html("");
-  
+      BudgetQueries.getDepartments(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
+      BudgetLib.updateHeader(BudgetLib.officerView, 'Department');
       BudgetQueries.getTotalsForYear(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, BudgetLib.updateScorecard);
       BudgetQueries.getControlOfficerDescription(BudgetLib.officerView, BudgetLib.updateScorecardDescription);
     }
     else { //load default view
       if (viewChanged || externalLoad) {
-  		BudgetQueries.getTotalArray('', '', true, BudgetLib.updateAppropTotal);
-  	  BudgetQueries.getTotalArray('', '', false, BudgetLib.updateExpendTotal);
+    		BudgetQueries.getTotalArray('', '', true, BudgetLib.updateAppropTotal);
+    	  BudgetQueries.getTotalArray('', '', false, BudgetLib.updateExpendTotal);
+      }
+        	
+      if (BudgetLib.viewByOfficer)
+      {
+      	BudgetQueries.getAllControlOfficersForYear(BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
+      	$("#breakdown-nav").html("<ul><li><a href='#' rel='address:/?year=" + BudgetLib.loadYear + "&viewMode=fund'>Where's it going?</a></li><li class='current'>Who controls it?</li></ul><div class='clear'></div>");
+      	$('#breakdown-item-title span').html('Control Officer');
+      }
+      else
+      {
+      	BudgetQueries.getAllFundsForYear(BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
+      	$("#breakdown-nav").html("<ul><li class='current'>Where's it going?</li><li><a href='#' rel='address:/?year=" + BudgetLib.loadYear + "&viewMode=officer'>Who controls it?</a></li></ul><div class='clear'></div>");
+      	$('#breakdown-item-title span').html('Fund');
+      }
+      
+      BudgetLib.updateHeader(BudgetLib.Title, 'Fund');
+      BudgetQueries.getTotalsForYear('', '', BudgetLib.loadYear, BudgetLib.updateScorecard);
+      BudgetQueries.getFundDescription(BudgetLib.fundView, BudgetLib.updateScorecardDescription);
+      
+      //track view in Google analytics
+      if (externalLoad)
+      	_trackClickEvent("Charts", "Load timeline", $('#secondary-title').html());
+      else if (viewChanged)
+      	_trackClickEvent("Charts", "View timeline", $('#secondary-title').html());
     }
-  
-    $('h1').html('Cook County Budget');
-    $('#secondary-title').html(BudgetLib.loadYear + ' Cook County Budget');
-      	
-    if (BudgetLib.viewByOfficer)
-    {
-    	BudgetQueries.getAllControlOfficersForYear(BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
-    	$("#breakdown-nav").html("<ul><li><a href='#' rel='address:/?year=" + BudgetLib.loadYear + "&viewMode=fund'>Where's it going?</a></li><li class='current'>Who controls it?</li></ul><div class='clear'></div>");
-    	$('#breakdown-item-title span').html('Control Officer');
-    }
-    else
-    {
-    	BudgetQueries.getAllFundsForYear(BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
-    	$("#breakdown-nav").html("<ul><li class='current'>Where's it going?</li><li><a href='#' rel='address:/?year=" + BudgetLib.loadYear + "&viewMode=officer'>Who controls it?</a></li></ul><div class='clear'></div>");
-    	$('#breakdown-item-title span').html('Fund');
-    }
-    $('#breadcrumbs').html('');
-    $("#breakdown-nav a").address();
-    
-    BudgetQueries.getTotalsForYear('', '', BudgetLib.loadYear, BudgetLib.updateScorecard);
-    BudgetQueries.getFundDescription(BudgetLib.fundView, BudgetLib.updateScorecardDescription);
-    
-    //track view in Google analytics
-    if (externalLoad)
-    	_trackClickEvent("Charts", "Load timeline", $('#secondary-title').html());
-    else if (viewChanged)
-    	_trackClickEvent("Charts", "View timeline", $('#secondary-title').html());
-    }
+    $('#breadcrumbs a').address();
   }  
+  
+  BudgetLib.updateHeader = function(view, subtype){
+    $('h1').html(view);
+    if (view != BudgetLib.Title)
+      $('#breadcrumbs').html("<a href='/?year=" + BudgetLib.loadYear + "' rel='address:/?year=" + BudgetLib.loadYear + "'>&laquo back to " + BudgetLib.Title + "</a>");
+    else
+      $('#breadcrumbs').html("");
+    $('#secondary-title').html(BudgetLib.loadYear + ' ' + view);
+    $('#breakdown-item-title span').html(subtype);
+    $("#breakdown-nav").html("");
+  }
 	
 	//displays main graph using highcharts
 	//see http://www.highcharts.com/ref/ for highcharts documentation 
@@ -476,22 +474,16 @@
 		
 		if (response.getDataTable().getNumberOfRows() > 0)
 		{
-			$('#scorecard-desc p').fadeOut('fast', function(){
-				$('#scorecard-desc p').html(response.getDataTable().getValue(0, 0));
-			}).fadeIn('fast');
+			$('#scorecard-desc p').hide().html(response.getDataTable().getValue(0, 0)).fadeIn();
 		}
 		else if (BudgetLib.viewByOfficer)
 		{
-			$('#scorecard-desc p').fadeOut('fast', function(){
-				$('#scorecard-desc p').html('Breakdown by control officer*');
-			}).fadeIn('fast');
+			$('#scorecard-desc p').hide().html('Breakdown by control officer*').fadeIn();
       $("#f-officers").show();
 		}
 		else if (!BudgetLib.viewByOfficer && BudgetLib.fundView == '' && BudgetLib.officerView == '')
 		{
-			$('#scorecard-desc p').fadeOut('fast', function(){
-				$('#scorecard-desc p').html('Breakdown by fund');
-			}).fadeIn('fast');
+			$('#scorecard-desc p').hide().html('Breakdown by fund').fadeIn();
 		}
 		else
 		  $('#scorecard-desc p').html('');
@@ -516,7 +508,7 @@
         } else {
           $('#f-zero2011').hide();
         }
-			}).fadeIn('fast');
+			}).fadeIn();
 			
 			if (response.getDataTable().getNumberOfColumns() > 2)
 			{
@@ -530,9 +522,7 @@
 					var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
 					if (budgetedPercent > -0.05) budgetedPercent = '+' + budgetedPercent;
 					
-					$('#budgeted-percent').fadeOut('fast', function(){
-						$('#budgeted-percent').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (BudgetLib.loadYear - 1));
-					}).fadeIn('fast');
+					$('#budgeted-percent').hide().html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (BudgetLib.loadYear - 1)).fadeIn();
 				}
 				else
 					$('#budgeted-percent').fadeOut();
@@ -542,9 +532,7 @@
 					var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
 					if (spentPercent > -0.05) spentPercent = '+' + spentPercent;
 					
-					$('#spent-percent').fadeOut('fast', function(){
-						$('#spent-percent').html('<strong>' + spentPercent + '%</strong> spent from ' + (BudgetLib.loadYear - 1));
-					}).fadeIn('fast');
+					$('#spent-percent').hide().html('<strong>' + spentPercent + '%</strong> spent from ' + (BudgetLib.loadYear - 1)).fadeIn();
 				}
 				else
 					$('#spent-percent').fadeOut();
@@ -663,9 +651,7 @@
 			description = response.getDataTable().getValue(0, 0);
 		
 		//console.log('description: ' + description);
-		$('#expanded-description').fadeOut('fast', function(){
-			$('#expanded-description').html(description);
-		}).fadeIn('fast');
+		$('#expanded-description').hide().html(description).fadeIn();
 	}
 	
 	//requests department details from Fusion Tables when row is clicked
@@ -731,9 +717,7 @@
 				var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
 				if (budgetedPercent >= -0.05) budgetedPercent = '+' + budgetedPercent;
 				
-				$('#sparkline-budgeted').fadeOut('fast', function(){
-					$('#sparkline-budgeted').html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (BudgetLib.loadYear - 1));
-				}).fadeIn('fast');
+				$('#sparkline-budgeted').hide().html('<strong>' + budgetedPercent + '%</strong> budgeted from ' + (BudgetLib.loadYear - 1)).fadeIn();
 			}
 			else
 				$('#sparkline-budgeted').fadeOut();
@@ -743,9 +727,7 @@
 				var spentPercent = (((spentTop / spentBottom) - 1) * 100).toFixed(1);
 				if (spentPercent >= -0.05) spentPercent = '+' + spentPercent;
 				
-				$('#sparkline-spent').fadeOut('fast', function(){
-					$('#sparkline-spent').html('<strong>' + spentPercent + '%</strong> spent from ' + (BudgetLib.loadYear - 1));
-				}).fadeIn('fast');
+				$('#sparkline-spent').hide().html('<strong>' + spentPercent + '%</strong> spent from ' + (BudgetLib.loadYear - 1)).fadeIn();
 			}
 			else
 				$('#sparkline-spent').fadeOut();
