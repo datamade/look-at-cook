@@ -28,7 +28,7 @@ BudgetHelpers.getDataAsTable = function(response) {
   numCols = response.getDataTable().getNumberOfColumns();
   
   //concatenate the results into a string, you can build a table here
-  fusiontabledata = "<table><tr>";
+  var fusiontabledata = "<table><tr>";
   for(i = 0; i < numCols; i++) {
     fusiontabledata += "<td>" + response.getDataTable().getColumnLabel(i) + "</td>";
   }
@@ -42,9 +42,15 @@ BudgetHelpers.getDataAsTable = function(response) {
     fusiontabledata += "</tr>";
   }
   fusiontabledata += "</table>";  
-  //console.log(fusiontabledata);
-  breakdownData += fusiontabledata;
-  updateTable();
+  console.log(fusiontabledata);
+  //breakdownData += fusiontabledata;
+  //updateTable();
+}
+
+BudgetHelpers.getAddressLink = function(year, fund, controlOfficer, title)
+{
+  var href = "/?year=" + year + "&amp;fund=" + fund + "&amp;controlOfficer=" + controlOfficer;
+	return ("<a class='adr' href='" + href + "' rel='address:" + href + "'>" + title + "</a>");
 }
 
 //converts a text in to a URL slug

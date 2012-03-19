@@ -592,7 +592,7 @@
     fusiontabledata += "    <h2>" + BudgetHelpers.convertToPlainString(itemId) + "</h2>";
     fusiontabledata += "    <p id='expanded-description'></p>";
     fusiontabledata += "    <ul class='stats'>";
-    fusiontabledata += "      <li><a class='adr' href='/?year=" + BudgetLib.loadYear + "&amp;fund=" + BudgetHelpers.convertToQueryString(itemId) + "' rel='address:/?year=" + BudgetLib.loadYear + "&amp;fund=" + BudgetHelpers.convertToQueryString(itemId) + "'>Breakdown by department&nbsp;&raquo;</a></li>";
+    fusiontabledata += "      <li>" + BudgetHelpers.getAddressLink(BudgetLib.loadYear, BudgetHelpers.convertToQueryString(itemId), "", "Breakdown by department&nbsp;&raquo;") + "</li>";
     fusiontabledata += "    </ul>";
     fusiontabledata += "    </div>";
     fusiontabledata += "    <div class='expanded-secondary'>";
@@ -623,7 +623,7 @@
     fusiontabledata += "    <h2>" + BudgetHelpers.convertToPlainString(itemId) + "</h2>";
     fusiontabledata += "    <p id='expanded-description'></p>";
     fusiontabledata += "    <ul class='stats'>";
-    fusiontabledata += "      <li><a class='adr' href='/?year=" + BudgetLib.loadYear + "&amp;controlOfficer=" + BudgetHelpers.convertToQueryString(itemId) + "' rel='address:/?year=" + BudgetLib.loadYear + "&amp;controlOfficer=" + BudgetHelpers.convertToQueryString(itemId) + "'>Breakdown by department&nbsp;&raquo;</a></li>";
+    fusiontabledata += "      <li>" + BudgetHelpers.getAddressLink(BudgetLib.loadYear, "", BudgetHelpers.convertToQueryString(itemId), "Breakdown by department&nbsp;&raquo;") + "</li>";
     fusiontabledata += "    </ul>";
     fusiontabledata += "    </div>";
     fusiontabledata += "    <div class='expanded-secondary'>";
@@ -682,9 +682,9 @@
       fusiontabledata += "      <a href='" + linkToWebsite + "'>Official&nbsp;website&nbsp;&raquo;</a>";
     fusiontabledata += "</p>";    
     fusiontabledata += "    <p>";
-    fusiontabledata += "      Fund: <a class='adr' href='/?year=" + BudgetLib.loadYear + "&amp;fund=" + BudgetHelpers.convertToQueryString(departmentFund) + "' rel='address:/?year=" + BudgetLib.loadYear + "&amp;fund=" + BudgetHelpers.convertToQueryString(departmentFund) + "'>" + departmentFund + " &raquo;</a>";
+    fusiontabledata += "      Fund: " + BudgetHelpers.getAddressLink(BudgetLib.loadYear, BudgetHelpers.convertToQueryString(departmentFund), "", departmentFund + " &raquo;") + "</a>";
     if (controlOfficer != '')
-      fusiontabledata += "    <br/>Control officer: <a class='adr' href='/?year=" + BudgetLib.loadYear + "&amp;controlOfficer=" + BudgetHelpers.convertToQueryString(controlOfficer) + "' rel='address:/?year=" + BudgetLib.loadYear + "&amp;controlOfficer=" + BudgetHelpers.convertToQueryString(controlOfficer) + "'>" + controlOfficer + " &raquo;</a>";
+      fusiontabledata += "    <br/>Control officer: " + BudgetHelpers.getAddressLink(BudgetLib.loadYear, "", BudgetHelpers.convertToQueryString(controlOfficer), controlOfficer + " &raquo;");
     fusiontabledata += "    </p>";
     fusiontabledata += "    </div>";
     fusiontabledata += "    <div class='expanded-secondary'>";
