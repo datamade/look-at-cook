@@ -21,8 +21,8 @@ var BudgetQueries = {
 			typeStr = "Appropriations";
 		
 		var myQuery = "SELECT ";
-		var year = 1993;
-		while (year <= 2011)
+		var year = BudgetLib.startYear;
+		while (year <= BudgetLib.endYear)
 		{
 			myQuery += "SUM('" + typeStr + " " + year + "') AS '" + year + "', ";
 			year++;
@@ -42,7 +42,7 @@ var BudgetQueries = {
 			whereClause = " WHERE '" + queryType + "' = '" + name + "'";
 		
 		var percentageQuery = "";	
-		if (year > 1993) {
+		if (year > BudgetLib.startYear) {
 			percentageQuery = ", SUM('Appropriations " + year + "') AS 'Appropriations Top', SUM('Expenditures " + year + "') AS 'Expenditures Top', SUM('Appropriations " + (year - 1) + "') AS 'Appropriations Bottom', SUM('Expenditures " + (year - 1) + "') AS 'Expenditures Bottom'";
 		}
 			
@@ -88,7 +88,7 @@ var BudgetQueries = {
 	
 	//get percentage change per year for display below the sparkline in expanded row detail
 	getSparklinePercentages: function(name, queryType, year, callback) {	
-		if (year > 1993) {
+		if (year > BudgetLib.startYear) {
 			var whereClause = "";
 			if (queryType != "")
 				whereClause += " WHERE '" + queryType + "' = '" + name + "'";

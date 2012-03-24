@@ -32,16 +32,7 @@ var BudgetHelpers = {
     }
     return fusiontabledata;
   },
-   
-  highChartsFormatAmount: function(value) {
-    if (value >= 1000000000)
-      return "$" + value / 1000000000 + "B";
-    else if (value >= 1000000)
-      return "$" + value / 1000000 + "M";
-    else
-      return "$" + value;
-  },
-  
+
   getAddressLink: function(year, fund, controlOfficer, title) {
     var href = "/?year=" + year + "&amp;fund=" + fund + "&amp;controlOfficer=" + controlOfficer;
   	return ("<a class='adr' href='" + href + "' rel='address:" + href + "'>" + title + "</a>");
@@ -83,6 +74,35 @@ var BudgetHelpers = {
             </ul>\
             </div>\
             <div class='expanded-secondary'>\
+            <div class='sparkline' id='selected-chart'></div>\
+            <ul class='stats'>\
+              <li id='sparkline-budgeted'></li>\
+              <li id='sparkline-spent'></li>\
+            </ul>\
+          </div>\
+        </td>\
+      </tr>";
+  },
+  
+  generateExpandedDeptRow: function(departmentId, department, description, linkToWebsite, departmentFund, controlOfficer) {
+    if (linkToWebsite != '')
+      linkToWebsite = "<a href='" + linkToWebsite + "'>Official&nbsp;website&nbsp;&raquo;</a>";
+      
+    if (controlOfficer != '')
+      controlOfficer = "<br/>Control officer: " + BudgetHelpers.getAddressLink(BudgetLib.loadYear, "", BudgetHelpers.convertToQueryString(controlOfficer), controlOfficer + " &raquo;");
+    
+    return "\
+      <tr class='expanded-content' id='department-" + departmentId + "-expanded'>\
+        <td colspan='5'>\
+          <div class='expanded-primary'>\
+            <h2>" + department + "</h2>\
+            <p>" + description + " " + linkToWebsite + "</p>\
+            <p>\
+              Fund: " + BudgetHelpers.getAddressLink(BudgetLib.loadYear, BudgetHelpers.convertToQueryString(departmentFund), "", departmentFund + " &raquo;") + "</a>\
+              " + controlOfficer + "\
+            </p>\
+          </div>\
+          <div class='expanded-secondary'>\
             <div class='sparkline' id='selected-chart'></div>\
             <ul class='stats'>\
               <li id='sparkline-budgeted'></li>\
