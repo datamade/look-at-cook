@@ -1,6 +1,6 @@
 Look at Cook - Cook County budget visualization 1993 - 2011
 Site: http://lookatcook.com
-Updated: 11/8/2011
+Updated: 3/23/2012
 
 What is this?
 
@@ -30,13 +30,13 @@ Overview
 
 This budget visualization is built entirely using HTML and jQuery. There is no server-side code, except for the stuff that happens behind the scenes with Google Fusion Tables. Even so, the data is fetched from Fusion Tables using the javascript Google Visualization API.
 
-The bulk of the code is in /scripts/budget.fusiontables.js. This file contains all of the init, data fetching, display and helper functions that the visualization uses to run. To get a good idea of how it works, you should first look at the data in Fusion Tables that it uses:
+The bulk of the code is in /scripts/budget_lib.js. This file contains all of the init, data fetching, display and helper functions that the visualization uses to run. To get a good idea of how it works, you should first look at the data in Fusion Tables that it uses:
 
  - Main budget table (expenditures and appropriations per department per year) - http://www.google.com/fusiontables/DataSource?dsrcid=1227404
  - Fund descriptions - http://www.google.com/fusiontables/DataSource?dsrcid=1270538
  - Control officer descriptions - http://www.google.com/fusiontables/DataSource?dsrcid=1270539
 
-The data is read from these tables and the appropriate content on the page is updated via asynchronous callback (for more info on callbacks see: http://docs.jquery.com/Tutorials:How_jQuery_Works#Callback_and_Functions). Whenever a chart point or link are clicked or the URL changes, the jQuery address code detects the change and updates the page using the 'loadFor' function. The 'loadFor' function updates all the internal variables and sets the display mode to either default, control officer list, fund detail or control officer detail.
+The data is read from these tables and the appropriate content on the page is updated via asynchronous callback (for more info on callbacks see: http://docs.jquery.com/Tutorials:How_jQuery_Works#Callback_and_Functions). Whenever a chart point or link are clicked or the URL changes, the jQuery address code detects the change and updates the page using the 'updateDisplay' function. The 'loadFor' function updates all the internal variables and sets the display mode to either default, control officer list, fund detail or control officer detail.
 
 The appropriations and expenditures per year are then fetched based on the view using the 'getTotalArray' which in turn updates the main chart (which uses Highcharts) via 'updateMainChart'. The list of departments for that particular view are also fetched via 'getDepartments' which then calls 'getDataAsBudgetTable' to build an HTML table (which then uses DataTables to do sorting).
 
@@ -56,6 +56,6 @@ Known issues
 
 More to come
 
-This is my initial pass at documentation. This is by no means a 'plug and play' application. There is quite a bit of complexity and Cook County specific code/language/styles in here. By all means feel free to use any of this code, but know before you do that it will take at least an intermediate understanding of coding and javascript/jQuery to get anywhere with it. 
+While I have made some efforts to abstract away functionality, this is still by no means a 'plug and play' application. There is quite a bit of complexity and Cook County specific code/language/styles in here. By all means feel free to use any of this code, but know before you do that it will take at least an intermediate understanding of coding and javascript/jQuery to get anywhere with it. 
 
 I'd like to make it simpler to use in the future, so if you have any suggestions, comments or want to make additions, contact me at derek.eder+git@gmail.com or tweet at me @derek_eder.
