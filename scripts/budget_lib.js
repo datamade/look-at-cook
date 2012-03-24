@@ -1,51 +1,47 @@
-/*--------------------------+
- | Site: Look at Cook       |
- | Budget Display library   |
- +--------------------------*/  
+/*!
+ * Look at Cook Budget Display library
+ * http://lookatcook.com/
+ *
+ * Copyright 2012, Derek Eder and Nick Rougeux
+ * Licensed under the MIT license.
+ * https://github.com/open-city/look-at-cook/wiki/License
+ *
+ * Date: 3/24/2012
+ *
+ * This is where all the 'magic' happens. jQuery address detects changes in the URL, and 
+ * calls the 'BudgetLib.updateDisplay' function which displays the appropriate data for that view.
+ * 
+ * Data is stored in Google Fusion tables, and fetches it using the Google visualization API
+ * 
+ * For display, the data is passed to Highcharts, another javascript library that specializes 
+ * in graphs, and an HTML table which displays the budget broken down by department.
+ * 
+ * Every fund, control officer or department that is clicked updates the URL query string using 
+ * jQuery Address and the page loads the data dynamically.
+ * 
+ * Storing all of our data in Google Fusion Tables. For this visualization, I split it up in to 
+ * 3 tables
+ * 
+ */
   
-  //this is where all the 'magic' happens. jQuery address detects changes in the URL, and 
-  //calls the 'BudgetLib.loadFor' function which displays the appropriate data for that view.
-  
-  //data is stored in Google Fusion tables, and fetches it using the Google visualization API
-  
-  //for display, the data is passed to Highcharts, another javascript library that specializes 
-  //in graphs, and an HTML table which displays the budget broken down by department.
-  
-  //every fund, control officer or department that is clicked updates the URL query string using 
-  //jQuery Address and the page loads the data dynamically.
-  
-  //storing all of our data in Google Fusion Tables. For this visualization, I split it up in to 
-  //3 tables
-  
-  //----------------------------------------------------------
-  
-  var BudgetLib = BudgetLib || {};
-  
+var BudgetLib = {
+
   //IDs used to reference Fusion Tables, where we store our data
-  BudgetLib.BUDGET_TABLE_ID = 1270347; //main budget table with expenditures/appropriations per department per year
-  BudgetLib.FUND_DESCRIPTION_TABLE_ID = 1270538;
-  BudgetLib.OFFICER_DESCRIPTION_TABLE_ID = 1270539;
+  BUDGET_TABLE_ID: 1270347, //main budget table with expenditures/appropriations per department per year
+  FUND_DESCRIPTION_TABLE_ID: 1270538,
+  OFFICER_DESCRIPTION_TABLE_ID: 1270539,
   
-  //containers for data
-  BudgetLib.sparkChart; //sparkline using Highcharts 
-  BudgetLib.breakdownTable; //secondary table show funds or departments
-  BudgetLib.appropTotalArray; //used to populate main highcharts graph
-  BudgetLib.expendTotalArray; 
-  BudgetLib.sparkAppropTotalArray; //used to populate sparkline graph in expanded detail
-  BudgetLib.sparkExpendTotalArray;
-  
-  BudgetLib.Title = "Cook County Budget"
-  BudgetLib.breakdownData = ""; //place to store secondary bar chart
-  BudgetLib.loadYear = 2011; //viewing year
-  BudgetLib.fundView = ""; //viewing fund
-  BudgetLib.officerView = ""; //viewing control officer
-  BudgetLib.viewByOfficer = false; //flag to switch between department and control officer view
-  BudgetLib.arraysLoaded = 0;
-  
+  title: "Cook County Budget",
+  loadYear: 2011, //viewing year
+  fundView: "", //viewing fund
+  officerView: "", //viewing control officer
+  viewByOfficer: false, //flag to switch between department and control officer view
+  arraysLoaded: 0,
+
   //-------------front end display functions-------------------
   
   //primary load for graph and table
-  BudgetLib.updateDisplay = function(viewMode, year, fund, officer, externalLoad) {
+  updateDisplay: function(viewMode, year, fund, officer, externalLoad) {
     //load in values and update internal variables
     var viewChanged = false;
     if (BudgetLib.fundView != BudgetHelpers.convertToPlainString(fund) || BudgetLib.officerView != BudgetHelpers.convertToPlainString(officer))
@@ -107,35 +103,31 @@
         $("#breakdown-nav").html("<ul><li class='current'>Where's it going?</li><li><a href='#' rel='address:/?year=" + BudgetLib.loadYear + "&viewMode=officer'>Who controls it?</a></li></ul><div class='clear'></div>");
         $('#breakdown-item-title span').html('Fund');
       }
+      $('#breakdown-nav a').address();
       
-      BudgetLib.updateHeader(BudgetLib.Title, 'Fund');
+      BudgetLib.updateHeader(BudgetLib.title, 'Fund');
       BudgetQueries.getTotalsForYear('', '', BudgetLib.loadYear, BudgetLib.updateScorecard);
       BudgetQueries.getFundDescription(BudgetLib.fundView, BudgetLib.updateScorecardDescription);
-      
-      //track view in Google analytics
-      if (externalLoad)
-        _trackClickEvent("Charts", "Load timeline", $('#secondary-title').html());
-      else if (viewChanged)
-        _trackClickEvent("Charts", "View timeline", $('#secondary-title').html());
     }
     $('#breadcrumbs a').address();
-  }  
+  },  
   
-  BudgetLib.updateHeader = function(view, subtype){
+  updateHeader: function(view, subtype){
     $('h1').html(view);
-    if (view != BudgetLib.Title)
-      $('#breadcrumbs').html("<a href='/?year=" + BudgetLib.loadYear + "' rel='address:/?year=" + BudgetLib.loadYear + "'>&laquo back to " + BudgetLib.Title + "</a>");
+    if (view != BudgetLib.title) {
+      $('#breadcrumbs').html("<a href='/?year=" + BudgetLib.loadYear + "' rel='address:/?year=" + BudgetLib.loadYear + "'>&laquo back to " + BudgetLib.title + "</a>");
+      $("#breakdown-nav").html("");
+    }
     else
       $('#breadcrumbs').html("");
     $('#secondary-title').html(BudgetLib.loadYear + ' ' + view);
     $('#breakdown-item-title span').html(subtype);
-    $("#breakdown-nav").html("");
-  }
+  },
   
   //displays main graph using highcharts
   //see http://www.highcharts.com/ref/ for highcharts documentation 
   //see http://www.highcharts.com/demo/ for highcharts examples
-  BudgetLib.updateMainChart = function() {
+  updateMainChart: function() {
     BudgetLib.arraysLoaded++;
     if (BudgetLib.arraysLoaded >= 2) //hack to wait for both expend and approp data callbacks to return
     {
@@ -194,7 +186,6 @@
                   }
                 });
         var clickedYear = new Date(x).getFullYear();
-        _trackClickEvent("Charts", "Choose year", clickedYear + " (from " + $('#secondary-title').html() + ")");
         $.address.parameter('year',clickedYear);
               }
             }
@@ -245,14 +236,7 @@
         gridLineColor: "#ddd",
         lineWidth: 1,
         labels: {
-          formatter: function() {
-            if (this.value >= 1000000000)
-              return "$" + this.value / 1000000000 + "B";
-            else if (this.value >= 1000000)
-              return "$" + this.value / 1000000 + "M";
-            else
-              return "$" + this.value;
-          }
+          formatter: function() { return BudgetHelpers.highChartsFormatAmount(this.value); }
         },
         min: Math.min.apply( Math, minValuesArray ),
         title: null
@@ -265,12 +249,12 @@
     if (mainChart.series[1].data[selectedYearIndex].y != null)
       mainChart.series[1].data[selectedYearIndex].select(true,true);
     }
-  }
+  },
     
   //displays detail sparkling using high charts
   //see http://www.highcharts.com/ref/ for highcharts documentation 
   //see http://www.highcharts.com/demo/ for highcharts examples
-  BudgetLib.updateSparkline = function() {
+  updateSparkline: function() {
     BudgetLib.arraysLoaded++;
      if (BudgetLib.arraysLoaded >= 2)
      {
@@ -293,17 +277,13 @@
             point: {
               events: {
                 click: function() {
-          var x = this.x;
+                  var x = this.x;
                   if (BudgetLib.fundView == '' && BudgetLib.officerView == '')
-          {
-            var clickedYear = new Date(x).getFullYear();          
-            $.address.parameter('year',clickedYear)
-            $.address.parameter('fund',BudgetHelpers.convertToQueryString($('.expanded-primary h2').html()));
-          }
-          else
-          {
-          
-          }
+                  {
+                    var clickedYear = new Date(x).getFullYear();          
+                    $.address.parameter('year',clickedYear)
+                    $.address.parameter('fund',BudgetHelpers.convertToQueryString($('.expanded-primary h2').html()));
+                  }
                 }
               }
             },
@@ -351,14 +331,7 @@
         yAxis: {
           gridLineWidth: 0,
           labels: {
-            formatter: function() {
-              if (this.value >= 1000000000)
-                return "$" + this.value / 1000000000 + "B";
-              else if (this.value >= 1000000)
-                return "$" + this.value / 1000000 + "M";
-              else
-                return "$" + this.value;
-            }
+            formatter: function() { return BudgetHelpers.highChartsFormatAmount(this.value);}
           },
           lineWidth: 1,
           min: Math.min.apply( Math, minValuesArray ),
@@ -371,10 +344,10 @@
   if (BudgetLib.sparkChart.series[1].data[selectedYearIndex].y != null)
     BudgetLib.sparkChart.series[1].data[selectedYearIndex].select(true,true);
     }
-  }
+  },
     
   //displays secondary datatables fund/department listing
-  BudgetLib.updateTable = function() {
+  updateTable: function() {
     $('#breakdown').fadeOut('fast', function(){
       if (BudgetLib.breakdownTable != null) BudgetLib.breakdownTable.fnDestroy();
       
@@ -417,10 +390,10 @@
         "bPaginate": false
       });
     }).fadeIn('fast');
-  }
+  },
   
   //show/hide expanded detail for a clicked row
-  BudgetLib.updateDetail = function(itemId, detail) {
+  updateDetail: function(itemId, detail) {
     if (BudgetLib.sparkChart != null)
     {
       BudgetLib.sparkChart.destroy();
@@ -442,34 +415,34 @@
       $('#breakdown .expanded-content').remove();
       $('#breakdown tr').removeClass('expanded-head');
     }
-  }
+  },
 
   //----------display callback functions----------------
   
   //these all work by being called (callback function) once Fusion Tables returns a result. 
   //the function then takes the response and handles updating the page
-  BudgetLib.updateAppropTotal = function(response) {
+  updateAppropTotal: function(response) {
     BudgetLib.appropTotalArray = BudgetHelpers.getDataAsArray(response);
     BudgetLib.updateMainChart();
-  }
+  },
   
-  BudgetLib.updateExpendTotal = function(response) {
+  updateExpendTotal: function(response) {
     BudgetLib.expendTotalArray = BudgetHelpers.getDataAsArray(response);
     BudgetLib.updateMainChart();
-  }
+  },
   
-  BudgetLib.updateSparkAppropTotal = function(response) {
+  updateSparkAppropTotal: function(response) {
     BudgetLib.sparkAppropTotalArray = BudgetHelpers.getDataAsArray(response);
     BudgetLib.updateSparkline();
-  }
+  },
   
-  BudgetLib.updateSparkExpendTotal = function(response) {
+  updateSparkExpendTotal: function(response) {
     BudgetLib.sparkExpendTotalArray = BudgetHelpers.getDataAsArray(response);
     BudgetLib.updateSparkline();
-  }
+  },
   
   //shows the description of the current view below the main chart
-  BudgetLib.updateScorecardDescription = function(response) {    
+  updateScorecardDescription: function(response) {    
     $("#f-officers").hide();
     
     if (response.getDataTable().getNumberOfRows() > 0)
@@ -487,10 +460,10 @@
     }
     else
       $('#scorecard-desc p').html('');
-  }
+  },
   
   //shows totals and percentage changes of the current view below the main chart
-  BudgetLib.updateScorecard = function(response) {    
+  updateScorecard: function(response) {    
     if (response.getDataTable().getNumberOfRows() > 0)
     {
       $('#scorecard .budgeted').fadeOut('fast', function(){
@@ -538,10 +511,10 @@
           $('#spent-percent').fadeOut();
       }
     }
-  }
+  },
   
   //builds out budget breakdown (secondary) table
-  BudgetLib.getDataAsBudgetTable = function(response) {  
+  getDataAsBudgetTable: function(response) {  
     numRows = response.getDataTable().getNumberOfRows();
     var fusiontabledata;
     for(i = 0; i < numRows; i++) {
@@ -565,86 +538,38 @@
       
       if (budgeted != 0 || spent != 0)
       {
-        fusiontabledata += "<tr id='" + rowId + "'>";
-        fusiontabledata += "<td><a onclick='" + detailLoadFunction + "'><img class='budget-expand-img' src='images/expand.png' /></a> <a onclick='" + detailLoadFunction + "'>" + rowName + "</a></td>";
-        fusiontabledata += "<td class='num budgeted'>" + budgeted + "</td>";
-        fusiontabledata += "<td class='num spent'>" + spent + "</td>";
-        fusiontabledata += "<td><div class='bars'>";
-        fusiontabledata += "          <span class='budgeted outer'></span>";
-        fusiontabledata += "          <span class='spent inner'></span>";
-        fusiontabledata += "        </div></td>";
-        fusiontabledata += "</tr>";
+        fusiontabledata += BudgetHelpers.generateTableRow(rowId, detailLoadFunction, rowName, budgeted, spent);
       }
     }
  
     BudgetLib.breakdownData = fusiontabledata;
     BudgetLib.updateTable();
-  }
+  },
   
   //shows fund details when row is clicked
-  BudgetLib.getFundDetails = function(itemId) {  
-    _trackClickEvent("Charts", "Expand row", "Fund: " + BudgetHelpers.convertToPlainString(itemId) + " (" + BudgetLib.loadYear + ")");
-    var fusiontabledata;
-      
-    fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
-    fusiontabledata += "  <td colspan='5'>";
-    fusiontabledata += "  <div class='expanded-primary'>";
-    fusiontabledata += "    <h2>" + BudgetHelpers.convertToPlainString(itemId) + "</h2>";
-    fusiontabledata += "    <p id='expanded-description'></p>";
-    fusiontabledata += "    <ul class='stats'>";
-    fusiontabledata += "      <li>" + BudgetHelpers.getAddressLink(BudgetLib.loadYear, BudgetHelpers.convertToQueryString(itemId), "", "Breakdown by department&nbsp;&raquo;") + "</li>";
-    fusiontabledata += "    </ul>";
-    fusiontabledata += "    </div>";
-    fusiontabledata += "    <div class='expanded-secondary'>";
-    fusiontabledata += "    <div class='sparkline' id='selected-chart'></div>";
-    fusiontabledata += "    <ul class='stats'>";
-    fusiontabledata += "      <li id='sparkline-budgeted'></li>";
-    fusiontabledata += "      <li id='sparkline-spent'></li>";
-    fusiontabledata += "    </ul>";
-    fusiontabledata += "    </div>";
-    fusiontabledata += "  </td>";
-    fusiontabledata += "  </tr>";
+  getFundDetails: function(itemId) {  
+    var fusiontabledata = BudgetHelpers.generateExpandedRow(itemId, 'fund');
     
     BudgetLib.updateDetail(itemId, fusiontabledata);
     BudgetQueries.getFundDescription(BudgetHelpers.convertToPlainString(itemId), BudgetLib.updateExpandedDescription);
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', true, BudgetLib.updateSparkAppropTotal);
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', false, BudgetLib.updateSparkExpendTotal);
     BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Fund', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages);
-  }
+  },
   
   //shows fund details when row is clicked
-  BudgetLib.getControlOfficerDetails = function(itemId) {  
-    _trackClickEvent("Charts", "Expand row", "Control officer: " + BudgetHelpers.convertToPlainString(itemId) + " (" + BudgetLib.loadYear + ")");
-    var fusiontabledata;
-      
-    fusiontabledata = "<tr class='expanded-content' id='" + itemId + "-expanded'>";
-    fusiontabledata += "  <td colspan='5'>";
-    fusiontabledata += "  <div class='expanded-primary'>";
-    fusiontabledata += "    <h2>" + BudgetHelpers.convertToPlainString(itemId) + "</h2>";
-    fusiontabledata += "    <p id='expanded-description'></p>";
-    fusiontabledata += "    <ul class='stats'>";
-    fusiontabledata += "      <li>" + BudgetHelpers.getAddressLink(BudgetLib.loadYear, "", BudgetHelpers.convertToQueryString(itemId), "Breakdown by department&nbsp;&raquo;") + "</li>";
-    fusiontabledata += "    </ul>";
-    fusiontabledata += "    </div>";
-    fusiontabledata += "    <div class='expanded-secondary'>";
-    fusiontabledata += "    <div class='sparkline' id='selected-chart'></div>";
-    fusiontabledata += "    <ul class='stats'>";
-    fusiontabledata += "      <li id='sparkline-budgeted'></li>";
-    fusiontabledata += "      <li id='sparkline-spent'></li>";
-    fusiontabledata += "    </ul>";
-    fusiontabledata += "    </div>";
-    fusiontabledata += "  </td>";
-    fusiontabledata += "  </tr>";
+  getControlOfficerDetails: function(itemId) {  
+    var fusiontabledata = BudgetHelpers.generateExpandedRow(itemId, 'controlOfficer');
     
     BudgetLib.updateDetail(itemId, fusiontabledata);
     BudgetQueries.getControlOfficerDescription(BudgetHelpers.convertToPlainString(itemId), BudgetLib.updateExpandedDescription);
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', true, BudgetLib.updateSparkAppropTotal);
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', false, BudgetLib.updateSparkExpendTotal);
     BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages);
-  }
+  },
   
   //shows description in expanded row when row is clicked
-  BudgetLib.updateExpandedDescription = function(response) {
+  updateExpandedDescription: function(response) {
     var description = '';
     
     if (response.getDataTable().getNumberOfRows() > 0)
@@ -652,17 +577,17 @@
     
     //console.log('description: ' + description);
     $('#expanded-description').hide().html(description).fadeIn();
-  }
+  },
   
   //requests department details from Fusion Tables when row is clicked
-  BudgetLib.getDepartmentDetails = function(departmentId) {
+  getDepartmentDetails: function(departmentId) {
     departmentId = departmentId.replace('department-', '')
     
     BudgetQueries.getDepartmentDescription(departmentId, BudgetLib.updateDepartmentDetails);
-  }
+  },
   
   //shows department details when row is clicked
-  BudgetLib.updateDepartmentDetails = function(response) {
+  updateDepartmentDetails: function(response) {
     var fusiontabledata;
     var departmentId = response.getDataTable().getValue(0, 0);
     var department = response.getDataTable().getValue(0, 1);
@@ -670,8 +595,6 @@
     var description = response.getDataTable().getValue(0, 3);
     var controlOfficer = response.getDataTable().getValue(0, 4);
     var departmentFund = response.getDataTable().getValue(0, 5);
-    
-    _trackClickEvent("Charts", "Expand row", "Department: " + department + " (" + BudgetLib.loadYear + ")");  
     
     fusiontabledata = "<tr class='expanded-content' id='department-" + departmentId + "-expanded'>";
     fusiontabledata += "  <td colspan='5'>";
@@ -701,10 +624,10 @@
     BudgetQueries.getTotalArray(departmentId, 'Department ID', true, BudgetLib.updateSparkAppropTotal);
     BudgetQueries.getTotalArray(departmentId, 'Department ID', false, BudgetLib.updateSparkExpendTotal);
     BudgetQueries.getSparklinePercentages(departmentId, 'Department ID', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages); 
-  }
+  },
   
   //updates percentages that display below the expanded row sparkling
-  BudgetLib.updateSparklinePercentages = function(response) {
+  updateSparklinePercentages: function(response) {
     if (response.getDataTable().getNumberOfRows() > 0)
     {
       var budgetedTop = response.getDataTable().getValue(0, 0);
@@ -733,3 +656,4 @@
         $('#sparkline-spent').fadeOut();
     }
   }
+}
