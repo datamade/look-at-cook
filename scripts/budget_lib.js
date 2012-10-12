@@ -26,14 +26,14 @@
 var BudgetLib = {
 
   //IDs used to reference Fusion Tables, where we store our data
-  BUDGET_TABLE_ID: 1270347, //main budget table with expenditures/appropriations per department per year
+  BUDGET_TABLE_ID: 5462674, //main budget table with expenditures/appropriations per department per year
   FUND_DESCRIPTION_TABLE_ID: 1270538,
   OFFICER_DESCRIPTION_TABLE_ID: 1270539,
   
   title: "Cook County Budget",
   startYear: 1993,
-  endYear: 2011,
-  loadYear: 2011, //viewing year
+  endYear: 2012,
+  loadYear: 2012, //viewing year
   fundView: "", //viewing fund
   officerView: "", //viewing control officer
   viewByOfficer: false, //flag to switch between department and control officer view
@@ -286,6 +286,7 @@ var BudgetLib = {
   
   //builds out budget breakdown (secondary) table
   getDataAsBudgetTable: function(response) {  
+    console.log(response);
     numRows = response.getDataTable().getNumberOfRows();
     var fusiontabledata;
     for(i = 0; i < numRows; i++) {

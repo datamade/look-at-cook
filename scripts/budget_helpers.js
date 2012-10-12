@@ -16,11 +16,14 @@ var BudgetHelpers = {
 	
   //converts SQL query to URL
   getQuery: function(query) {
+    console.log(query);
+    //console.log('http://www.google.com/fusiontables/gvizdata?tq='  + encodeURIComponent(query));
     return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + encodeURIComponent(query));
   },
   	
   //converts a Fusion Table response in to an array for passing in to highcharts
   getDataAsArray: function(response) {
+    console.log(response);
     numCols = response.getDataTable().getNumberOfColumns();
     var fusiontabledata = new Array();
     
