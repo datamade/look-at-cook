@@ -12,28 +12,52 @@
  * 
  */
 
+var BudgetHelpers = BudgetHelpers || {};  
 var BudgetHelpers = {
+
+  query: function(selectColumns, whereClause, orderBy, fusionTableId, callback) {
+    var queryStr = [];
+    queryStr.push("SELECT " + selectColumns);
+    queryStr.push(" FROM " + fusionTableId);
+    
+    if (whereClause != "")
+      queryStr.push(" WHERE " + whereClause);
+
+    if (orderBy != "")
+      queryStr.push(" ORDER BY " + orderBy);
+  
+    var sql = encodeURIComponent(queryStr.join(" "));
+    //console.log(queryStr.join(" "));
+    $.ajax({
+      url: "https://www.googleapis.com/fusiontables/v1/query?sql="+sql+"&callback="+callback+"&key="+BudgetLib.FusionTableApiKey, 
+      dataType: "jsonp"
+    });
+  },
+
+  handleError: function(json) {
+    if (json["error"] != undefined)
+      console.log("Error in Fusion Table call: " + json["error"]["message"]);
+  },
 	
   //converts SQL query to URL
   getQuery: function(query) {
-    console.log(query);
     //console.log('http://www.google.com/fusiontables/gvizdata?tq='  + encodeURIComponent(query));
     return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + encodeURIComponent(query));
   },
   	
   //converts a Fusion Table response in to an array for passing in to highcharts
-  getDataAsArray: function(response) {
-    console.log(response);
-    numCols = response.getDataTable().getNumberOfColumns();
-    var fusiontabledata = new Array();
-    
-    for(j = 0; j < numCols; j++) {
-      if (response.getDataTable().getValue(0, j) == "0")
-        fusiontabledata[j] = null;
+  getDataAsArray: function(json) {
+    data = json["rows"][0]; 
+    var dataArray = [];
+    for(var i=0; i<data.length; i++) { 
+      dataArray[i] = data[i];
+      if (dataArray[i] == 0)
+        dataArray[i] = null
       else
-        fusiontabledata[j] = response.getDataTable().getValue(0, j);
+        dataArray[i] = +dataArray[i]; 
     }
-    return fusiontabledata;
+
+    return dataArray;
   },
 
   getAddressLink: function(year, fund, controlOfficer, title) {

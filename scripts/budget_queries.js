@@ -12,6 +12,7 @@
  * 
  */
 
+var BudgetQueries = BudgetQueries || {};  
 var BudgetQueries = {
 
   //gets fund or department totals per year for highcharts  	
@@ -20,19 +21,20 @@ var BudgetQueries = {
 		if (isAppropriation == true) 
 			typeStr = "Appropriations";
 		
-		var myQuery = "SELECT ";
+		var selectColumns = "";
 		var year = BudgetLib.startYear;
 		while (year <= BudgetLib.endYear)
 		{
-			myQuery += "SUM('" + typeStr + " " + year + "') AS '" + year + "', ";
+			selectColumns += "SUM('" + typeStr + " " + year + "') AS '" + year + "', ";
 			year++;
 		}
-		myQuery = myQuery.slice(0,myQuery.length-2);  
-		myQuery += " FROM " + BudgetLib.BUDGET_TABLE_ID;
+		selectColumns = selectColumns.slice(0,selectColumns.length-2);  
+
+		var whereClause = "";
 		if (name != '')
-			myQuery += " WHERE '" + queryType + "' = '" + name + "'";
+			whereClause += "'" + queryType + "' = '" + name + "'";
 		
-		BudgetHelpers.getQuery(myQuery).send(callback);
+		BudgetHelpers.query(selectColumns, whereClause, "", BudgetLib.BUDGET_TABLE_ID, callback);
 	},
 	
 	//returns total given year

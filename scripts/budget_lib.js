@@ -22,13 +22,15 @@
  * Storing all of our data in Google Fusion Tables. For this visualization, I split it up in to 
  * 3 tables
  */
-  
+
+var BudgetLib = BudgetLib || {};  
 var BudgetLib = {
 
   //IDs used to reference Fusion Tables, where we store our data
-  BUDGET_TABLE_ID: 5462674, //main budget table with expenditures/appropriations per department per year
-  FUND_DESCRIPTION_TABLE_ID: 1270538,
-  OFFICER_DESCRIPTION_TABLE_ID: 1270539,
+  FusionTableApiKey: "AIzaSyDgYMq5VzeWQdYNpvYfP0W3NuCKYOAB5_Y",
+  BUDGET_TABLE_ID: "1ZJJvlYCYTC1DIgp_tkJKEAs9l0sdO7J4kF8Gv9Y", //main budget table with expenditures/appropriations per department per year
+  FUND_DESCRIPTION_TABLE_ID: "1DVnzs1tOFrVxrf6_jRFeXUe7b6lDYd5jh309Up4",
+  OFFICER_DESCRIPTION_TABLE_ID: "1uSDhUpVbk3c7m0E7iT87LP8GfPk6vnczh-y64sI",
   
   title: "Cook County Budget",
   startYear: 1993,
@@ -63,8 +65,8 @@ var BudgetLib = {
     if (BudgetLib.fundView != ""){
       if (viewChanged || externalLoad) {
         window.scrollTo(0, 0);
-        BudgetQueries.getTotalArray(BudgetLib.fundView, 'Fund', true, BudgetLib.updateAppropTotal);
-        BudgetQueries.getTotalArray(BudgetLib.fundView, 'Fund', false, BudgetLib.updateExpendTotal);
+        BudgetQueries.getTotalArray(BudgetLib.fundView, 'Fund', true, "BudgetLib.updateAppropTotal");
+        BudgetQueries.getTotalArray(BudgetLib.fundView, 'Fund', false, "BudgetLib.updateExpendTotal");
       }
       
       BudgetQueries.getDepartments(BudgetLib.fundView, 'Fund', BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
@@ -75,8 +77,8 @@ var BudgetLib = {
     else if (BudgetLib.officerView != ""){ //show control officer view
       if (viewChanged || externalLoad) {
         window.scrollTo(0, 0);
-        BudgetQueries.getTotalArray(BudgetLib.officerView, 'Control Officer', true, BudgetLib.updateAppropTotal);
-        BudgetQueries.getTotalArray(BudgetLib.officerView, 'Control Officer', false, BudgetLib.updateExpendTotal);
+        BudgetQueries.getTotalArray(BudgetLib.officerView, 'Control Officer', true, "BudgetLib.updateAppropTotal");
+        BudgetQueries.getTotalArray(BudgetLib.officerView, 'Control Officer', false, "BudgetLib.updateExpendTotal");
       }
       
       BudgetQueries.getDepartments(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
@@ -86,8 +88,8 @@ var BudgetLib = {
     }
     else { //load default view
       if (viewChanged || externalLoad) {
-        BudgetQueries.getTotalArray('', '', true, BudgetLib.updateAppropTotal);
-        BudgetQueries.getTotalArray('', '', false, BudgetLib.updateExpendTotal);
+        BudgetQueries.getTotalArray('', '', true, "BudgetLib.updateAppropTotal");
+        BudgetQueries.getTotalArray('', '', false, "BudgetLib.updateExpendTotal");
       }
           
       if (BudgetLib.viewByOfficer) {
@@ -286,7 +288,6 @@ var BudgetLib = {
   
   //builds out budget breakdown (secondary) table
   getDataAsBudgetTable: function(response) {  
-    console.log(response);
     numRows = response.getDataTable().getNumberOfRows();
     var fusiontabledata;
     for(i = 0; i < numRows; i++) {
@@ -322,8 +323,8 @@ var BudgetLib = {
     var fusiontabledata = BudgetHelpers.generateExpandedRow(itemId, 'fund');
     BudgetLib.updateDetail(itemId, fusiontabledata);
     BudgetQueries.getFundDescription(BudgetHelpers.convertToPlainString(itemId), BudgetLib.updateExpandedDescription);
-    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', true, BudgetLib.updateSparkAppropTotal);
-    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', false, BudgetLib.updateSparkExpendTotal);
+    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', true, "BudgetLib.updateSparkAppropTotal");
+    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', false, "BudgetLib.updateSparkExpendTotal");
     BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Fund', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages);
   },
   
@@ -332,8 +333,8 @@ var BudgetLib = {
     var fusiontabledata = BudgetHelpers.generateExpandedRow(itemId, 'controlOfficer');
     BudgetLib.updateDetail(itemId, fusiontabledata);
     BudgetQueries.getControlOfficerDescription(BudgetHelpers.convertToPlainString(itemId), BudgetLib.updateExpandedDescription);
-    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', true, BudgetLib.updateSparkAppropTotal);
-    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', false, BudgetLib.updateSparkExpendTotal);
+    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', true, "BudgetLib.updateSparkAppropTotal");
+    BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', false, "BudgetLib.updateSparkExpendTotal");
     BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages);
   },
   
@@ -365,8 +366,8 @@ var BudgetLib = {
     var fusiontabledata = BudgetHelpers.generateExpandedDeptRow(departmentId, department, description, linkToWebsite, departmentFund, controlOfficer);
     BudgetLib.updateDetail('department-' + departmentId, fusiontabledata);
     
-    BudgetQueries.getTotalArray(departmentId, 'Department ID', true, BudgetLib.updateSparkAppropTotal);
-    BudgetQueries.getTotalArray(departmentId, 'Department ID', false, BudgetLib.updateSparkExpendTotal);
+    BudgetQueries.getTotalArray(departmentId, 'Department ID', true, "BudgetLib.updateSparkAppropTotal");
+    BudgetQueries.getTotalArray(departmentId, 'Department ID', false, "BudgetLib.updateSparkExpendTotal");
     BudgetQueries.getSparklinePercentages(departmentId, 'Department ID', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages); 
   },
   
