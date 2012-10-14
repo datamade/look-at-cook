@@ -12,28 +12,43 @@
  * 
  */
 
+var BudgetHelpers = BudgetHelpers || {};  
 var BudgetHelpers = {
+
+  query: function(sql, callback) {  
+    var sql = encodeURIComponent(sql);
+    //console.log(queryStr.join(" "));
+    $.ajax({
+      url: "https://www.googleapis.com/fusiontables/v1/query?sql="+sql+"&callback="+callback+"&key="+BudgetLib.FusionTableApiKey, 
+      dataType: "jsonp"
+    });
+  },
+
+  handleError: function(json) {
+    if (json["error"] != undefined)
+      console.log("Error in Fusion Table call: " + json["error"]["message"]);
+  },
 	
   //converts SQL query to URL
   getQuery: function(query) {
-    console.log(query);
     //console.log('http://www.google.com/fusiontables/gvizdata?tq='  + encodeURIComponent(query));
     return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + encodeURIComponent(query));
   },
   	
-  //converts a Fusion Table response in to an array for passing in to highcharts
-  getDataAsArray: function(response) {
-    console.log(response);
-    numCols = response.getDataTable().getNumberOfColumns();
-    var fusiontabledata = new Array();
-    
-    for(j = 0; j < numCols; j++) {
-      if (response.getDataTable().getValue(0, j) == "0")
-        fusiontabledata[j] = null;
-      else
-        fusiontabledata[j] = response.getDataTable().getValue(0, j);
+  //converts a Fusion Table json response in to an array for passing in to highcharts
+  getDataAsArray: function(json) {
+    var data = json["rows"][0]; 
+    var dataArray = [];
+    var lastItem = 0;
+    for(var i=0; i<data.length; i++) { 
+      dataArray[i] = +data[i];
+      lastItem = i;
     }
-    return fusiontabledata;
+
+    //For the most recent year, we usually don't have expenditures. 
+    //By setting the last year to null when 0, Highcharts just truncates the line.
+    if (dataArray[lastItem] == 0) dataArray[lastItem] = null;
+    return dataArray;
   },
 
   getAddressLink: function(year, fund, controlOfficer, title) {
@@ -135,23 +150,21 @@ var BudgetHelpers = {
   },
   
   //NOT USED for debugging - prints out data in a table
-  getDataAsTable: function(response) {
-    //for more information on the response object, see the documentation
-    //http://code.google.com/apis/visualization/documentation/reference.html#QueryResponse
-    numRows = response.getDataTable().getNumberOfRows();
-    numCols = response.getDataTable().getNumberOfColumns();
+  getDataAsTable: function(json) {
+    var rows = json["rows"];
+    var cols = json["columns"];
     
     //concatenate the results into a string, you can build a table here
     var fusiontabledata = "<table><tr>";
-    for(i = 0; i < numCols; i++) {
-      fusiontabledata += "<td>" + response.getDataTable().getColumnLabel(i) + "</td>";
+    for(i = 0; i < cols.length; i++) {
+      fusiontabledata += "<td>" + cols[i] + "</td>";
     }
     fusiontabledata += "</tr>";
     
-    for(i = 0; i < numRows; i++) {
+    for(i = 0; i < rows.length; i++) {
     	fusiontabledata += "<tr>";
-      for(j = 0; j < numCols; j++) {
-        fusiontabledata += "<td>" + response.getDataTable().getValue(i, j) + "</td>";
+      for(j = 0; j < cols.length; j++) {
+        fusiontabledata += "<td>" + rows[i][j] + "</td>";
       }
       fusiontabledata += "</tr>";
     }
