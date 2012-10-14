@@ -69,10 +69,10 @@ var BudgetLib = {
         BudgetQueries.getTotalArray(BudgetLib.fundView, 'Fund', false, "BudgetLib.updateExpendTotal");
       }
       
-      BudgetQueries.getDepartments(BudgetLib.fundView, 'Fund', BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
+      BudgetQueries.getDepartments(BudgetLib.fundView, 'Fund', BudgetLib.loadYear, "BudgetLib.getDataAsBudgetTable");
       BudgetLib.updateHeader(BudgetLib.fundView, 'Department');
-      BudgetQueries.getTotalsForYear(BudgetLib.fundView, 'Fund', BudgetLib.loadYear, BudgetLib.updateScorecard);
-      BudgetQueries.getFundDescription(BudgetLib.fundView, BudgetLib.updateScorecardDescription);
+      BudgetQueries.getTotalsForYear(BudgetLib.fundView, 'Fund', BudgetLib.loadYear, "BudgetLib.updateScorecard");
+      BudgetQueries.getFundDescription(BudgetLib.fundView, "BudgetLib.updateScorecardDescription");
     } 
     else if (BudgetLib.officerView != ""){ //show control officer view
       if (viewChanged || externalLoad) {
@@ -81,10 +81,10 @@ var BudgetLib = {
         BudgetQueries.getTotalArray(BudgetLib.officerView, 'Control Officer', false, "BudgetLib.updateExpendTotal");
       }
       
-      BudgetQueries.getDepartments(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
+      BudgetQueries.getDepartments(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, "BudgetLib.getDataAsBudgetTable");
       BudgetLib.updateHeader(BudgetLib.officerView, 'Department');
-      BudgetQueries.getTotalsForYear(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, BudgetLib.updateScorecard);
-      BudgetQueries.getControlOfficerDescription(BudgetLib.officerView, BudgetLib.updateScorecardDescription);
+      BudgetQueries.getTotalsForYear(BudgetLib.officerView, 'Control Officer', BudgetLib.loadYear, "BudgetLib.updateScorecard");
+      BudgetQueries.getControlOfficerDescription(BudgetLib.officerView, "BudgetLib.updateScorecardDescription");
     }
     else { //load default view
       if (viewChanged || externalLoad) {
@@ -93,7 +93,7 @@ var BudgetLib = {
       }
           
       if (BudgetLib.viewByOfficer) {
-        BudgetQueries.getAllControlOfficersForYear(BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
+        BudgetQueries.getAllControlOfficersForYear(BudgetLib.loadYear, "BudgetLib.getDataAsBudgetTable");
         $("#breakdown-nav").html("\
           <ul>\
             <li><a href='#' rel='address:/?year=" + BudgetLib.loadYear + "&viewMode=fund'>Where's it going?</a></li>\
@@ -103,7 +103,7 @@ var BudgetLib = {
         $('#breakdown-item-title span').html('Control Officer');
       }
       else {
-        BudgetQueries.getAllFundsForYear(BudgetLib.loadYear, BudgetLib.getDataAsBudgetTable);
+        BudgetQueries.getAllFundsForYear(BudgetLib.loadYear, "BudgetLib.getDataAsBudgetTable");
         $("#breakdown-nav").html("\
           <ul>\
             <li class='current'>Where's it going?</li>\
@@ -115,8 +115,8 @@ var BudgetLib = {
       $('#breakdown-nav a').address();
       
       BudgetLib.updateHeader(BudgetLib.title, 'Fund');
-      BudgetQueries.getTotalsForYear('', '', BudgetLib.loadYear, BudgetLib.updateScorecard);
-      BudgetQueries.getFundDescription(BudgetLib.fundView, BudgetLib.updateScorecardDescription);
+      BudgetQueries.getTotalsForYear('', '', BudgetLib.loadYear, "BudgetLib.updateScorecard");
+      BudgetQueries.getFundDescription(BudgetLib.fundView, "BudgetLib.updateScorecardDescription");
     }
     $('#breadcrumbs a').address();
   },  
@@ -226,46 +226,53 @@ var BudgetLib = {
   },
   
   //shows the description of the current view below the main chart
-  updateScorecardDescription: function(response) {    
-    $("#f-officers").hide();
-    
-    if (response.getDataTable().getNumberOfRows() > 0) {
-      $('#scorecard-desc p').hide().html(response.getDataTable().getValue(0, 0)).fadeIn();
+  updateScorecardDescription: function(json) { 
+    var rows = json["rows"];
+    var cols = json["columns"];
+
+    if(rows != undefined) {
+      $("#f-officers").hide();
+      
+      if (rows.length > 0) {
+        $('#scorecard-desc p').hide().html(rows[0][0]).fadeIn();
+      }
+      else if (BudgetLib.viewByOfficer) {
+        $('#scorecard-desc p').hide().html('Breakdown by control officer*').fadeIn();
+        $("#f-officers").show();
+      }
+      else if (!BudgetLib.viewByOfficer && BudgetLib.fundView == '' && BudgetLib.officerView == '') {
+        $('#scorecard-desc p').hide().html('Breakdown by fund').fadeIn();
+      }
+      else $('#scorecard-desc p').html('');
     }
-    else if (BudgetLib.viewByOfficer) {
-      $('#scorecard-desc p').hide().html('Breakdown by control officer*').fadeIn();
-      $("#f-officers").show();
-    }
-    else if (!BudgetLib.viewByOfficer && BudgetLib.fundView == '' && BudgetLib.officerView == '') {
-      $('#scorecard-desc p').hide().html('Breakdown by fund').fadeIn();
-    }
-    else $('#scorecard-desc p').html('');
   },
   
   //shows totals and percentage changes of the current view below the main chart
-  updateScorecard: function(response) {    
-    if (response.getDataTable().getNumberOfRows() > 0) {
+  updateScorecard: function(json) {   
+    var rows = json["rows"];
+    var cols = json["columns"];
+    if (rows.length > 0) {
       $('#scorecard .budgeted').fadeOut('fast', function(){
-        $('#scorecard .budgeted').html(response.getDataTable().getValue(0, 0));
+        $('#scorecard .budgeted').html(rows[0][0]);
         $('#scorecard .budgeted').formatCurrency();
       }).fadeIn('fast');
       
       $('#scorecard .spent').fadeOut('fast', function(){
-        $('#scorecard .spent').html(response.getDataTable().getValue(0, 1));
+        $('#scorecard .spent').html(rows[0][1]);
         $('#scorecard .spent').formatCurrency();
         
-        if (BudgetLib.loadYear == BudgetLib.endYear && response.getDataTable().getValue(0, 1) == 0) {
+        if (BudgetLib.loadYear == BudgetLib.endYear && rows[0][1] == 0) {
           $('#scorecard .spent').append("<sup class='ref'>&dagger;</sup>");
           $('#f-zero2011').show();
         } 
         else $('#f-zero2011').hide();
       }).fadeIn();
       
-      if (response.getDataTable().getNumberOfColumns() > 2) {
-        var budgetedTop = response.getDataTable().getValue(0, 2);
-        var spentTop = response.getDataTable().getValue(0, 3);
-        var budgetedBottom = response.getDataTable().getValue(0, 4);
-        var spentBottom = response.getDataTable().getValue(0, 5);
+      if (cols.length > 2) {
+        var budgetedTop = rows[0][2];
+        var spentTop = rows[0][3];
+        var budgetedBottom = rows[0][4];
+        var spentBottom = rows[0][5];
         
         if (budgetedTop > 0 && budgetedBottom > 0) {
           var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
@@ -287,17 +294,19 @@ var BudgetLib = {
   },
   
   //builds out budget breakdown (secondary) table
-  getDataAsBudgetTable: function(response) {  
-    numRows = response.getDataTable().getNumberOfRows();
+  getDataAsBudgetTable: function(json) {
+    var rows = json["rows"];
+    var cols = json["columns"];  
     var fusiontabledata;
-    for(i = 0; i < numRows; i++) {
-      var rowName = response.getDataTable().getValue(i, 0);
+
+    for(i = 0; i < rows.length; i++) {
+      var rowName = rows[i][0];
       var departmentId = 0;
-      if (response.getDataTable().getNumberOfColumns() > 4)
-        departmentId = response.getDataTable().getValue(i, 4);
-      var year = response.getDataTable().getColumnLabel(3);
-      var budgeted = response.getDataTable().getValue(i, 1);
-      var spent = response.getDataTable().getValue(i, 2);
+      if (cols.length > 4)
+        departmentId = rows[i][4];
+      var year = cols[3];
+      var budgeted = rows[i][1];
+      var spent = rows[i][2];
       
       var rowId = BudgetHelpers.convertToSlug(rowName);
       var detailLoadFunction = "BudgetLib.getFundDetails(\"" + BudgetHelpers.convertToSlug(rowName) + "\");";
@@ -322,28 +331,29 @@ var BudgetLib = {
   getFundDetails: function(itemId) {  
     var fusiontabledata = BudgetHelpers.generateExpandedRow(itemId, 'fund');
     BudgetLib.updateDetail(itemId, fusiontabledata);
-    BudgetQueries.getFundDescription(BudgetHelpers.convertToPlainString(itemId), BudgetLib.updateExpandedDescription);
+    BudgetQueries.getFundDescription(BudgetHelpers.convertToPlainString(itemId), "BudgetLib.updateExpandedDescription");
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', true, "BudgetLib.updateSparkAppropTotal");
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Fund', false, "BudgetLib.updateSparkExpendTotal");
-    BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Fund', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages);
+    BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Fund', BudgetLib.loadYear, "BudgetLib.updateSparklinePercentages");
   },
   
   //shows fund details when row is clicked
   getControlOfficerDetails: function(itemId) {  
     var fusiontabledata = BudgetHelpers.generateExpandedRow(itemId, 'controlOfficer');
     BudgetLib.updateDetail(itemId, fusiontabledata);
-    BudgetQueries.getControlOfficerDescription(BudgetHelpers.convertToPlainString(itemId), BudgetLib.updateExpandedDescription);
+    BudgetQueries.getControlOfficerDescription(BudgetHelpers.convertToPlainString(itemId), "BudgetLib.updateExpandedDescription");
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', true, "BudgetLib.updateSparkAppropTotal");
     BudgetQueries.getTotalArray(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', false, "BudgetLib.updateSparkExpendTotal");
-    BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages);
+    BudgetQueries.getSparklinePercentages(BudgetHelpers.convertToPlainString(itemId), 'Control Officer', BudgetLib.loadYear, "BudgetLib.updateSparklinePercentages");
   },
   
   //shows description in expanded row when row is clicked
-  updateExpandedDescription: function(response) {
+  updateExpandedDescription: function(json) {
+    var rows = json["rows"];
     var description = '';
     
-    if (response.getDataTable().getNumberOfRows() > 0)
-      description = response.getDataTable().getValue(0, 0);
+    if (rows != undefined)
+      description = rows[0][0];
     
     $('#expanded-description').hide().html(description).fadeIn();
   },
@@ -351,34 +361,39 @@ var BudgetLib = {
   //requests department details from Fusion Tables when row is clicked
   getDepartmentDetails: function(departmentId) {
     departmentId = departmentId.replace('department-', '')
-    BudgetQueries.getDepartmentDescription(departmentId, BudgetLib.updateDepartmentDetails);
+    BudgetQueries.getDepartmentDescription(departmentId, "BudgetLib.updateDepartmentDetails");
   },
   
   //shows department details when row is clicked
-  updateDepartmentDetails: function(response) {
-    var departmentId = response.getDataTable().getValue(0, 0);
-    var department = response.getDataTable().getValue(0, 1);
-    var linkToWebsite = response.getDataTable().getValue(0, 2);
-    var description = response.getDataTable().getValue(0, 3);
-    var controlOfficer = response.getDataTable().getValue(0, 4);
-    var departmentFund = response.getDataTable().getValue(0, 5);
+  updateDepartmentDetails: function(json) {
+    var rows = json["rows"];
+
+    var departmentId = rows[0][0];
+    var department = rows[0][1];
+    var linkToWebsite = rows[0][2];
+    var description = rows[0][3];
+    var controlOfficer = rows[0][4];
+    var departmentFund = rows[0][5];
      
     var fusiontabledata = BudgetHelpers.generateExpandedDeptRow(departmentId, department, description, linkToWebsite, departmentFund, controlOfficer);
     BudgetLib.updateDetail('department-' + departmentId, fusiontabledata);
     
     BudgetQueries.getTotalArray(departmentId, 'Department ID', true, "BudgetLib.updateSparkAppropTotal");
     BudgetQueries.getTotalArray(departmentId, 'Department ID', false, "BudgetLib.updateSparkExpendTotal");
-    BudgetQueries.getSparklinePercentages(departmentId, 'Department ID', BudgetLib.loadYear, BudgetLib.updateSparklinePercentages); 
+    BudgetQueries.getSparklinePercentages(departmentId, 'Department ID', BudgetLib.loadYear, "BudgetLib.updateSparklinePercentages"); 
   },
   
   //updates percentages that display below the expanded row sparkling
-  updateSparklinePercentages: function(response) {
-    if (response.getDataTable().getNumberOfRows() > 0)
+  updateSparklinePercentages: function(json) {
+    var rows = json["rows"];
+    var cols = json["columns"]; 
+
+    if (rows.length > 0)
     {
-      var budgetedTop = response.getDataTable().getValue(0, 0);
-      var spentTop = response.getDataTable().getValue(0, 1);
-      var budgetedBottom = response.getDataTable().getValue(0, 2);
-      var spentBottom = response.getDataTable().getValue(0, 3);
+      var budgetedTop = rows[0][0];
+      var spentTop = rows[0][1];
+      var budgetedBottom = rows[0][2];
+      var spentBottom = rows[0][3];
       
       if (budgetedTop > 0 && budgetedBottom > 0) {
         var budgetedPercent = (((budgetedTop / budgetedBottom) - 1) * 100).toFixed(1);
