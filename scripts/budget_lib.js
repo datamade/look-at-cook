@@ -204,24 +204,24 @@ var BudgetLib = {
   //----------display callback functions----------------
   
   //these all work by being called (callback function) once Fusion Tables returns a result. 
-  //the function then takes the response and handles updating the page
-  updateAppropTotal: function(response) {
-    BudgetLib.appropTotalArray = BudgetHelpers.getDataAsArray(response);
+  //the function then takes the json and handles updating the page
+  updateAppropTotal: function(json) {
+    BudgetLib.appropTotalArray = BudgetHelpers.getDataAsArray(json);
     BudgetHighcharts.updateMainChart();
   },
   
-  updateExpendTotal: function(response) {
-    BudgetLib.expendTotalArray = BudgetHelpers.getDataAsArray(response);
+  updateExpendTotal: function(json) {
+    BudgetLib.expendTotalArray = BudgetHelpers.getDataAsArray(json);
     BudgetHighcharts.updateMainChart();
   },
   
-  updateSparkAppropTotal: function(response) {
-    BudgetLib.sparkAppropTotalArray = BudgetHelpers.getDataAsArray(response);
+  updateSparkAppropTotal: function(json) {
+    BudgetLib.sparkAppropTotalArray = BudgetHelpers.getDataAsArray(json);
     BudgetHighcharts.updateSparkline();
   },
   
-  updateSparkExpendTotal: function(response) {
-    BudgetLib.sparkExpendTotalArray = BudgetHelpers.getDataAsArray(response);
+  updateSparkExpendTotal: function(json) {
+    BudgetLib.sparkExpendTotalArray = BudgetHelpers.getDataAsArray(json);
     BudgetHighcharts.updateSparkline();
   },
   

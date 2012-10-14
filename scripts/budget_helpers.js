@@ -35,7 +35,7 @@ var BudgetHelpers = {
     return query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + encodeURIComponent(query));
   },
   	
-  //converts a Fusion Table response in to an array for passing in to highcharts
+  //converts a Fusion Table json response in to an array for passing in to highcharts
   getDataAsArray: function(json) {
     var data = json["rows"][0]; 
     var dataArray = [];
