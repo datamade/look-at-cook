@@ -13,6 +13,7 @@ Dependencies
 - [Datatables](http://datatables.net) (for the appropriations and expenditures lists)
 
 Press
+-----
 
 - [O'reilly Radar](http://radar.oreilly.com/2011/09/look-at-cook-gov-data-visualization.html)
 - [govfresh](http://govfresh.com/2011/09/beautiful-budgets-look-at-cook/)
@@ -50,7 +51,7 @@ Known issues
  - Search engines: Because this is an AJAX application, the data that is displayed is NOT crawlable by search engines. I would love to fix this. See http://code.google.com/web/ajaxcrawling/docs/specification.html for more info
  - Special characters: Some of the data elements I'm filtering on don't have proper IDs or slugs in my Fusion Table. This results in the visualization not supporting special characters (anything that a URL wouldn't like) in the Fund and Control Officer name fields. Departments are ok because they each have a unique ID. I'd recommend using IDs for everything if you plan on making your own budget visualization.
 
-Errors / Bugs
+Errors / bugs
 -------------
 
 If something is not behaving intuitively, it is a bug, and should be reported.
@@ -58,7 +59,7 @@ Report it here: https://github.com/open-city/look-at-cook/issues
 
 You can also email me at derek.eder+git@gmail.com or tweet @derek_eder.
 
-Note on Patches/Pull Requests
+Note on patches/pull requests
 -----------------------------
  
 * Fork the project.
