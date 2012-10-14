@@ -6,12 +6,11 @@ A budget transparency visualization for Cook County, IL (Chicago's county) displ
 Dependencies
 ------------
 
-- jQuery - http://jquery.com/
-- Google Visualization API - http://code.google.com/apis/chart/interactive/docs/reference.html
-- Google Fusion Tables - http://www.google.com/fusiontables/Home/
-- jQuery Address (for RESTful URLs) - http://www.asual.com/jquery/address/
-- Highcharts (for the line graph) - http://www.highcharts.com/
-- Datatables (for the appropriations and expenditures lists) - http://datatables.net/
+- [jQuery](http://jquery.com)
+- [Google Fusion Tables v1 API](https://developers.google.com/fusiontables/docs/v1/getting_started)
+- [jQuery Address](http://www.asual.com/jquery/address/) (for RESTful URLs)
+- [Highcharts](http://www.highcharts.com/) (for the line graph)
+- [Datatables](http://datatables.net) (for the appropriations and expenditures lists)
 
 Press
 
