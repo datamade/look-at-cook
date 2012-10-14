@@ -1,3 +1,4 @@
+var BudgetHighcharts = BudgetHighcharts || {};  
 var BudgetHighcharts = {  
 
   pointInterval: 365 * 24 * 3600 * 1000, //one year in ms
