@@ -1,40 +1,35 @@
-Look at Cook - Cook County budget visualization 1993 - 2012
-Site: http://lookatcook.com
-Updated: 3/23/2012
+[Look at Cook](http://lookatcook.com)
+=====================================
 
-What is this?
+A budget transparency visualization for Cook County, IL (Chicago's county) displaying all county departments broken down by fund and control officer from 1993 to 2011. Done as a collaboration with Cook County Commissioner John Fritchey.
 
-Every year our Cook County government budgets and spends more than $3 billion. The County's budget impacts our lives every day. All of its funding comes from you—your sales and property taxes, your purchase fees on gas, and other goods. All of its spending exists to support you too. County funding drives the jail, public hospitals and clinics, the Cook County courts, and dozens of other civic institutions designed to make our region prosperous, efficient, and fair. Yet, too many residents don't understand what Cook County government is or what it does. They keep asking, "Where exactly does our money go?"
+Dependencies
+------------
 
-This budget transparency tool was created to answer that question, but it's only the first step. We need your help. What questions do you have about County spending? What do you want to know about the County budget that this visualization isn't explaining? What do you think of our spending? What can we do to make Cook County government better?
+- jQuery - http://jquery.com/
+- Google Visualization API - http://code.google.com/apis/chart/interactive/docs/reference.html
+- Google Fusion Tables - http://www.google.com/fusiontables/Home/
+- jQuery Address (for RESTful URLs) - http://www.asual.com/jquery/address/
+- Highcharts (for the line graph) - http://www.highcharts.com/
+- Datatables (for the appropriations and expenditures lists) - http://datatables.net/
 
 Press
 
- - O'reilly Radar - http://radar.oreilly.com/2011/09/look-at-cook-gov-data-visualization.html
- - govfresh - http://govfresh.com/2011/09/beautiful-budgets-look-at-cook/
- - Civic Commons - http://civiccommons.org/2011/11/look-at-cook-open-sourced/
- - Webitects blog - http://www.webitects.com/blog/post/look-at-cook-a-budget-visualization-for-cook-county-il
-
--------------------------------------
-
-Codebases used
-
- - jQuery - http://jquery.com/
- - Google Visualization API - http://code.google.com/apis/chart/interactive/docs/reference.html
- - Google Fusion Tables - http://www.google.com/fusiontables/Home/
- - jQuery Address (for RESTful URLs) - http://www.asual.com/jquery/address/
- - Highcharts (for the line graph) - http://www.highcharts.com/
- - Datatables (for the appropriations and expenditures lists) - http://datatables.net/
+- [O'reilly Radar](http://radar.oreilly.com/2011/09/look-at-cook-gov-data-visualization.html)
+- [govfresh](http://govfresh.com/2011/09/beautiful-budgets-look-at-cook/)
+- [Civic Commons](http://civiccommons.org/2011/11/look-at-cook-open-sourced/)
+- [Metafilter Projects](http://projects.metafilter.com/3241/Look-at-Cook-A-Budget-Visualization-for-Cook-County-IL)
 
 Overview
+--------
 
 This budget visualization is built entirely using HTML and jQuery. There is no server-side code, except for the stuff that happens behind the scenes with Google Fusion Tables. Even so, the data is fetched from Fusion Tables using the javascript Google Visualization API.
 
 The bulk of the code is in /scripts/budget_lib.js. This file contains all of the init, data fetching, display and helper functions that the visualization uses to run. To get a good idea of how it works, you should first look at the data in Fusion Tables that it uses:
 
- - Main budget table (expenditures and appropriations per department per year) - http://www.google.com/fusiontables/DataSource?dsrcid=1227404
- - Fund descriptions - http://www.google.com/fusiontables/DataSource?dsrcid=1270538
- - Control officer descriptions - http://www.google.com/fusiontables/DataSource?dsrcid=1270539
+ - [Main budget table](http://www.google.com/fusiontables/DataSource?dsrcid=1227404) (expenditures and appropriations per department per year)
+ - [Fund descriptions](http://www.google.com/fusiontables/DataSource?dsrcid=1270538)
+ - [Control officer descriptions](http://www.google.com/fusiontables/DataSource?dsrcid=1270539)
 
 The data is read from these tables and the appropriate content on the page is updated via asynchronous callback (for more info on callbacks see: http://docs.jquery.com/Tutorials:How_jQuery_Works#Callback_and_Functions). Whenever a chart point or link are clicked or the URL changes, the jQuery address code detects the change and updates the page using the 'updateDisplay' function. The 'loadFor' function updates all the internal variables and sets the display mode to either default, control officer list, fund detail or control officer detail.
 
@@ -43,6 +38,7 @@ The appropriations and expenditures per year are then fetched based on the view 
 When a row is clicked, the details for that row are fetched and then displayed using either the 'getFundDetails', 'getControlOfficerDetails' or 'updateDepartmentDetails' functions. From inside that expanded row are links to other views (depending on your current view) which are handled the same way as above. 
 
 View paths / hierarchy 
+----------------------
 
 * note that at any point, the year could also be updated by clicking on a point on the main chart.
 
@@ -50,12 +46,29 @@ View paths / hierarchy
  - List of control officers -> Expanded control officer detail -> Control officer view with list of departments -> Expanded department detail
 
 Known issues
+------------
 
  - Search engines: Because this is an AJAX application, the data that is displayed is NOT crawlable by search engines. I would love to fix this. See http://code.google.com/web/ajaxcrawling/docs/specification.html for more info
  - Special characters: Some of the data elements I'm filtering on don't have proper IDs or slugs in my Fusion Table. This results in the visualization not supporting special characters (anything that a URL wouldn't like) in the Fund and Control Officer name fields. Departments are ok because they each have a unique ID. I'd recommend using IDs for everything if you plan on making your own budget visualization.
 
-More to come
+Errors / Bugs
+-------------
 
-While I have made some efforts to abstract away functionality, this is still by no means a 'plug and play' application. There is quite a bit of complexity and Cook County specific code/language/styles in here. By all means feel free to use any of this code, but know before you do that it will take at least an intermediate understanding of coding and javascript/jQuery to get anywhere with it. 
+If something is not behaving intuitively, it is a bug, and should be reported.
+Report it here: https://github.com/open-city/hows-business/issues
 
-I'd like to make it simpler to use in the future, so if you have any suggestions, comments or want to make additions, contact me at derek.eder+git@gmail.com or tweet at me @derek_eder.
+You can also email me at derek.eder+git@gmail.com or tweet @derek_eder.
+
+Note on Patches/Pull Requests
+-----------------------------
+ 
+* Fork the project.
+* Make your feature addition or bug fix.
+* Commit and send me a pull request. Bonus points for topic branches.
+
+Copyright
+---------
+
+Copyright (c) 2012 Derek Eder and Nick Rougeux. Released under the MIT License.
+
+See LICENSE for details https://github.com/open-city/look-at-cook/wiki/License
