@@ -40,7 +40,7 @@ When a row is clicked, the details for that row are fetched and then displayed u
 View paths / hierarchy 
 ----------------------
 
-* note that at any point, the year could also be updated by clicking on a point on the main chart.
+Note: the year could also be updated by clicking on a point on the main chart.
 
  - List of funds (default view when loading the site) -> Expanded fund detail -> Fund view with list of departments -> Expanded department detail
  - List of control officers -> Expanded control officer detail -> Control officer view with list of departments -> Expanded department detail
@@ -55,7 +55,7 @@ Errors / Bugs
 -------------
 
 If something is not behaving intuitively, it is a bug, and should be reported.
-Report it here: https://github.com/open-city/hows-business/issues
+Report it here: https://github.com/open-city/look-at-cook/issues
 
 You can also email me at derek.eder+git@gmail.com or tweet @derek_eder.
 
