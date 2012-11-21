@@ -5,12 +5,12 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
-  
+
   <link href="styles/master.css" rel="stylesheet" type="text/css" />
   <link href="styles/print.css" media="print" rel="stylesheet" type="text/css" />
-  
+
   <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-  
+
   <!-- javascript libraries -->
   <script src="scripts/jquery.js" type="text/javascript"></script>
   <script src="scripts/highcharts.js" type="text/javascript"></script>
@@ -19,33 +19,33 @@
   <script src="scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
   <script src="scripts/jquery.address-1.4.min.js" type="text/javascript"></script>
   <script src="scripts/jquery.cookie.js" type="text/javascript"></script>
-  
+
   <!-- custom javascript -->
-  <script src="scripts/budget_helpers.js?1" type="text/javascript"></script>
-  <script src="scripts/budget_queries.js?1" type="text/javascript"></script>
-  <script src="scripts/budget_highcharts.js?1" type="text/javascript"></script>
-  <script src="scripts/budget_lib.js?3" type="text/javascript"></script>
+  <script src="scripts/budget_helpers.js?2" type="text/javascript"></script>
+  <script src="scripts/budget_queries.js?2" type="text/javascript"></script>
+  <script src="scripts/budget_highcharts.js?2" type="text/javascript"></script>
+  <script src="scripts/budget_lib.js?4" type="text/javascript"></script>
   <script src="scripts/analytics_lib.js" type="text/javascript"></script>
-  
+
   <script type="text/javascript">
 
   $.address.crawlable(true);
 	//every action is handled by jQuery Address, which detects when the URL has changed
-	$.address.externalChange(function(event) {  
+	$.address.externalChange(function(event) {
     BudgetLib.updateDisplay($.address.parameter('viewMode'), $.address.parameter('year'), $.address.parameter('fund'), $.address.parameter('controlOfficer'), true);
-	});	
+	});
 
-	$.address.internalChange(function(event) {  
+	$.address.internalChange(function(event) {
     BudgetLib.updateDisplay($.address.parameter('viewMode'), $.address.parameter('year'), $.address.parameter('fund'), $.address.parameter('controlOfficer'), false);
 	});
-    
+
   //cookies for first time visitors
-  $(function() {        
+  $(function() {
     $("body").bind("click", function(e){
       $.cookie("budgetbreakdownreadme", "read", { expires: 7 });
       $("#readme").fadeOut("fast");
     });
-    
+
     if ($.cookie("budgetbreakdownreadme") != "read") {
       $("#readme").fadeIn("fast");
     }
@@ -64,24 +64,24 @@
     </div>
     <div class="clear"></div>
   </div>
-  
+
   <div id="content">
     <div id="content-primary">
       <span id="breadcrumbs"></span>
       <h1>Where's the money going?</h1>
-      <p>Explore Cook County's budget from 1993 to 2012 and learn how the money is being spent. <a onclick="window.scrollTo(0, document.body.scrollHeight);">More about this project</a> &raquo;</p>
-      
+      <p>Explore Cook County's budget from 1993 to 2012 and learn how the money is being spent. <a onclick="window.scrollTo(0, document.body.scrollHeight);">Read more</a> or <a href='/faq.html'>check out the FAQ</a> &raquo;</p>
+
       <div id="timeline">
         <h2></h2>
         <div id="timeline-chart"></div>
         <div id="readme"><img alt="Click points to see annual budgets below" src="images/readme.png" /></div>
       </div>
-      
+
       <div id="breakdown-nav">
         <ul></ul>
         <div class="clear"></div>
       </div>
-      
+
       <table id="scorecard">
         <tbody>
           <tr>
@@ -99,7 +99,7 @@
             </td>
           </tr>
       </table>
-      
+
       <table id="breakdown">
         <thead>
           <tr>
@@ -112,7 +112,7 @@
         <tbody>
         </tbody>
       </table>
-      
+
       <div id="footnotes">
         <ul>
           <li id="f-officers">* These budgets are controlled by the officers and offices listed even though not all expenses are incurred by the respective control officer.</li>
@@ -120,7 +120,7 @@
         </ul>
       </div>
     </div>
-    
+
     <div id="content-secondary">
       <h2>Where's the money going?</h2>
       <p>Every year our Cook County government budgets and spends more than $3 billion. The County's budget impacts our lives every day. All of its funding comes from you&mdash;your sales and property taxes, your purchase fees on gas, and other goods. All of its spending exists to support you too. County funding drives the jail, public hospitals and clinics, the Cook County courts, and dozens of other civic institutions designed to make our region prosperous, efficient, and fair. Yet, too many residents don't understand what Cook County government is or what it does. They keep asking, "Where exactly does our money go?"</p>
@@ -128,13 +128,13 @@
       <p><a href="http://www.fritchey.com/contact-us-2">Contact John Fritchey</a> with questions or comments or connect with him on <a class="icon-facebook" href="http://www.facebook.com/John.Fritchey">Facebook</a> or <a class="icon-twitter" href="http://twitter.com/johnfritchey">Twitter</a>.</p>
 	  <p class="mute">If you have technical questions or want your city or municipality to use this tool for their budget, feel free to contact <a href='http://twitter.com/derek_eder'>Derek Eder</a> or <a href='http://twitter.com/rougeux'>Nick Rougeux</a> at <a href='http://opencityapps.org'>Open City</a>.</p>
 	</div>
-    
+
     <div id="content-tertiary">
       <a id="download-button" class="action" href="https://www.google.com/fusiontables/DataSource?docid=1ZJJvlYCYTC1DIgp_tkJKEAs9l0sdO7J4kF8Gv9Y">View &amp; download data</a>
       All the data for this project is freely available to download or explore on Google Fusion Tables.
     </div>
   </div>
-  
+
   <div id="footer">
     <ul class="share">
       <li><a href="http://www.facebook.com/share.php?u=http%3a%2f%2flookatcook.com"><img alt="Facebook" src="images/facebook-lg.png" /> Share budget on <strong>Facebook</strong></a></li>
