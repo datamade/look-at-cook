@@ -27,9 +27,9 @@ var BudgetLib = BudgetLib || {};
 var BudgetLib = {
 
   //IDs used to reference Fusion Tables, where we store our data
-  FusionTableApiKey: "AIzaSyDgYMq5VzeWQdYNpvYfP0W3NuCKYOAB5_Y",
-  BUDGET_TABLE_ID: "1ZJJvlYCYTC1DIgp_tkJKEAs9l0sdO7J4kF8Gv9Y", //main budget table with expenditures/appropriations per department per year
-  FUND_DESCRIPTION_TABLE_ID: "1DVnzs1tOFrVxrf6_jRFeXUe7b6lDYd5jh309Up4",
+  FusionTableApiKey: "AIzaSyAxoKylS0g9p7HuFalideL2etQsEzLCThs",
+  BUDGET_TABLE_ID: "1eC4r9Qy86Pbs-mXGMGVF_yqOUlv4rat7GsikBrA", //main budget table with expenditures/appropriations per department per year
+  FUND_DESCRIPTION_TABLE_ID: "eC4r9Qy86Pbs-mXGMGVF_yqOUlv4rat7GsikBrA",
   OFFICER_DESCRIPTION_TABLE_ID: "1uSDhUpVbk3c7m0E7iT87LP8GfPk6vnczh-y64sI",
   
   title: "Cook County Budget",
