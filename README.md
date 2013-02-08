@@ -1,5 +1,6 @@
-
+[Look at Asheville](http://openasheville.github.com/look-at-asheville/)
 =====================================
+
 
 A budget transparency visualization for Buncombe County, NC (Asheville) displaying all county departments broken down by fund and control officer from 1993 to 2011. Done as a collaboration with Cook County Commissioner John Fritchey.
 
@@ -12,13 +13,6 @@ Dependencies
 - [Highcharts](http://www.highcharts.com/) (for the line graph)
 - [Datatables](http://datatables.net) (for the appropriations and expenditures lists)
 
-Press
------
-
-- [O'reilly Radar](http://radar.oreilly.com/2011/09/look-at-cook-gov-data-visualization.html)
-- [govfresh](http://govfresh.com/2011/09/beautiful-budgets-look-at-cook/)
-- [Civic Commons](http://civiccommons.org/2011/11/look-at-cook-open-sourced/)
-- [Metafilter Projects](http://projects.metafilter.com/3241/Look-at-Cook-A-Budget-Visualization-for-Cook-County-IL)
 
 Overview
 --------
@@ -55,9 +49,7 @@ Errors / bugs
 -------------
 
 If something is not behaving intuitively, it is a bug, and should be reported.
-Report it here: https://github.com/open-city/look-at-cook/issues
-
-You can also email me at derek.eder+git@gmail.com or tweet @derek_eder.
+Report it here: https://github.com/openAshevile/look-at-asheville/issues
 
 Note on patches/pull requests
 -----------------------------
