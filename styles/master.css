@@ -150,6 +150,8 @@ ul { list-style: disc; }
   #scorecard h2, #scorecard p { margin: 0; }
   #scorecard td { border: 1px solid #ddd; border-bottom: 0; padding: 0.8em 10px; width: 25%; }
   #scorecard td#scorecard-desc { width: 50%; }  
+  #scorecard span#ref{ cursor: pointer; }
+
   
   /* Stats */
   .stats { list-style: none; margin: 0 0 0.5em 0; }
