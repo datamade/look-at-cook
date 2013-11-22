@@ -122,6 +122,8 @@ var BudgetLib = {
   },  
   
   updateHeader: function(view, subtype){
+    $('#startyear').html(BudgetLib.startYear);
+    $('#endyear').html(BudgetLib.endYear);
     $('h1').html(view);
     if (view != BudgetLib.title) {
       $('#breadcrumbs').html("<a href='/?year=" + BudgetLib.loadYear + "' rel='address:/?year=" + BudgetLib.loadYear + "'>&laquo back to " + BudgetLib.title + "</a>");
@@ -260,12 +262,18 @@ var BudgetLib = {
       $('#scorecard .spent').fadeOut('fast', function(){
         $('#scorecard .spent').html(rows[0][1]);
         $('#scorecard .spent').formatCurrency();
-        
-        if (BudgetLib.loadYear == BudgetLib.endYear && rows[0][1] == 0) {
-          $('#scorecard .spent').append("<sup class='ref'>&dagger;</sup>");
-          $('#f-zero2011').show();
-        } 
-        else $('#f-zero2011').hide();
+        $('#scorecard .spent').append("<span id='ref'><sup class='ref'>&dagger;</sup></span>");
+		$('#ref').click(function(){
+		$(document.body).animate({
+			'scrollTop':   $('#dagger').offset().top
+		}, 1000);
+	  });
+	  if (/*BudgetLib.loadYear == BudgetLib.endYear &&*/ rows[0][1] == 0) {
+		$('#f-zeroyear').html(BudgetLib.loadYear);
+		$('#f-availyear').html(parseInt(BudgetLib.loadYear) + 1);
+		$('#f-zero').show();
+      } 
+        else $('#f-zero').hide();
       }).fadeIn();
       
       if (cols.length > 2) {
