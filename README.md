@@ -27,7 +27,7 @@ This budget visualization is built entirely using HTML and jQuery. There is no s
 
 The bulk of the code is in /scripts/budget_lib.js. This file contains all of the init, data fetching, display and helper functions that the visualization uses to run. To get a good idea of how it works, you should first look at the data in Fusion Tables that it uses:
 
- - [Main budget table](http://www.google.com/fusiontables/DataSource?dsrcid=1227404) (expenditures and appropriations per department per year)
+ - [Main budget table](https://www.google.com/fusiontables/DataSource?docid=16T1LB-lcPz6uQORLE7KtCc0sINMFF5EbsVaycoUU) (expenditures and appropriations per department per year)
  - [Fund descriptions](http://www.google.com/fusiontables/DataSource?dsrcid=1270538)
  - [Control officer descriptions](http://www.google.com/fusiontables/DataSource?dsrcid=1270539)
 
