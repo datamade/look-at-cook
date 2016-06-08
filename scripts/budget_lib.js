@@ -28,14 +28,14 @@ var BudgetLib = {
 
   //IDs used to reference Fusion Tables, where we store our data
   FusionTableApiKey: "AIzaSyDgYMq5VzeWQdYNpvYfP0W3NuCKYOAB5_Y",
-  BUDGET_TABLE_ID: "16T1LB-lcPz6uQORLE7KtCc0sINMFF5EbsVaycoUU", //main budget table with expenditures/appropriations per department per year
+  BUDGET_TABLE_ID: "1aw02_HiCsIcEc3ECxL7Cwusc-i8wdOkjtHTsJRKG", //main budget table with expenditures/appropriations per department per year
   FUND_DESCRIPTION_TABLE_ID: "1DVnzs1tOFrVxrf6_jRFeXUe7b6lDYd5jh309Up4",
   OFFICER_DESCRIPTION_TABLE_ID: "1uSDhUpVbk3c7m0E7iT87LP8GfPk6vnczh-y64sI",
   
   title: "Cook County Budget",
   startYear: 1993,
-  endYear: 2015,
-  loadYear: 2015, //viewing year
+  endYear: 2016,
+  loadYear: 2016, //viewing year
   fundView: "", //viewing fund
   officerView: "", //viewing control officer
   viewByOfficer: false, //flag to switch between department and control officer view
