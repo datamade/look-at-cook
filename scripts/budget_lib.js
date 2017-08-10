@@ -34,8 +34,8 @@ var BudgetLib = {
   
   title: "Cook County Budget",
   startYear: 1993,
-  endYear: 2016,
-  loadYear: 2016, //viewing year
+  endYear: 2017,
+  loadYear: 2017, //viewing year
   fundView: "", //viewing fund
   officerView: "", //viewing control officer
   viewByOfficer: false, //flag to switch between department and control officer view
