@@ -178,7 +178,7 @@ ul { list-style: disc; }
 #footnotes ul { list-style: none; margin: 0; }
 
 /* Header */
-#header { color: #b7c6d6; font-size: 13px; padding-bottom: 30px; position: relative; }
+#header { color: #b7c6d6; font-size: 13px; padding-bottom: 10px; position: relative; }
 #header a { color: #fff; }
 #header-secondary { float: right; font-style: italic; padding-top: 23px; text-align: right; }
 #header-secondary p { margin: 0; }
@@ -190,6 +190,10 @@ ul { list-style: disc; }
   /* Logo */
   #logo { float: left; }
   #logo-print { display: none; }
+
+  #logo-title {
+    color: #FEFEFE;
+  }
 
 /* Icons */
 a[class*="icon"] {

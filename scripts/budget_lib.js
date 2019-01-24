@@ -122,7 +122,7 @@ var BudgetLib = {
   },  
   
   updateHeader: function(view, subtype){
-    $('h1').html(view);
+    $('#main-title').html(view);
     if (view != BudgetLib.title) {
       $('#breadcrumbs').html("<a href='/?year=" + BudgetLib.loadYear + "' rel='address:/?year=" + BudgetLib.loadYear + "'>&laquo back to " + BudgetLib.title + "</a>");
       $("#breakdown-nav").html("");
