@@ -1,7 +1,7 @@
-[Look at Cook](http://lookatcook.com)
+[Look at Cook](http://lookatcook.org)
 =====================================
 
-A budget transparency visualization for Cook County, IL (Chicago's county) displaying all county departments broken down by fund and control officer from 1993 to 2011. Done as a collaboration with Cook County Commissioner John Fritchey.
+A budget transparency visualization for Cook County, IL (Chicago's county) displaying all county departments broken down by fund and control officer from 1993 to 2017. Done as a collaboration with Cook County Commissioner John Fritchey.
 
 Dependencies
 ------------
