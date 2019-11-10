@@ -1,8 +1,0 @@
-/*-------------------------+
- | Part: Storyboard styles |
- +-------------------------*/
-
-* { margin: 0; padding: 0; }
-body { background: #233b56 url(bg.jpg) repeat 50% 0; }
-img { border: 0; }
-p { margin: 0 auto; width: 1024px; }

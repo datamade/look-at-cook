@@ -1,0 +1,60 @@
+<div class='row'>
+  <div class='col-md-12'>
+    <span id="breadcrumbs"></span>
+  </div>
+</div>
+<div class='clearfix' ></div>
+<div id="main-chart">
+    <div id="timeline">
+      <h2></h2>
+      <div id="timeline-chart" class="budget-chart"></div>
+      <div id="readme"><img class='visible-lg' alt="Click points to see annual budgets below" src="images/readme.png" /></div>
+    </div>
+
+    <div id="breakdown-nav">
+        <ul>
+            <% if (model.get('view') == 'Fund'){ %>
+                <li class="current">
+            <% } else { %>
+                <li>
+            <% } %>
+                <a class="breakdown-choice" href="javascript://" data-choice="Fund">Where's it going?</a>
+            </li>
+            <% if (model.get('view') == 'Control Officer'){ %>
+                <li class="current">
+            <% } else { %>
+                <li>
+            <% } %>
+                <a class="breakdown-choice" href="javascript://" data-choice="Control Officer">Who controls it?</a>
+            </li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+
+    <table id="scorecard" class='table'>
+      <tbody>
+        <tr>
+          <td id="scorecard-desc">
+            <h2>
+                <span class="viewYear"><%= model.get('viewYear') %></span>
+                <span class="title"><%= model.get('title') %></span>
+            </h2>
+            <p id='actual-change-percent'></p>
+          </td>
+          <td>
+            <h2 class="appropriations"><%= model.get('selectedApprop') %></h2>
+            <p class="main-approp">
+              <strong class="appropChange"><%= model.get('appropChange') %>%</strong> budgeted from
+              <span class="prevYear"><%= model.get('prevYear') %></span>
+            </p>
+          </td>
+          <td>
+            <h2 class="expenditures"><%= model.get('selectedExp') %></h2>
+            <p class="main-exp">
+              <strong class="expChange"><%= model.get('appropChange') %>%</strong> spent from
+              <span class="prevYear"><%= model.get('prevYear') %></span>
+            </p>
+          </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,42 @@
+<td colspan='4'>
+    <div class='row'>
+        <div class='col-md-5'>
+            <h2 class="rowName"><%= model.get('rowName') %></h2>
+            <p class='expanded-description'>
+                <%= model.get('description') %>
+            </p>
+            <% if (model.get('link')){ %>
+            <p><a href="<%= model.get('link') %>" target="_blank">Read more on their website&raquo;</a></p>
+            <%}%>
+            <ul class='stats'>
+                <li>
+                  <% if (model.get('child')){ %>
+                  <a href="javascript://" class="breakdown btn btn-info"
+                      data-type="<%= model.get('type')%>"
+                      data-slug="<%= model.get('slug') %>"
+                      <% if (model.get('parent')){ %>
+                          data-parent="<%= model.get('parent') %>"
+                      <% } %>
+                      data-child="<%= model.get('child') %>"
+                  >
+                      Breakdown by <%= model.get('child') %> &raquo;
+                    </a>
+                    <% } %>
+                </li>
+            </ul>
+        </div>
+        <div class='col-md-7'>
+            <div class='sparkline budget-chart' id='<%= model.get('slug') %>-selected-chart'></div>
+            <ul class="stats">
+                <li class="sparkline-budgeted">
+                    <strong class="appropChange"><%= model.get('appropChange') %></strong> budgeted from
+                    <span class="prevYear"><%= model.get('prevYear') %></span>
+                </li>
+                <li class="sparkline-spent">
+                    <strong class="expChange"><%= model.get('expChange') %></strong> spent from
+                    <span class="prevYear"><%= model.get('prevYear') %></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</td>

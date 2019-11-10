@@ -1,0 +1,15 @@
+<td>
+    <a href="javascript://" class="details">
+        <img class='budget-expand-img' src='images/expand.png' />
+    </a>
+    &nbsp;
+    <a href="javascript://" class="details rowName"><%= model.get('rowName') %></a>
+</td>
+<td class='num appropriations' name="appropriations"><%= model.get('appropriations') %></td>
+<td class='num expenditures' name="expenditures"><%= model.get('expenditures') %></td>
+<td>
+    <div class="bars">
+        <span class="budgeted outer" name="app_perc" style="width: <%= model.get('app_perc') %>;"></span>
+        <span class="spent inner" name="exp_perc" style="width: <%= model.get('exp_perc') %>;"></span>
+    </div>
+</td>

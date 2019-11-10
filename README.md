@@ -1,74 +1,68 @@
 [Look at Cook](http://lookatcook.org)
 =====================================
 
-A budget transparency visualization for Cook County, IL (Chicago's county) displaying all county departments broken down by fund and control officer from 1993 to 2017. Done as a collaboration with Cook County Commissioner John Fritchey.
+A budget transparency visualization for Cook County, IL (Chicago's county) displaying all county departments broken down by fund and control officer from 1993 to 2017. Originally done as a collaboration with Cook County Commissioner John Fritchey.
 
-Dependencies
-------------
-
-- [jQuery](http://jquery.com)
-- [Google Fusion Tables v1 API](https://developers.google.com/fusiontables/docs/v1/getting_started)
-- [jQuery Address](http://www.asual.com/jquery/address/) (for RESTful URLs)
-- [Highcharts](http://www.highcharts.com/) (for the line graph)
-- [Datatables](http://datatables.net) (for the appropriations and expenditures lists)
-
-Press
------
+## Press
 
 - [O'reilly Radar](http://radar.oreilly.com/2011/09/look-at-cook-gov-data-visualization.html)
 - [govfresh](http://govfresh.com/2011/09/beautiful-budgets-look-at-cook/)
 - [Civic Commons](http://civiccommons.org/2011/11/look-at-cook-open-sourced/)
 - [Metafilter Projects](http://projects.metafilter.com/3241/Look-at-Cook-A-Budget-Visualization-for-Cook-County-IL)
 
-Overview
---------
 
-This budget visualization is built entirely using HTML and jQuery. There is no server-side code, except for the stuff that happens behind the scenes with Google Fusion Tables. Even so, the data is fetched from Fusion Tables using the javascript Google Visualization API.
+#### Dependencies
 
-The bulk of the code is in /scripts/budget_lib.js. This file contains all of the init, data fetching, display and helper functions that the visualization uses to run. To get a good idea of how it works, you should first look at the data in Fusion Tables that it uses:
+- [jQuery](http://jquery.com)
+- [D3](http://d3js.org) (for CSV manipulation)
+- [Backbone](http://backbonejs.org/) (javascript MVC framework)
+- [Highcharts](http://www.highcharts.com/) (charting library)
+- [Datatables](http://datatables.net) (sortable HTML tables)
 
- - [Main budget table](https://www.google.com/fusiontables/DataSource?docid=16T1LB-lcPz6uQORLE7KtCc0sINMFF5EbsVaycoUU) (expenditures and appropriations per department per year)
- - [Fund descriptions](http://www.google.com/fusiontables/DataSource?dsrcid=1270538)
- - [Control officer descriptions](http://www.google.com/fusiontables/DataSource?dsrcid=1270539)
+## How to Re-Deploy
+This code can be customized to visualize another data set.
+####Data Prepatation
+The budget data can be in various forms (csv, google doc, google fusion table), but must adhere to a fixed format in order for the app to process it properly. Budget column headers include: Fund ID, Fund, Results Area, Department ID, Department, Short Title, Link to Website, Department Description, and Control Officer. Values for appropriations and expenditures must be broken down into a separate column for each year.
 
-The data is read from these tables and the appropriate content on the page is updated via asynchronous callback (for more info on callbacks see: http://docs.jquery.com/Tutorials:How_jQuery_Works#Callback_and_Functions). Whenever a chart point or link are clicked or the URL changes, the jQuery address code detects the change and updates the page using the 'updateDisplay' function. The 'loadFor' function updates all the internal variables and sets the display mode to either default, control officer list, fund detail or control officer detail.
+See examples of prepped data:
+  - [New Orleans](https://docs.google.com/spreadsheet/ccc?key=0AswuyKhD7LxVdGlERGdEckpaRDc4Q1RCN0tjZ2tMMGc&usp=sharing_eil#gid=0)
+  - [Macoupin County](https://github.com/datamade/macoupin-budget/blob/master/data/macoupin-budget_1997-2014.csv)
+  - [A blank template to populate](https://docs.google.com/spreadsheets/d/1I6xZe8syHTiLguZ56l6J1KW0nAJVrUilvq0eP-BpE2A/edit?usp=sharing)
 
-The appropriations and expenditures per year are then fetched based on the view using the 'getTotalArray' which in turn updates the main chart (which uses Highcharts) via 'updateMainChart'. The list of departments for that particular view are also fetched via 'getDepartments' which then calls 'getDataAsBudgetTable' to build an HTML table (which then uses DataTables to do sorting).
+####Configuration
+1. Once the data is prepared, set dataSource in js/app.js to link up to your data.
+  
+  *If your budget data is in CSV form:*
+  Drop the csv file in the data folder, and set dataSource to the file path.
+  
+  *If your data is in a google doc:*
+  You will first need to publish the google doc to the web as a CSV. Then, set dataSource to the URL provided.
+  
+  ![alt-tag](https://cloud.githubusercontent.com/assets/1406537/3767681/94b15ba4-18cf-11e4-96b1-a2dca1f39c73.png) 
+  ![alt-tag](https://cloud.githubusercontent.com/assets/1406537/3767658/55df1880-18cf-11e4-9593-51bc89b0744a.png)
+  
+2. Next, set the following configuration variables at the top of js/app.js:
+  - startYear
+  - endYear
+  - activeYear
+  - municipalityName
 
-When a row is clicked, the details for that row are fetched and then displayed using either the 'getFundDetails', 'getControlOfficerDetails' or 'updateDepartmentDetails' functions. From inside that expanded row are links to other views (depending on your current view) which are handled the same way as above. 
+## Errors / bugs
 
-View paths / hierarchy 
-----------------------
+If something is not behaving intuitively, it is a bug, and should be [reported as an issue](https://github.com/open-city/look-at-cook/issues)
 
-Note: the year could also be updated by clicking on a point on the main chart.
+You can also email info@datamade.us.
 
- - List of funds (default view when loading the site) -> Expanded fund detail -> Fund view with list of departments -> Expanded department detail
- - List of control officers -> Expanded control officer detail -> Control officer view with list of departments -> Expanded department detail
+## Note on patches/pull requests
 
-Known issues
-------------
-
- - Search engines: Because this is an AJAX application, the data that is displayed is NOT crawlable by search engines. I would love to fix this. See http://code.google.com/web/ajaxcrawling/docs/specification.html for more info
- - Special characters: Some of the data elements I'm filtering on don't have proper IDs or slugs in my Fusion Table. This results in the visualization not supporting special characters (anything that a URL wouldn't like) in the Fund and Control Officer name fields. Departments are ok because they each have a unique ID. I'd recommend using IDs for everything if you plan on making your own budget visualization.
-
-Errors / bugs
--------------
-
-If something is not behaving intuitively, it is a bug, and should be reported.
-Report it here: https://github.com/open-city/look-at-cook/issues
-
-You can also email me at derek.eder+git@gmail.com or tweet @derek_eder.
-
-Note on patches/pull requests
------------------------------
- 
 * Fork the project.
 * Make your feature addition or bug fix.
 * Commit and send me a pull request. Bonus points for topic branches.
 
+
 Copyright
 ---------
 
-Copyright (c) 2012 Derek Eder and Nick Rougeux. Released under the MIT License.
+Copyright © 2019 DataMade (datamade.us), Derek Eder, Nick Rougeux and Open City. Released under the MIT License.
 
 See LICENSE for details https://github.com/open-city/look-at-cook/wiki/License

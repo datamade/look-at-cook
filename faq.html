@@ -1,31 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Look at Cook: Explore Cook County's budget</title>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Customize meta description -->
+    <meta name="description" content="">
+    <!-- Customize meta author -->
+    <meta name="author" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <link href="styles/master.css" rel="stylesheet" type="text/css" />
-  <link href="styles/print.css" media="print" rel="stylesheet" type="text/css" />
+    <!-- Customize page title -->
+    <title>Look at Cook</title>
 
-  <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!-- Bootstrap core CSS -->
+    <link rel="shortcut icon" href="/favicon.png">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
 
-  <script src="scripts/jquery.js" type="text/javascript"></script>
-  <script src="scripts/jquery.ga-event-tracker.js" type="text/javascript"></script>
-</head>
-<body>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/lib/html5shiv.js"></script>
+      <script src="/lib/respond.min.js"></script>
+    <![endif]-->
+  </head>
 
-<div id="page">
-  <div id="header">
-    <h1 id='logo-title'>Look at Cook</h1>
-    <p>A project by <a href="http://www.derekeder.com">Derek Eder</a> and <a href="http://www.c82.net">Nick Rougeux</a> from <a href='http://opencityapps.org'>Open City</a></p>
-  </div>
+  <body>
+    <a href="#content" class="sr-only">Skip to content</a>
+    <div id="readme" style="display: none;"><img src="" alt="Click points to see annual budgets below"></div>
+    <div class="container">
+      <div id='header'>
+        <div class='row'>
+          <div class='col-md-9'>
+            <div id='logo'>
+              <!-- Customize logo -->
+              <a href='/'>Look at Cook</a>
+            </div>
+            <!-- Customize page text below logo -->
+            <p>Explore Cook County's budget from 1993 to 2017 and learn how the money is being spent.</p>
+          </div>
+        </div>
+      </div>
 
-  <div id="content">
-    <div id="content-primary">
-      <p>&laquo; <a href="/">Back to the budget</a></p>
-
-      <h1>Frequently asked questions</h1>
+      <div class='well about'>
+        <a href='/'>&laquo; Back to the budget</a>
+        
+        <h1>Frequently asked questions</h1>
 
       <ul id="faq">
         <li><a href="#q1">How does Cook County set its budget each year?</a></li>
@@ -50,9 +69,56 @@
 
       <h2 id="q4">Why is there no money budgeted for Capital Improvements in 2011?</h2>
       <p>Capital Improvements are usually tied to bonds let for several years (i.e. 3 yrs.) that are tied to multiple projects with varying timelines. Therefore, the money associated with them is not spent uniformly. The money spent in 2011 can be from bonds let in previous years.</p>
-    </div>
-  </div>
-</div>
 
-</body>
+
+
+      </div>
+
+      <div id='footer'>
+        <p class='pull-left'>
+          <!-- Customize download link -->
+          <a id="download-button" class="btn btn-primary" href="">View &amp; download data</a>
+          All the data for this project is freely available to download or explore.
+          <br />
+          <br />
+          Built by <a href="http://datamade.us">DataMade</a>
+        </p>
+        <p class='pull-right'>
+          <strong>Share:</strong>
+          <!-- Customize facebook share -->
+          <a href="http://www.facebook.com/share.php?u=http%3a%2f%2fwww..com"><img alt="Facebook" src="images/facebook-lg.png" /></a>
+          <!-- Customize twitter share -->
+          <a href="http://twitter.com/share?text=Where's%20the%20money%20going%3F%20Explore%20New%20Orleans'%20budget&amp;url=http%3a%2f%2fwww..com"><img alt="Twitter" src="images/twitter-lg.png" /></a>
+        </p>
+      </div>
+    </div>
+    <!-- loading javascript at the bottom of the page for performance -->
+    <!-- HTML templates for Backbone views -->
+    <!-- javascript libraries -->
+    <script src="lib/jquery.min.js" type="text/javascript"></script>
+    <script src="lib/spin.min.js" type="text/javascript"></script>
+    <script src="lib/jquery.spin.js" type="text/javascript"></script>
+    <script src="lib/accounting.min.js" type="text/javascript"></script>
+    <script src="lib/fuse.min.js" type="text/javascript"></script>
+    <script src="lib/reduce.js" type="text/javascript"></script>
+    <script src="lib/range.js" type="text/javascript"></script>
+    <script src="lib/array_indexof.js" type="text/javascript"></script>
+    <script src="lib/array_getunique.js" type="text/javascript"></script>
+    <script src="lib/jquery.csv.min.js" type="text/javascript"></script>
+    <script src="lib/bootstrap.min.js" type="text/javascript"></script>
+    <script src="lib/highcharts.js" type="text/javascript"></script>
+    <script src="lib/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="lib/jquery.cookie.js" type="text/javascript"></script>
+    <script src="lib/underscore.min.js" type="text/javascript"></script>
+    <script src="lib/backbone.min.js" type="text/javascript"></script>
+    <script src="lib/Backbone.ModelBinder.min.js" type="text/javascript"></script>
+
+    <!-- custom javascript -->
+    <script src="js/dataTables.sorting.js" type="text/javascript"></script>
+    <script src="js/budget_helpers.js" type="text/javascript"></script>
+    <script src="js/budget_highcharts.js" type="text/javascript"></script>
+    <script src="js/analytics_lib.js" type="text/javascript"></script>
+
+    <script src="js/app.js" type="text/javascript"></script>
+  </body>
 </html>
