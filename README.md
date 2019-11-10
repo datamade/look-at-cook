@@ -49,7 +49,7 @@ See examples of prepped data:
 
 ## Errors / bugs
 
-If something is not behaving intuitively, it is a bug, and should be [reported as an issue](https://github.com/open-city/look-at-cook/issues)
+If something is not behaving intuitively, it is a bug, and should be [reported as an issue](https://github.com/datamade/look-at-cook/issues)
 
 You can also email info@datamade.us.
 
@@ -65,4 +65,4 @@ Copyright
 
 Copyright © 2019 DataMade (datamade.us), Derek Eder, Nick Rougeux and Open City. Released under the MIT License.
 
-See LICENSE for details https://github.com/open-city/look-at-cook/wiki/License
+See LICENSE for details https://raw.githubusercontent.com/datamade/look-at-cook/master/LICENSE.md
